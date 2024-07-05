@@ -10,6 +10,9 @@ module.exports = {
   resolve: {
     // 配置 extensions 来告诉 webpack 在没有书写后缀时，以什么样的顺序去寻找文件
     extensions: [".mjs", ".js", ".json", ".jsx", ".ts", ".tsx"], // 如果项目中只有 tsx 或 ts 可以将其写在最前面
+    alias: {
+      "@": path.resolve(__dirname, "src"), // 将@映射到src文件夹
+    },
   },
   module: {
     rules: [

@@ -7,6 +7,9 @@ module.exports = merge(base, {
     open: true, // 编译完自动打开浏览器
     port: 8080,
     historyApiFallback: true,
+    client: {
+      overlay: false,
+    },
   },
   module: {
     rules: [
