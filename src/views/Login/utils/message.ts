@@ -16,3 +16,16 @@ export function showError(
   });
   console.error(s);
 }
+
+export function showMessage(
+  s: string | ReactNode,
+  duration: number = 4,
+  toBottom: number = 100
+) {
+  message.destroy();
+  message.config({
+    top: window.innerHeight - toBottom,
+    duration,
+  });
+  message.success(s, duration);
+}

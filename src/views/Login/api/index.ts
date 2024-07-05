@@ -10,6 +10,16 @@ export class LoginApi {
     );
     return result.data;
   }
+  public async registerAuth(body: {
+    nickname: string;
+    password: string;
+    email: string;
+    phone: string;
+    vericode: string;
+  }) {
+    const result = await axios.post(`${apikeyPrefix}/register`, body);
+    return result.data;
+  }
 }
 
 export const loginApi = new LoginApi();

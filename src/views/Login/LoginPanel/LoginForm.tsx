@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   ConfigProvider,
   Form,
   Input,
-  Select,
   Button,
   Checkbox,
   CheckboxProps,
@@ -15,18 +14,13 @@ import {
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../provider/authProvider";
-import {
-  validateEmail,
-  validatePassword,
-  validatePhone,
-  validateUsername,
-} from "../utils";
+import { validateUsername } from "../utils";
 import { DownOutlined } from "@ant-design/icons";
 import { loginApi } from "../api";
-import useCustomRequest from "@/hooks/useRequest";
+import RegisterForm from "./RegisterForm";
+import { useRequest } from "@/hooks/useRequest";
 
 function LoginForm() {
-  const [countdown, setCountdown] = useState<number>(0);
   const [isAgreed, setIsAgreed] = useState<boolean>(true);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [operation, setOperation] = useState<string>("login");
@@ -48,7 +42,6 @@ function LoginForm() {
     },
   };
   const [form] = Form.useForm();
-  const { Option } = Select;
 
   // 选择邮箱注册or手机号注册的Dropdown
   const items: MenuProps["items"] = [
@@ -82,21 +75,7 @@ function LoginForm() {
     },
   ];
 
-  // 手机号归属地选择框
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select
-        popupMatchSelectWidth={false}
-        className="w-20 [&_.ant-select-selection-item]:text-base"
-      >
-        <Option value="86" className="w-44">
-          +86
-        </Option>
-        <Option value="non-chinese-mainland">非中国大陆手机号</Option>
-      </Select>
-    </Form.Item>
-  );
-  const { runAsync: login } = useCustomRequest(async (username, password) => {
+  const { runAsync: login } = useRequest(async (username, password) => {
     const res = await loginApi.loginAuth(username, password);
     return res;
   });
@@ -111,21 +90,6 @@ function LoginForm() {
       navigate("/", { replace: true });
     }
   };
-  const handleRegister = async (): Promise<void> => {
-    try {
-      if (!isAgreed) {
-        setIsModalVisible(true);
-      } else {
-        const values = await form.validateFields();
-        console.log("values", values);
-        setToken("this is a test token");
-        navigate("/", { replace: true });
-        navigate("..");
-      }
-    } catch (_) {
-      return;
-    }
-  };
   const agreePolicyChange: CheckboxProps["onChange"] = (e) => {
     setIsAgreed(e.target.checked);
   };
@@ -136,21 +100,6 @@ function LoginForm() {
   const handleModalCancel = () => {
     setIsModalVisible(false);
   };
-
-  // 点击“发送验证码”后逻辑
-  const sendVericode = () => {
-    if (countdown === 0) {
-      setCountdown(60);
-    }
-  };
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setCountdown((prev) => prev - 1);
-    }, 1000);
-    if (countdown === 0) {
-      clearTimeout(timer);
-    }
-  }, [countdown]);
 
   return (
     <div className="relative h-full w-1/2 float-left">
@@ -260,81 +209,12 @@ function LoginForm() {
                     </Form.Item>
                   </>
                 ) : (
-                  <>
-                    {operation == "registerByPhone" ? (
-                      <Form.Item
-                        name="phone"
-                        rules={[...validatePhone()]}
-                        className="h-10 mb-7"
-                      >
-                        <Input
-                          addonBefore={prefixSelector}
-                          placeholder="手机号"
-                          className="[&>span]:h-10 [&_input]:h-10"
-                        />
-                      </Form.Item>
-                    ) : (
-                      <Form.Item
-                        name="email"
-                        rules={[...validateEmail()]}
-                        className="h-10 mb-7"
-                      >
-                        <Input placeholder="邮箱" className="h-10" />
-                      </Form.Item>
-                    )}
-
-                    <Form.Item
-                      name="verificationCode"
-                      rules={[{ required: true, message: "请输入验证码" }]}
-                      className="h-10 mb-7 [&_input]:h-[30px]"
-                    >
-                      <Input
-                        className="w-full"
-                        suffix={
-                          countdown === 0 ? (
-                            <Button
-                              type="link"
-                              className="text-primary text-base h-7"
-                              onClick={sendVericode}
-                            >
-                              发送验证码
-                            </Button>
-                          ) : (
-                            <Button
-                              type="link"
-                              disabled
-                              style={{ fontSize: "16px" }}
-                            >{`已发送${countdown}s`}</Button>
-                          )
-                        }
-                        placeholder="验证码"
-                        autoComplete="off"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name="nickname"
-                      rules={[...validateUsername()]}
-                      className="h-10 mb-7"
-                    >
-                      <Input placeholder="设置昵称" className="h-10" />
-                    </Form.Item>
-                    <Form.Item
-                      name="password"
-                      rules={[...validatePassword()]}
-                      className="h-10 mb-7"
-                    >
-                      <Input.Password placeholder="设置密码" className="h-10" />
-                    </Form.Item>
-                    <Form.Item>
-                      <Button
-                        type="primary"
-                        onClick={handleRegister}
-                        className="w-full h-10 text-base bg-gradient-to-r from-primary to-indigo-500"
-                      >
-                        注册
-                      </Button>
-                    </Form.Item>
-                  </>
+                  <RegisterForm
+                    operation={operation}
+                    isAgreed={isAgreed}
+                    form={form}
+                    openIs={() => setIsModalVisible(true)}
+                  />
                 )}
               </Form>
             </ConfigProvider>
