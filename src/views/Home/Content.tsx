@@ -1,6 +1,10 @@
 import React, { useMemo } from "react";
 import { Space, Table } from "antd";
-import { FolderAddOutlined } from "@ant-design/icons";
+import {
+  FileAddOutlined,
+  ImportOutlined,
+  OpenAIOutlined,
+} from "@ant-design/icons";
 
 enum OPERATE {
   CREATE = "create",
@@ -12,25 +16,19 @@ const Content = () => {
     () => [
       {
         key: OPERATE.CREATE,
-        icon: (
-          <FolderAddOutlined className="text-3xl text-primary mr-2 h-full" />
-        ),
+        icon: <FileAddOutlined className="text-3xl text-primary mr-2 h-full" />,
         title: "新建文档",
         desc: "从空文本起草",
       },
       {
         key: OPERATE.WRITE,
-        icon: (
-          <FolderAddOutlined className="text-3xl text-primary mr-2 h-full" />
-        ),
+        icon: <OpenAIOutlined className="text-3xl text-primary mr-2 h-full" />,
         title: "AI写作",
         desc: "让AI辅助您高效写作",
       },
       {
         key: OPERATE.UPLOAD,
-        icon: (
-          <FolderAddOutlined className="text-3xl text-primary mr-2 h-full" />
-        ),
+        icon: <ImportOutlined className="text-3xl text-primary mr-2 h-full" />,
         title: "上传Word",
         desc: "从本地上传文档",
       },
@@ -72,7 +70,7 @@ const Content = () => {
         {operates.map((item) => (
           <Space
             key={item.key}
-            className="border w-full h-[76px] p-4 items-start hover:bg-gray-100"
+            className="border w-full h-[76px] p-4 items-start hover:bg-gray-100 [&>.ant-space-item]:h-full"
             onClick={() => handle(item.key)}
           >
             {item.icon}

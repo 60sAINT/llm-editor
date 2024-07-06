@@ -1,11 +1,14 @@
 import React from "react";
 import {
+  AppstoreOutlined,
   ClockCircleOutlined,
+  ExperimentOutlined,
   FileTextTwoTone,
   FolderAddTwoTone,
   FolderOutlined,
   RobotFilled,
   ShareAltOutlined,
+  UpCircleOutlined,
   UploadOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -80,17 +83,17 @@ const Home: React.FC = () => {
     },
     {
       key: "4",
-      icon: <FolderOutlined />,
+      icon: <UpCircleOutlined />,
       label: "应用升级",
     },
     {
       key: "5",
-      icon: <FolderOutlined />,
+      icon: <AppstoreOutlined />,
       label: "应用中心",
     },
     {
       key: "6",
-      icon: <FolderOutlined />,
+      icon: <ExperimentOutlined />,
       label: "实验室",
     },
   ];
