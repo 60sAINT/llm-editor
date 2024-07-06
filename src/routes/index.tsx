@@ -8,18 +8,12 @@ const Routes = () => {
   const UserAgreement = lazy(() => import("../views/UserAgreement"));
   const PrivacyPolicy = lazy(() => import("../views/PrivacyPolicy"));
   const Logout = lazy(() => import("../views/Logout"));
+  const Home = lazy(() => import("../views/Home"));
+  const NewDoc = lazy(() => import("../views/NewDoc"));
   const { token } = useAuth();
 
   // 公共路由配置
   const routesForPublic = [
-    {
-      path: "/login",
-      element: (
-        <Suspense fallback={<div>Loading...</div>}>
-          <Login />
-        </Suspense>
-      ),
-    },
     {
       path: "/login",
       element: (
@@ -54,11 +48,19 @@ const Routes = () => {
       children: [
         {
           path: "/",
-          element: <div>User Home Page</div>,
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <Home />
+            </Suspense>
+          ),
         },
         {
-          path: "/profile",
-          element: <div>User Profile</div>,
+          path: "/newDoc",
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <NewDoc />
+            </Suspense>
+          ),
         },
         {
           path: "/logout",
@@ -73,16 +75,7 @@ const Routes = () => {
   ];
 
   // 没有授权的用户才可以访问的路由配置
-  const routesForNotAuthenticatedOnly = [
-    {
-      path: "/login",
-      element: (
-        <Suspense fallback={<div>Loading...</div>}>
-          <Login />
-        </Suspense>
-      ),
-    },
-  ];
+  const routesForNotAuthenticatedOnly = [{}];
 
   // 合并路由配置
   const router = createBrowserRouter([
