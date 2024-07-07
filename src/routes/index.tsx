@@ -10,6 +10,7 @@ const Routes = () => {
   const Logout = lazy(() => import("../views/Logout"));
   const Home = lazy(() => import("../views/Home"));
   const NewDoc = lazy(() => import("../views/NewDoc"));
+  const Temp = lazy(() => import("../views/Temp"));
   const { token } = useAuth();
 
   // 公共路由配置
@@ -67,6 +68,14 @@ const Routes = () => {
           element: (
             <Suspense fallback={<div>Loading...</div>}>
               <Logout />
+            </Suspense>
+          ),
+        },
+        {
+          path: "/temp",
+          element: (
+            <Suspense fallback={<div>Loading...</div>}>
+              <Temp />
             </Suspense>
           ),
         },
