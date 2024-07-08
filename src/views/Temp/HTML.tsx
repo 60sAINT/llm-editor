@@ -62,18 +62,22 @@ const HTML = () => {
 
   return (
     <div className="flex flex-col h-full">
+      <div className="text-4xl font-bold text-primary mt-3">
+        BlockNote Editor内容onChange后转为HTML
+      </div>
       <div>输入（BlockNote 编辑器）：</div>
       <div className="rounded-lg flex-1 overflow-hidden">
         <BlockNoteView editor={editor} onChange={onChange} />
       </div>
-      <div>上方BlockNote Editor内容onChange后转为HTML</div>
       <div>Output (HTML):</div>
       <div className="border border-gray-600">
         <pre className="rounded-lg h-full overflow-auto ps-14 pe-14 w-full whitespace-pre-wrap py-4">
           <code>{html}</code>
         </pre>
       </div>
-      <div>HTML转BlockNote Editor:</div>
+      <div className="text-4xl font-bold text-primary mt-3">
+        HTML转BlockNote Editor:
+      </div>
       <div>Input (HTML):</div>
       <div className="border border-gray-600">
         <code>

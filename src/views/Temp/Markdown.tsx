@@ -62,18 +62,22 @@ const Markdown = () => {
 
   return (
     <div className="flex flex-col h-full">
+      <div className="text-4xl font-bold text-primary mt-3">
+        BlockNote Editor内容onChange后转为Markdown
+      </div>
       <div>输入（BlockNote 编辑器）：</div>
       <div className="rounded-lg flex-1 overflow-hidden">
         <BlockNoteView editor={editor} onChange={onChange} />
       </div>
-      <div>上方BlockNote Editor内容onChange后转为Markdown</div>
       <div>Output (Markdown):</div>
       <div className="border border-gray-600">
         <pre className="rounded-lg h-full overflow-auto ps-14 pe-14 w-full whitespace-pre-wrap py-4">
           <code>{markdown}</code>
         </pre>
       </div>
-      <div>Markdown转BlockNote Editor:</div>
+      <div className="text-4xl font-bold text-primary mt-3">
+        Markdown转BlockNote Editor:
+      </div>
       <div>Input (Markdown):</div>
       <div className="border border-gray-600">
         <code>

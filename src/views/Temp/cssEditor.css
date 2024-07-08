@@ -1,0 +1,21 @@
+/* .bn-container：编辑器的容器元素，以及所有菜单和工具栏的容器元素。
+.bn-editor：仅用于编辑器的元素。
+.bn-block：块的元素，包括嵌套块。
+.bn-block-group：嵌套块的容器元素。
+.bn-block-content：块内容的元素。
+.bn-inline-content：仅用于块的可编辑富文本内容的元素。
+.bn-toolbar：格式和链接工具栏的元素。
+.bn-side-menu：侧边菜单的元素。
+.bn-drag-handle-menu：拖动手柄菜单的元素。
+.bn-suggestion-menu：建议菜单的元素。 */
+
+/* Adds border and shadow to editor */
+.bn-container[data-theming-css-demo] .bn-editor * {
+  color: blue;
+}
+
+/* Makes slash menu hovered items blue */
+.bn-container[data-theming-css-demo] .bn-suggestion-menu-item[aria-selected="true"],
+.bn-container[data-theming-css-demo] .bn-suggestion-menu-item:hover {
+  background-color: pink;
+}

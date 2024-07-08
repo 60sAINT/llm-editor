@@ -245,7 +245,9 @@ const Basics = () => {
   // Renders the editor instance using a React component.
   return (
     <div className="flex flex-col h-full">
-      <div>BlockNote Editor:</div>
+      <div className="text-4xl font-bold text-primary mt-3">
+        BlockNote Editor:
+      </div>
       <div className="rounded-lg flex-1 overflow-hidden">
         <BlockNoteView
           editor={editor}
@@ -255,7 +257,9 @@ const Basics = () => {
           }}
         />
       </div>
-      <div>Document JSON when onChange:</div>
+      <div className="text-4xl font-bold text-primary mt-3">
+        Document JSON when onChange:
+      </div>
       <div className="border border-gray-600">
         <pre className="rounded-lg h-full overflow-auto ps-14 pe-14 w-full whitespace-pre-wrap py-4">
           <code>{JSON.stringify(document, null, 2)}</code>

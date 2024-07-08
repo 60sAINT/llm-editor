@@ -144,7 +144,9 @@ const API = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <div>BlockNote Editor:</div>
+      <div className="text-4xl font-bold text-primary mt-3">
+        BlockNote Editor:
+      </div>
       <div className="rounded-lg flex-1 overflow-hidden">
         <BlockNoteView
           editor={editor}
@@ -165,7 +167,7 @@ const API = () => {
           }}
         />
       </div>
-      <div>
+      <div className="text-4xl font-bold text-primary mt-3">
         onSelectionChange:所选内容当前跨越的块(包括嵌套块),如果没有所选内容则显示包含文本光标的最里一层的块
       </div>
       <div className="border border-gray-600">
