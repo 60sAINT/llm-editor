@@ -1,0 +1,75 @@
+.ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 1.5em;
+  height: 1em;
+}
+
+.circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.circle1 {
+  background-color: #ccc;
+  animation-name: circle1;
+}
+
+.circle2 {
+  background-color: #999;
+  animation-name: circle2;
+}
+
+.circle3 {
+  background-color: #666;
+  animation-name: circle3;
+}
+
+@keyframes circle1 {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.5);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes circle2 {
+  0% {
+    transform: scale(0.8);
+  }
+
+  50% {
+    transform: scale(1.3);
+  }
+
+  100% {
+    transform: scale(0.8);
+  }
+}
+
+@keyframes circle3 {
+  0% {
+    transform: scale(0.6);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(0.6);
+  }
+}

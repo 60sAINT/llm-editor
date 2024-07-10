@@ -26,21 +26,19 @@ const API = () => {
 
   // 操作块:
   // 获取文档
-  const doc = editor.document;
-  console.log("doc", doc);
+  // const doc = editor.document;
   // 获取特定块
   /* getBlock(blockIdentifier: BlockIdentifier): Block | undefined;
     const getBlock = editor.getBlock(blockIdentifier);
     blockIdentifier:应检索的现有块的标识符。
     returns:与标识符匹配的块，或者未找到匹配块的块。undefined
   */
-  const getBlock = editor.getBlock("firstP");
-  console.log("getBlock", getBlock);
+  // const getBlock = editor.getBlock("firstP");
   // 遍历所有区块
-  editor.forEachBlock((block) => {
+  /* editor.forEachBlock((block) => {
     console.log("forEachBlock", block);
     return true; // 返回false将停止遍历
-  });
+  }); */
   // 插入新块
   /* insertBlocks(
       blocksToInsert: PartialBlock[], // 要插入的新块的数组

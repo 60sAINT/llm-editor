@@ -7,10 +7,7 @@ import Markdown from "./Markdown";
 import HTML from "./HTML";
 import Themes from "./Themes";
 import Components from "./Components";
-
-const onChange = (key: string) => {
-  console.log(key);
-};
+import StateManage from "./StateManage";
 
 const items: TabsProps["items"] = [
   {
@@ -43,10 +40,13 @@ const items: TabsProps["items"] = [
     label: "UI组件",
     children: <Components />,
   },
+  {
+    key: "7",
+    label: "useContext & useReducer管理状态",
+    children: <StateManage />,
+  },
 ];
 
-const Temp: React.FC = () => (
-  <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
-);
+const Temp: React.FC = () => <Tabs defaultActiveKey="1" items={items} />;
 
 export default Temp;
