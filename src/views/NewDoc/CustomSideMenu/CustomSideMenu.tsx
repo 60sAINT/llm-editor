@@ -5,7 +5,7 @@ import { CustomBlockButton } from "./CustomBlockButton";
 export function CustomSideMenu(props: SideMenuProps) {
   return (
     <SideMenu {...props}>
-      <CustomBlockButton {...props} />
+      {/* <CustomBlockButton {...props} /> */}
       <DragHandleButton {...props} />
     </SideMenu>
   );

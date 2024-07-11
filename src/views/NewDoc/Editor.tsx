@@ -22,6 +22,16 @@ const Editor = () => {
         content: "Welcome to llm-editor!",
       },
     ],
+    uploadFile: async (file: File) => {
+      const base64String = await new Promise<string>((resolve) => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.onload = () => {
+          resolve(fileReader.result?.toString()!);
+        };
+      });
+      return base64String;
+    },
   });
   const dispatch = useDispatch();
 

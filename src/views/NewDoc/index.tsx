@@ -1,14 +1,34 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 import Editor from "./Editor";
 import { DispatchContext, StateContext, initialState } from "./utils/context";
 import { reducer } from "./utils/reducer";
+import TopBar from "./TopBar";
+import DocTitle from "./DocTitle";
 
 const NewDoc = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [title, setTitle] = useState("");
+
   return (
     <StateContext.Provider value={state}>
       <DispatchContext.Provider value={dispatch}>
-        <Editor />
+        <div className="h-screen flex flex-col bg-gray-200">
+          <TopBar title={title} setTitle={setTitle} />
+          <div className="flex-grow flex justify-center items-start p-4 overflow-auto">
+            <div
+              className="w-full max-w-2xl bg-white shadow-md"
+              style={{
+                borderRadius: "0",
+                padding: "20px 20px 20px 20px",
+                boxSizing: "border-box",
+                minHeight: "1123px",
+              }}
+            >
+              <DocTitle title={title} setTitle={setTitle} />
+              <Editor />
+            </div>
+          </div>
+        </div>
       </DispatchContext.Provider>
     </StateContext.Provider>
   );
