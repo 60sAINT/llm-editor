@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
-import { axios } from "@/api/AxiosInstance";
+import { dropdownMenuApi } from "../../api/DropdownMenu";
+import { useNewDocState } from "../../utils/provider";
 
 const DownloadButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { editor } = useNewDocState();
 
   const handleClick = () => {
     setIsModalOpen(true);
@@ -11,17 +13,11 @@ const DownloadButton = () => {
 
   const handleConfirm = async (template: string) => {
     try {
-      const response = await axios.post(
-        "http://localhost:8000/doc/export",
-        {
-          html: "<p>Your HTML content here</p>",
-          template,
-        },
-        { responseType: "blob" }
-      );
+      const html = await editor?.blocksToHTMLLossy();
+      const res = await dropdownMenuApi.downloadDoc(html!, template);
 
       // Create a link element to trigger the download
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const url = window.URL.createObjectURL(new Blob([res]));
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("download", "document.docx"); // or the name you prefer
