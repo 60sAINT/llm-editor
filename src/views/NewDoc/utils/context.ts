@@ -2,6 +2,7 @@ import { Block, BlockIdentifier, BlockNoteEditor } from "@blocknote/core";
 import { createContext } from "react";
 
 export interface State {
+  title: string; //文章标题
   continButtnDisplay: DisplayStyle; // 续写框是否显示
   continText: string; // 续写的文本
   selection: string; // 光标选择的的文本
@@ -27,9 +28,11 @@ export type Action =
   | { type: "RESET_ALL_TEXT" }
   | { type: "SET_EDITOR"; payload: BlockNoteEditor }
   | { type: "SET_BLOCK_TO_UPDATE"; payload: Block }
-  | { type: "SET_RANGE"; payload: RangeType };
+  | { type: "SET_RANGE"; payload: RangeType }
+  | { type: "EDIT_TITLE"; payload: string };
 
 export const initialState: State = {
+  title: "",
   continButtnDisplay: DisplayStyle.HIDDEN,
   continText: "",
   selection: "",

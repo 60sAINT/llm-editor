@@ -18,6 +18,8 @@ export const reducer = (state: State, action: Action): State => {
       return { ...state, blockToUpdate: action.payload }; // 设置要更新的块对象
     case "SET_RANGE":
       return { ...state, range: action.payload }; // 设置鼠标选择的文字的startIndex和endIndex
+    case "EDIT_TITLE":
+      return { ...state, title: action.payload }; // 编辑文章标题
     default:
       return state;
   }

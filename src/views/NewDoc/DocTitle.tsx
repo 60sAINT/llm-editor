@@ -1,18 +1,19 @@
 import React from "react";
+import { useDispatch, useNewDocState } from "./utils/provider";
 
-interface DocTitleProps {
-  title: string;
-  setTitle: (title: string) => void;
-}
-
-const DocTitle: React.FC<DocTitleProps> = ({ title, setTitle }) => {
+const DocTitle = () => {
+  const { title } = useNewDocState();
+  const dispatch = useDispatch();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: "EDIT_TITLE", payload: e.target.value });
+  };
   return (
     <div style={{ padding: "40px 54px 20px 54px" }}>
       <input
         type="text"
         placeholder="无标题"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={handleChange}
         className="text-3xl font-bold outline-none flex-grow"
       />
     </div>

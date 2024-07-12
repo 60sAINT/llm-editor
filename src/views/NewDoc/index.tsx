@@ -14,6 +14,7 @@ const NewDoc = () => {
       <DispatchContext.Provider value={dispatch}>
         <div className="h-screen flex flex-col bg-gray-200">
           <TopBar title={title} setTitle={setTitle} />
+          {/* <TopBar /> */}
           <div className="flex-grow flex justify-center items-start p-4 overflow-auto">
             <div
               className="w-full max-w-2xl bg-white shadow-md"
@@ -24,7 +25,7 @@ const NewDoc = () => {
                 minHeight: "1123px",
               }}
             >
-              <DocTitle title={title} setTitle={setTitle} />
+              <DocTitle />
               <Editor />
             </div>
           </div>
