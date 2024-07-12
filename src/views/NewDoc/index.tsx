@@ -7,13 +7,12 @@ import DocTitle from "./DocTitle";
 
 const NewDoc = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [title, setTitle] = useState("");
 
   return (
     <StateContext.Provider value={state}>
       <DispatchContext.Provider value={dispatch}>
         <div className="h-screen flex flex-col bg-gray-200">
-          <TopBar title={title} setTitle={setTitle} />
+          <TopBar />
           {/* <TopBar /> */}
           <div className="flex-grow flex justify-center items-start p-4 overflow-auto">
             <div

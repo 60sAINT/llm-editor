@@ -12,9 +12,6 @@ const TopBar = () => {
       <div className="flex items-center space-x-4">
         <ExitButton />
         <TopBarTitle />
-        {/* <ActionButton label="开始" />
-        <ActionButton label="效率" />
-        <ActionButton label="审阅" /> */}
       </div>
       <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
         <ActionButton label="开始" />
