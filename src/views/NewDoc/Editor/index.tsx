@@ -10,9 +10,9 @@ import { BlockNoteView } from "@blocknote/mantine";
 
 import { CustomSideMenu } from "./CustomSideMenu/CustomSideMenu";
 import { CustomFormattingToolbar } from "./CustomFormattingToolBar";
-import { useDispatch } from "./utils/provider";
-import { DisplayStyle } from "./utils/context";
-import useRange from "./hooks/useRange";
+import { useDispatch } from "../utils/provider";
+import { DisplayStyle } from "../utils/context";
+import useRange from "../hooks/useRange";
 
 const Editor = () => {
   const editor = useCreateBlockNote({

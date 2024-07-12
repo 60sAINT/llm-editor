@@ -1,24 +1,20 @@
 import React from "react";
 import { useRequest } from "@/hooks/useRequest";
 import { useBlockNoteEditor, useComponentsContext } from "@blocknote/react";
-import { RiTranslate } from "react-icons/ri";
-import { sideMenuApi } from "../api/FormattingToolBar";
+import { sideMenuApi } from "../../api/FormattingToolBar";
 
-// TODO 添加认证逻辑
-// TODO 添加目标翻译语言选择按钮
-
-export function TranslationButton() {
+export function PolishButton() {
   const editor = useBlockNoteEditor();
   const Components = useComponentsContext()!;
   const selectedText = editor.getSelectedText();
 
-  const { runAsync: textTranslate } = useRequest(async (tar_lang, text) => {
-    const res = await sideMenuApi.textTranslate(tar_lang, text);
+  const { runAsync: textPolish } = useRequest(async (text) => {
+    const res = await sideMenuApi.textRevise(text);
     return res;
   });
   // 翻译逻辑
-  const handleTextTranslation = async (): Promise<void> => {
-    const response = await textTranslate("英语", selectedText);
+  const handleTextPolish = async (): Promise<void> => {
+    const response = await textPolish(selectedText);
     const reader = response!.pipeThrough(new TextDecoderStream()).getReader();
     while (true) {
       const { done, value } = await reader.read();
@@ -28,10 +24,10 @@ export function TranslationButton() {
   };
   return (
     <Components.FormattingToolbar.Button
-      mainTooltip="文本翻译"
-      onClick={handleTextTranslation}
+      mainTooltip="文本润色"
+      onClick={handleTextPolish}
     >
-      {/* {<RiTranslate />} */}译
+      {/* {<IoMdTrendingUp />} */}润
     </Components.FormattingToolbar.Button>
   );
 }

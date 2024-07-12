@@ -1,5 +1,5 @@
 import TextArea, { TextAreaRef } from "antd/es/input/TextArea";
-import { useNewDocState } from "../../utils/provider";
+import { useNewDocState } from "../../../utils/provider";
 import React, { useEffect, useRef, useCallback } from "react";
 import { StyleSchema, StyledText } from "@blocknote/core";
 import { Button, Space } from "antd";

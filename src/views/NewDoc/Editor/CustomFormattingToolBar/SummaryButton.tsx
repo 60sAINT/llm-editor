@@ -1,8 +1,7 @@
 import React from "react";
 import { useRequest } from "@/hooks/useRequest";
 import { useBlockNoteEditor, useComponentsContext } from "@blocknote/react";
-import { IoMdTrendingUp } from "react-icons/io";
-import { sideMenuApi } from "../api/FormattingToolBar";
+import { sideMenuApi } from "../../api/FormattingToolBar";
 
 export function SummaryButton() {
   const editor = useBlockNoteEditor();

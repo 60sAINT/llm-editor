@@ -1,9 +1,9 @@
 import React from "react";
 import { useRequest } from "@/hooks/useRequest";
 import { useComponentsContext } from "@blocknote/react";
-import { sideMenuApi } from "../api/FormattingToolBar";
-import { DisplayStyle } from "../utils/context";
-import { useDispatch, useNewDocState } from "../utils/provider";
+import { sideMenuApi } from "../../api/FormattingToolBar";
+import { DisplayStyle } from "../../utils/context";
+import { useDispatch, useNewDocState } from "../../utils/provider";
 
 // TODO 添加认证逻辑
 
