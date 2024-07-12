@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
 import { dropdownMenuApi } from "../../api/DropdownMenu";
-import { useNewDocState } from "../../utils/provider";
+import { useDocState } from "../../utils/docProvider";
 
 const DownloadButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { editor } = useNewDocState();
+  const { editor } = useDocState();
 
   const handleClick = () => {
     setIsModalOpen(true);
@@ -31,13 +31,12 @@ const DownloadButton = () => {
 
   return (
     <>
-      <a
-        href="#"
+      <div
         className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
         onClick={handleClick}
       >
         下载文档
-      </a>
+      </div>
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

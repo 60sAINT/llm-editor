@@ -1,11 +1,11 @@
 import React from "react";
-import { useDispatch, useNewDocState } from "./utils/provider";
+import { useDocState, useDocDispatch } from "./utils/docProvider";
 
 const DocTitle = () => {
-  const { title } = useNewDocState();
-  const dispatch = useDispatch();
+  const { title } = useDocState();
+  const docDispatch = useDocDispatch();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: "EDIT_TITLE", payload: e.target.value });
+    docDispatch({ type: "EDIT_TITLE", payload: e.target.value });
   };
   return (
     <div style={{ padding: "40px 54px 20px 54px" }}>

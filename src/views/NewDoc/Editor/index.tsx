@@ -57,6 +57,11 @@ const Editor = () => {
         dispatch({ type: "SWITCH_VISIBILITY", payload: DisplayStyle.HIDDEN });
       }}
       onMouseUp={(e) => handleMouseUp(e)}
+      onKeyDownCapture={(e) => {
+        if (e.ctrlKey && e.key === "s") {
+          e.preventDefault();
+        }
+      }}
     >
       <FormattingToolbarController
         formattingToolbar={CustomFormattingToolbar}
