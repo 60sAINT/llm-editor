@@ -18,6 +18,7 @@ export function PolishButton() {
     dispatch({ type: "SWITCH_VISIBILITY", payload: DisplayStyle.BLOCK });
     const selection = state.editor?.getSelectedText();
     if (selection && !state.syncLock) {
+      dispatch({ type: "LOCK" });
       const selectedText = selection.toString();
       if (
         selectedText === state.polishSelection &&
