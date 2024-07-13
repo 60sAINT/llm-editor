@@ -4,7 +4,6 @@ import { createContext } from "react";
 export interface State {
   syncLock: boolean; // 同步锁，同时只能有一个功能更新 Frame
   buttonDisplay: DisplayStyle; // 续写框是否显示
-  translateTargetLanguage: string; // 翻译功能目标语言
   // TEXT
   frameText: string; // frame中当前展示的文本
   continueText: string; // 续写框中展示的文本
@@ -37,7 +36,6 @@ export type Action =
   | { type: "SWITCH_VISIBILITY"; payload: DisplayStyle }
   | { type: "LOCK" }
   | { type: "UNLOCK" }
-  | { type: "SET_TARGET_LANGUAGE"; payload: string }
   // TEXT
   | { type: "REPLACE_FRAME_TEXT"; payload: string }
   | { type: "FRAME_TEXT"; payload: string }
@@ -68,7 +66,6 @@ export type Action =
 export const initialState: State = {
   syncLock: false,
   buttonDisplay: DisplayStyle.HIDDEN,
-  translateTargetLanguage: "英文",
   frameText: "",
   continueText: "",
   translateText: "",

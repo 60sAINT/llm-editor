@@ -4,6 +4,7 @@ import { useComponentsContext } from "@blocknote/react";
 import { sideMenuApi } from "../../api/FormattingToolBar";
 import { useDispatch, useNewDocState } from "../../utils/provider";
 import { DisplayStyle } from "../../utils/context";
+import { targetLanguage } from "@/common/utils";
 
 // TODO 添加认证逻辑
 // TODO 添加目标翻译语言选择按钮
@@ -21,6 +22,7 @@ export function TranslationButton() {
   const handleTextTranslation = async (): Promise<void> => {
     dispatch({ type: "SWITCH_VISIBILITY", payload: DisplayStyle.BLOCK });
     const selection = state.editor?.getSelectedText();
+    const targetLang = targetLanguage(selection);
     if (selection && !state.syncLock) {
       dispatch({ type: "LOCK" });
       const selectedText = selection.toString();
@@ -36,10 +38,7 @@ export function TranslationButton() {
           type: "REPLACE_TRANSLATE_SELECTION",
           payload: selectedText,
         });
-        const response = await textTranslate(
-          state.translateTargetLanguage,
-          selectedText
-        );
+        const response = await textTranslate(targetLang, selectedText);
         const reader = response!
           .pipeThrough(new TextDecoderStream())
           .getReader();
