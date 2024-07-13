@@ -10,6 +10,8 @@ export const reducer = (state: State, action: Action): State => {
       return { ...state, syncLock: false };
     case "SET_TARGET_LANGUAGE":
       return { ...state, translateTargetLanguage: action.payload };
+    case "REPLACE_FRAME_TEXT":
+      return { ...state, frameText: action.payload }; // 替换Frame中的展示的文本
     case "FRAME_TEXT":
       return { ...state, frameText: state.frameText + action.payload }; // 不断更新显示从后端获取的续写文本
     case "CONTINUE_TEXT":

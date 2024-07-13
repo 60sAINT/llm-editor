@@ -26,7 +26,7 @@ export const ContinuationButton = () => {
         selectedText === state.continueSelection &&
         state.continueText.length !== 0
       ) {
-        dispatch({ type: "FRAME_TEXT", payload: state.continueText });
+        dispatch({ type: "REPLACE_FRAME_TEXT", payload: state.continueText });
       } else {
         dispatch({ type: "RESET_FRAME_TEXT" });
         dispatch({ type: "RESET_CONTINUE_TEXT" });

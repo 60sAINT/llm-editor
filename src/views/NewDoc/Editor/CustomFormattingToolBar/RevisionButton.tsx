@@ -25,7 +25,10 @@ export function RevisionButton() {
         selectedText === state.reviseSelection &&
         state.reviseText.length !== 0
       ) {
-        dispatch({ type: "FRAME_TEXT", payload: state.reviseText });
+        dispatch({
+          type: "REPLACE_FRAME_TEXT",
+          payload: state.reviseSelection,
+        });
       } else {
         dispatch({ type: "RESET_FRAME_TEXT" });
         dispatch({ type: "RESET_REVISE_TEXT" });

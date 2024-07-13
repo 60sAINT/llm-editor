@@ -23,7 +23,7 @@ export function PolishButton() {
         selectedText === state.polishSelection &&
         state.polishText.length !== 0
       ) {
-        dispatch({ type: "FRAME_TEXT", payload: state.polishText });
+        dispatch({ type: "REPLACE_FRAME_TEXT", payload: state.polishText });
       } else {
         dispatch({ type: "RESET_FRAME_TEXT" });
         dispatch({ type: "RESET_POLISH_TEXT" });

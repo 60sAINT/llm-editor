@@ -39,10 +39,6 @@ const DisplayFrame = () => {
           ],
         });
       } else {
-        // blocksToInsert.push({
-        //   type: "paragraph",
-        //   content: "",
-        // });
         blocksToInsert.push({
           type: "paragraph",
           content: substr,

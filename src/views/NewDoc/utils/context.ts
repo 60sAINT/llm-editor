@@ -39,6 +39,7 @@ export type Action =
   | { type: "UNLOCK" }
   | { type: "SET_TARGET_LANGUAGE"; payload: string }
   // TEXT
+  | { type: "REPLACE_FRAME_TEXT"; payload: string }
   | { type: "FRAME_TEXT"; payload: string }
   | { type: "CONTINUE_TEXT"; payload: string }
   | { type: "POLISH_TEXT"; payload: string }

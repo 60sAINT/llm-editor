@@ -28,7 +28,7 @@ export function TranslationButton() {
         selectedText === state.translateSelection &&
         state.translateText.length !== 0
       ) {
-        dispatch({ type: "FRAME_TEXT", payload: state.translateSelection });
+        dispatch({ type: "REPLACE_FRAME_TEXT", payload: state.translateText });
       } else {
         dispatch({ type: "RESET_FRAME_TEXT" });
         dispatch({ type: "RESET_TRANSLATE_TEXT" });

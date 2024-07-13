@@ -24,7 +24,7 @@ export function SummaryButton() {
         selectedText === state.summarySelection &&
         state.summaryText.length !== 0
       ) {
-        dispatch({ type: "FRAME_TEXT", payload: state.summaryText });
+        dispatch({ type: "REPLACE_FRAME_TEXT", payload: state.summaryText });
       } else {
         dispatch({ type: "RESET_FRAME_TEXT" });
         dispatch({ type: "RESET_SUMMARY_TEXT" });
