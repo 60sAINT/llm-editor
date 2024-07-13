@@ -1,0 +1,45 @@
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100%);
+    background-color: rgba(255, 255, 255, 0);
+    color: rgba(0, 0, 0, 0.1);
+  }
+
+  50% {
+    transform: translateY(0);
+    background-color: rgba(255, 255, 255, 0.5);
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  100% {
+    background-color: rgba(255, 255, 255, 1);
+    color: rgba(0, 0, 0, 1);
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    background-color: rgba(255, 255, 255, 1);
+    color: rgba(0, 0, 0, 1);
+  }
+
+  50% {
+    transform: translateY(0);
+    background-color: rgba(255, 255, 255, 0.5);
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  100% {
+    transform: translateY(-100%);
+    background-color: rgba(255, 255, 255, 0);
+    color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+.animate {
+  animation: slideDown 1s ease-in-out forwards;
+}
+
+.animateReverse {
+  animation: slideUp 1s ease-in-out forwards;
+}

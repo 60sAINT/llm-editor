@@ -8,7 +8,7 @@ const PaperlessButton = () => {
   return (
     <a
       href="#"
-      className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+      className="w-40 h-8 leading-8 block !text-dropdown-text text-sm"
       onClick={handleClick}
     >
       无纸化
