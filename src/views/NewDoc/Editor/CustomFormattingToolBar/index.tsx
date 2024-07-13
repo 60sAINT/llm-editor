@@ -17,7 +17,7 @@ import { TranslationButton } from "./TranslationButton";
 import { PolishButton } from "./PolishButton";
 import { RevisionButton } from "./RevisionButton";
 import { SummaryButton } from "./SummaryButton";
-import ContinueFrame from "./ContinueFrame";
+import DisplayFrame from "./DisplayFrame";
 
 export const CustomFormattingToolbar: FunctionComponent<
   FormattingToolbarProps
@@ -67,7 +67,7 @@ export const CustomFormattingToolbar: FunctionComponent<
         {<RevisionButton key={"textRevisionButton"} />}
         {<SummaryButton key={"textSummaryButton"} />}
       </FormattingToolbar>
-      <ContinueFrame />
+      <DisplayFrame />
     </div>
   );
 };

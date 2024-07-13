@@ -11,7 +11,10 @@ const TopBar = () => {
     <div className="w-full flex items-center justify-between bg-white p-4 shadow-md border-b border-gray-300 h-14">
       <div className="flex items-center space-x-4">
         <ExitButton />
-        <TopBarTitle />
+        <div className="flex items-center justify-center flex-grow space-x-4">
+          <TopBarTitle />
+          <Status />
+        </div>
       </div>
       <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
         <ActionButton label="开始" />
@@ -19,7 +22,6 @@ const TopBar = () => {
         <ActionButton label="审阅" />
       </div>
       <div className="flex items-center space-x-4">
-        <Status />
         <LoginButton />
         <DropdownMenu />
       </div>

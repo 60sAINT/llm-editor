@@ -19,11 +19,18 @@ export const ContinuationButton = () => {
   const handleTextContinuation = async (): Promise<void> => {
     dispatch({ type: "SWITCH_VISIBILITY", payload: DisplayStyle.BLOCK });
     const selection = state.editor?.getSelectedText();
-    if (selection) {
+    if (selection && !state.syncLock) {
+      dispatch({ type: "LOCK" });
       const selectedText = selection.toString();
-      if (selectedText !== state.selection) {
-        dispatch({ type: "RESET_ALL_TEXT" });
-        dispatch({ type: "REPLACE_SELECTION", payload: selectedText });
+      if (
+        selectedText === state.continueSelection &&
+        state.continueText.length !== 0
+      ) {
+        dispatch({ type: "FRAME_TEXT", payload: state.continueText });
+      } else {
+        dispatch({ type: "RESET_FRAME_TEXT" });
+        dispatch({ type: "RESET_CONTINUE_TEXT" });
+        dispatch({ type: "REPLACE_CONTINUE_SELECTION", payload: selectedText });
         const response = await textContinue(selectedText);
         const reader = response!
           .pipeThrough(new TextDecoderStream())
@@ -33,9 +40,11 @@ export const ContinuationButton = () => {
           if (done) {
             break;
           }
+          dispatch({ type: "FRAME_TEXT", payload: value });
           dispatch({ type: "CONTINUE_TEXT", payload: value });
         }
       }
+      dispatch({ type: "UNLOCK" });
     }
   };
 

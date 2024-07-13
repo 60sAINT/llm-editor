@@ -13,8 +13,7 @@ const TopBarTitle = () => {
       placeholder="无标题"
       value={title}
       onChange={handleChange}
-      className="text-l font-bold outline-none flex-grow"
-      style={{ minWidth: "50px", maxWidth: "500px", width: "auto" }}
+      className="text-l max-w-lg w-auto outline-none hover:underline decoration-2 underline-offset-2"
     />
   );
 };
