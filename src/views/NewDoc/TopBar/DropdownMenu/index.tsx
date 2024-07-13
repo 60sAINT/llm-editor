@@ -46,7 +46,7 @@ const DropdownMenu = () => {
     // TODO: 图标样式还需要调整
     <>
       <Dropdown
-        className="text-gray-600 hover:bg-neutral-200 !w-14 rounded-sm"
+        className="text-gray-600 hover:bg-neutral-200 !w-14 rounded-sm text-center"
         menu={{ items }}
         placement="bottom"
         trigger={["click"]}
