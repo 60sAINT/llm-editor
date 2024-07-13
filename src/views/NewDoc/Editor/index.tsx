@@ -8,7 +8,7 @@ import {
 import "@blocknote/mantine/style.css";
 import { BlockNoteView } from "@blocknote/mantine";
 
-import { CustomSideMenu } from "./CustomSideMenu/CustomSideMenu";
+import { CustomSideMenu } from "./CustomSideMenu";
 import { CustomFormattingToolbar } from "./CustomFormattingToolBar";
 import { useDispatch } from "../utils/provider";
 import { DisplayStyle } from "../utils/context";
