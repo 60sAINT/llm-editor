@@ -1,0 +1,53 @@
+.card-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-right: 16px;
+}
+
+.card {
+  width: 0;
+  height: 0;
+  opacity: 0;
+  background-color: #fff;
+  margin: 0 0 16px;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  animation: cardAnimation 0.5s ease-in-out forwards;
+}
+
+@keyframes cardAnimation {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  100% {
+    width: 100%;
+    height: 105px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-0 {
+  animation-delay: 0.1s;
+}
+
+.card-1 {
+  animation-delay: 0.2s;
+}
+
+.card-2 {
+  animation-delay: 0.3s;
+}
+
+.card-3 {
+  animation-delay: 0.4s;
+}
+
+.card-4 {
+  animation-delay: 0.5s;
+}
