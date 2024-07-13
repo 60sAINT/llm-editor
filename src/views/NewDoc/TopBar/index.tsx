@@ -5,8 +5,9 @@ import Status from "./Status";
 import ActionButton from "./ActionButton";
 import DropdownMenu from "./DropdownMenu";
 import "./index.css";
-import { UpOutlined, UserOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Col, Row } from "antd";
+import { Start } from "./Start";
 
 interface TopBarProps {
   getShowCards: (showCards: boolean) => void;
@@ -22,11 +23,6 @@ const TopBar: React.FC<TopBarProps> = ({
   const handleStartClick = () => {
     setAnimateReverse(false);
     setAnimate(true);
-  };
-  // 再次点击“开始”后，即折叠开始
-  const handleFold = () => {
-    setAnimate(false);
-    setAnimateReverse(true);
   };
 
   // 点击“效率”后，把最新的是否展示Cards传给父组件NewDoc
@@ -65,7 +61,13 @@ const TopBar: React.FC<TopBarProps> = ({
           </div>
         </Col>
       </Row>
-      <div
+      <Start
+        setAnimate={setAnimate}
+        setAnimateReverse={setAnimateReverse}
+        animateReverse={animateReverse}
+        animate={animate}
+      />
+      {/* <div
         className={`shadow-md border-b border-gray-300 h-9 w-full ${
           animateReverse ? "animateReverse" : ""
         }  ${animate ? "animate" : "hidden"}`}
@@ -74,7 +76,7 @@ const TopBar: React.FC<TopBarProps> = ({
           className="float-right inline-block leading-8 !font-black text-base mr-5"
           onClick={handleFold}
         />
-      </div>
+      </div> */}
     </div>
   );
 };
