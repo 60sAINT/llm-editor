@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Modal from "./Modal";
 import { dropdownMenuApi } from "../../api/DropdownMenu";
 import { useDocState } from "../../utils/docProvider";
+import { Modal, Select } from "antd";
 
 const DownloadButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -9,6 +9,9 @@ const DownloadButton = () => {
 
   const handleClick = () => {
     setIsModalOpen(true);
+  };
+  const handleSelectChange = (value: string) => {
+    console.log(`selected ${value}`);
   };
 
   const handleConfirm = async (template: string) => {
@@ -32,16 +35,33 @@ const DownloadButton = () => {
   return (
     <>
       <div
-        className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+        className="block h-8 leading-8 !text-dropdown-text text-sm"
         onClick={handleClick}
       >
         下载文档
       </div>
       <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onConfirm={handleConfirm}
-      />
+        title="选择模板"
+        open={isModalOpen}
+        onOk={() => handleConfirm}
+        onCancel={() => setIsModalOpen(false)}
+      >
+        <Select
+          className="w-full my-2"
+          defaultValue="电子科技大学研究生学位论文撰写规范"
+          onChange={handleSelectChange}
+          options={[
+            {
+              value: "电子科技大学研究生学位论文撰写规范",
+              label: "电子科技大学研究生学位论文撰写规范",
+            },
+            {
+              value: "电子科技大学研究生学位论文撰写规范2",
+              label: "电子科技大学研究生学位论文撰写规范2",
+            },
+          ]}
+        />
+      </Modal>
     </>
   );
 };

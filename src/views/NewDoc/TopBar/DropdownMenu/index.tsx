@@ -1,41 +1,57 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import PaperlessButton from "./PaperlessButton";
 import HistoryButton from "./HistoryButton";
 import ShareButton from "./ShareButton";
 import DownloadButton from "./DownloadButton";
 import DeleteButton from "./DeleteButton";
+import { Dropdown, MenuProps } from "antd";
+import {
+  DeleteOutlined,
+  DownloadOutlined,
+  FileOutlined,
+  HistoryOutlined,
+  ShareAltOutlined,
+} from "@ant-design/icons";
 
 const DropdownMenu = () => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const closeTimeoutRef = useRef<number | null>(null);
-
-  const handleButtonClick = () => {
-    if (dropdownOpen) {
-      setDropdownOpen(false);
-    } else {
-      setDropdownOpen(true);
-    }
-    if (closeTimeoutRef.current) {
-      clearTimeout(closeTimeoutRef.current);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    closeTimeoutRef.current = window.setTimeout(() => {
-      setDropdownOpen(false);
-    }, 300); // 延迟关闭时间
-  };
-
-  const handleMouseEnter = () => {
-    if (closeTimeoutRef.current) {
-      clearTimeout(closeTimeoutRef.current);
-    }
-  };
+  const items: MenuProps["items"] = [
+    {
+      key: "paperless",
+      icon: <FileOutlined className="text-dropdown-text !text-sm" />,
+      label: <PaperlessButton />,
+    },
+    {
+      key: "history",
+      icon: <HistoryOutlined className="text-dropdown-text !text-sm" />,
+      label: <HistoryButton />,
+    },
+    {
+      key: "share",
+      icon: <ShareAltOutlined className="text-dropdown-text !text-sm" />,
+      label: <ShareButton />,
+    },
+    {
+      key: "download",
+      icon: <DownloadOutlined className="text-dropdown-text !text-sm" />,
+      label: <DownloadButton />,
+    },
+    {
+      key: "delete",
+      icon: <DeleteOutlined className="text-dropdown-text !text-sm" />,
+      label: <DeleteButton />,
+    },
+  ];
 
   return (
     // TODO: 图标样式还需要调整
-    <div className="relative">
-      <button className="text-gray-600" onClick={handleButtonClick}>
+    <>
+      <Dropdown
+        className="text-gray-600 hover:bg-neutral-200 !w-14 rounded-sm"
+        menu={{ items }}
+        placement="bottom"
+        trigger={["click"]}
+        // onClick={handleButtonClick}
+      >
         <svg
           className="w-6 h-6"
           fill="currentColor"
@@ -48,21 +64,8 @@ const DropdownMenu = () => {
             clipRule="evenodd"
           ></path>
         </svg>
-      </button>
-      {dropdownOpen && (
-        <div
-          className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg z-10"
-          onMouseLeave={handleMouseLeave}
-          onMouseEnter={handleMouseEnter}
-        >
-          <PaperlessButton />
-          <HistoryButton />
-          <ShareButton />
-          <DownloadButton />
-          <DeleteButton />
-        </div>
-      )}
-    </div>
+      </Dropdown>
+    </>
   );
 };
 

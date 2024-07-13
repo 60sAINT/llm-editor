@@ -15,6 +15,7 @@ import {
 import {
   Avatar,
   Button,
+  ConfigProvider,
   Divider,
   Dropdown,
   Layout,
@@ -34,13 +35,13 @@ const Home: React.FC = () => {
           onClick={() => window.open("/newDoc", "_blank")}
         >
           <div className="mb-4">
-            <FileTextTwoTone className="text-3xl" twoToneColor="#d1d5db" />
+            <FileTextTwoTone className="text-3xl" twoToneColor="#ddc5c9" />
           </div>
           <span>新建文档</span>
         </div>
         <div className="text-center hover:bg-gray-100 py-2.5">
           <div className="mb-4">
-            <RobotFilled className="text-3xl text-blue-200" />
+            <RobotFilled className="text-3xl text-[#f1d1d5]" />
           </div>
           <span>AI写作</span>
         </div>
@@ -49,7 +50,7 @@ const Home: React.FC = () => {
       <div className="grid grid-cols-2 gap-4 mt-2">
         <div className="text-center hover:bg-gray-100 py-2.5">
           <div className="mb-4">
-            <FolderAddTwoTone className="text-3xl" twoToneColor="#bfdbfe" />
+            <FolderAddTwoTone className="text-3xl" twoToneColor="#f5bdc5" />
           </div>
           <span>新建文件夹</span>
         </div>
@@ -99,46 +100,66 @@ const Home: React.FC = () => {
   ];
 
   return (
-    <Layout>
-      <Header className="h-14 bg-white pr-10 border-b border-gray-200">
-        <div className="h-full leading-[56px] float-left text-blue-500 text-2xl font-semibold tracking-wide">
-          XXX 编辑器
-        </div>
-        <div className="float-right leading-[56px]">
-          <Avatar icon={<UserOutlined />} size="small" />
-        </div>
-      </Header>
-      <Layout className="bg-white">
-        <Sider width={200} className="mx-4 my-6 !bg-white">
-          <Dropdown trigger={["click"]} dropdownRender={() => dropdownContent}>
-            <Button
-              onClick={(e) => e.preventDefault()}
-              type="primary"
-              className="w-full border-none h-9 text-sm rounded-sm font-bold bg-primary text-white tracking-tighter"
+    <ConfigProvider
+      theme={{
+        components: {
+          Menu: {
+            itemSelectedBg: "#fbf2f3",
+            itemActiveBg: "#fbf2f3",
+            itemSelectedColor: "#d67b88",
+          },
+          Button: {
+            colorPrimary: "#d67b88",
+            colorPrimaryHover: "#dc8f9a",
+            colorPrimaryActive: "#e65c70",
+          },
+        },
+      }}
+    >
+      <Layout>
+        <Header className="h-14 bg-white pr-10 border-b border-gray-200">
+          <div className="h-full leading-[56px] float-left text-primary text-2xl font-bold tracking-wide">
+            XXX Editor
+          </div>
+          <div className="float-right leading-[56px]">
+            <Avatar icon={<UserOutlined />} size="small" />
+          </div>
+        </Header>
+        <Layout className="bg-white">
+          <Sider width={200} className="mx-4 my-6 !bg-white">
+            <Dropdown
+              trigger={["click"]}
+              dropdownRender={() => dropdownContent}
             >
-              创建
-            </Button>
-          </Dropdown>
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={["1"]}
-            defaultOpenKeys={["sub1"]}
-            style={{ height: "100%", borderRight: 0 }}
-            className="mt-6"
-            items={menuItems}
-          />
-        </Sider>
-        <Content
-          style={{
-            padding: 24,
-            margin: 0,
-            minHeight: 280,
-          }}
-        >
-          <Main />
-        </Content>
+              <Button
+                onClick={(e) => e.preventDefault()}
+                type="primary"
+                className="w-full border-none h-9 text-sm rounded-sm font-bold bg-primary text-white tracking-tighter"
+              >
+                创建
+              </Button>
+            </Dropdown>
+            <Menu
+              mode="inline"
+              defaultSelectedKeys={["1"]}
+              defaultOpenKeys={["sub1"]}
+              style={{ height: "100%", borderRight: 0 }}
+              className="mt-6"
+              items={menuItems}
+            />
+          </Sider>
+          <Content
+            style={{
+              padding: 24,
+              margin: 0,
+              minHeight: 280,
+            }}
+          >
+            <Main />
+          </Content>
+        </Layout>
       </Layout>
-    </Layout>
+    </ConfigProvider>
   );
 };
 
