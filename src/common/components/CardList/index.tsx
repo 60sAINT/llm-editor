@@ -6,7 +6,7 @@ const CardList: React.FC = () => {
 
   return (
     <div className="card-list">
-      {cards.map((card, index) => (
+      {cards.map((_, index) => (
         <Card key={index} index={index} />
       ))}
     </div>
