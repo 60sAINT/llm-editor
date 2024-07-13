@@ -15,7 +15,7 @@ const TopBarTitle = () => {
         placeholder="无标题"
         value={title}
         onChange={handleChange}
-        className="text-sm outline-none flex-grow ml-4 text-[#1f1f1f] leading-7"
+        className="text-sm outline-none ml-4 text-[#1f1f1f] leading-7"
         style={{
           minWidth: "50px",
           maxWidth: "500px",

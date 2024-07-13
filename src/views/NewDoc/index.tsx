@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 import Editor from "./Editor";
 import { DispatchContext, StateContext, initialState } from "./utils/context";
 import { reducer } from "./utils/reducer";
@@ -10,10 +10,16 @@ import {
   initialDocState,
 } from "./utils/docContext";
 import { docReducer } from "./utils/docReducer";
+import CardList from "@/common/components/CardList";
+import { Col, Row } from "antd";
 
 const NewDoc = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [docState, docDispatch] = useReducer(docReducer, initialDocState);
+  const [showCards, setShowCards] = useState<boolean>(false);
+  const getShowCards = (showCards: boolean) => {
+    setShowCards(showCards);
+  };
 
   return (
     <DocStateContext.Provider value={docState}>
@@ -21,21 +27,25 @@ const NewDoc = () => {
         <StateContext.Provider value={state}>
           <DispatchContext.Provider value={dispatch}>
             <div className="h-screen flex flex-col bg-gray-200">
-              <TopBar />
-              <div className="flex-grow flex justify-center items-start p-4 overflow-auto">
-                <div
-                  className="w-full max-w-2xl bg-white shadow-md"
-                  style={{
-                    borderRadius: "0",
-                    padding: "20px 20px 20px 20px",
-                    boxSizing: "border-box",
-                    minHeight: "1123px",
-                  }}
-                >
-                  <DocTitle />
-                  <Editor />
-                </div>
-              </div>
+              <TopBar getShowCards={getShowCards} />
+              <Row className="flex-grow justify-center items-start p-4 overflow-auto">
+                <Col span={4}>{showCards && <CardList />}</Col>
+                <Col span={16}>
+                  <div
+                    className="w-full bg-white shadow-md"
+                    style={{
+                      borderRadius: "0",
+                      padding: "20px 20px 20px 20px",
+                      boxSizing: "border-box",
+                      minHeight: "1123px",
+                    }}
+                  >
+                    <DocTitle />
+                    <Editor />
+                  </div>
+                </Col>
+                <Col span={4} />
+              </Row>
             </div>
           </DispatchContext.Provider>
         </StateContext.Provider>
