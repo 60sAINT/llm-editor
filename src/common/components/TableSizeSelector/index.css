@@ -1,0 +1,25 @@
+.table-selector {
+  display: inline-block;
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #ccc;
+  margin: 1px;
+  cursor: pointer;
+}
+
+.cell.selected {
+  background-color: #f0f0f0;
+}
+
+.cell.locked {
+  background-color: orange;
+}

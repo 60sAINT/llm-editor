@@ -4,19 +4,22 @@ import {
   AlignLeftOutlined,
   AlignRightOutlined,
   CaretDownOutlined,
-  FileImageOutlined,
+  CaretRightOutlined,
   MenuFoldOutlined,
   MenuOutlined,
   MenuUnfoldOutlined,
   OrderedListOutlined,
+  PictureOutlined,
+  TableOutlined,
   UnorderedListOutlined,
   UpOutlined,
 } from "@ant-design/icons";
-import { Divider, Dropdown, MenuProps, Space, Tooltip } from "antd";
+import { Divider, Dropdown, MenuProps, Popover, Space, Tooltip } from "antd";
 import "./index.css";
 import { useNewDocState } from "../../utils/provider";
 import { Block } from "@blocknote/core";
 import { showError } from "@/common/utils/message";
+import { TableSizeSelector } from "@/common/components/TableSizeSelector";
 
 interface StartProps {
   animateReverse: boolean;
@@ -43,7 +46,6 @@ export const Start: React.FC<StartProps> = ({
   const [newParaBlocks, setNewParaBlocks] = useState<Block[]>([]);
   const [level, setLevel] = useState<2 | 1 | 3 | undefined>(1);
   useEffect(() => {
-    console.log(newParaBlocks);
     newParaBlocks.forEach((newParaBlock) => {
       state.editor?.updateBlock(newParaBlock, {
         type: "heading",
@@ -129,7 +131,6 @@ export const Start: React.FC<StartProps> = ({
       if (state.editor?.getSelection()) {
         const blocks = state.editor?.getSelection()?.blocks;
         const updatedBlocks = blocks!.map((block: Block) => {
-          console.log(block);
           return block;
         });
         setNewParaBlocks(updatedBlocks);
@@ -148,7 +149,6 @@ export const Start: React.FC<StartProps> = ({
         state.editor?.getSelection() ||
         state.editor?.getTextCursorPosition().block
       ) {
-        console.log(state.editor?.getTextCursorPosition().block);
         showError("selected block(s) can't be nested");
       }
     }
@@ -163,7 +163,6 @@ export const Start: React.FC<StartProps> = ({
         state.editor?.getSelection() ||
         state.editor?.getTextCursorPosition().block
       ) {
-        console.log(state.editor?.getTextCursorPosition().block);
         showError("selected block(s) can't be un-nested");
       }
     }
@@ -176,7 +175,6 @@ export const Start: React.FC<StartProps> = ({
       const blocks = state.editor?.getSelection()?.blocks;
       blocks!.map((block: Block) => {
         const newProps = { ...block.props, textAlignment };
-        console.log(block);
         state.editor?.updateBlock(block, {
           props: newProps,
         });
@@ -284,16 +282,62 @@ export const Start: React.FC<StartProps> = ({
       reader.readAsDataURL(file);
     }
   };
+  // 插入表格
+  const handleTableClick = (rows: number, cols: number) => {
+    const tableContent = generateTableData(rows, cols);
+    // 光标选择了文本
+    if (state.editor?.getSelection()) {
+      const blocks = state.editor?.getSelection()?.blocks;
+      const lastBlock = blocks[blocks.length - 1];
+      state.editor?.insertBlocks(
+        [
+          {
+            type: "table",
+            content: tableContent,
+          },
+        ],
+        lastBlock!,
+        "after"
+      );
+    }
+    // 光标未选择文本，但放在某处
+    else {
+      state.editor?.insertBlocks(
+        [
+          {
+            type: "table",
+            content: tableContent,
+          },
+        ],
+        state.editor?.getTextCursorPosition().block,
+        "after"
+      );
+    }
+  };
+  const generateTableData = (rows: number, cols: number) => {
+    const cellTemplate = {
+      type: "text",
+      text: "",
+      styles: {},
+    };
+    const tableData = {
+      type: "tableContent",
+      rows: Array.from({ length: rows }, () => ({
+        cells: Array.from({ length: cols }, () => [{ ...cellTemplate }]),
+      })),
+    };
+    return tableData;
+  };
   // ”插入“的dropdown列表
   const insertItems: MenuProps["items"] = [
     {
       label: (
         <>
           <div
-            className="text-xs w-28 h-5 leading-5"
+            className="text-xs w-28 h-5 leading-5 text-topbar-insert-dropdown-text"
             onClick={handleImageClick}
           >
-            <FileImageOutlined className="mr-2.5" />
+            <PictureOutlined className="mr-2.5" />
             图片
           </div>
           <input
@@ -305,19 +349,22 @@ export const Start: React.FC<StartProps> = ({
           />
         </>
       ),
-      key: "paragraph",
+      key: "image",
     },
     {
-      label: <div>标题1</div>,
-      key: "heading1",
-    },
-    {
-      label: <div>标题2</div>,
-      key: "heading2",
-    },
-    {
-      label: <div>标题3</div>,
-      key: "heading3",
+      label: (
+        <Popover
+          placement="leftTop"
+          content={<TableSizeSelector onSelect={handleTableClick} />}
+        >
+          <div className="group text-xs w-28 h-5 leading-5 text-topbar-insert-dropdown-text">
+            <TableOutlined className="mr-2.5" />
+            表格
+            <CaretRightOutlined className="float-right h-5 group-hover:text-gray-400" />
+          </div>
+        </Popover>
+      ),
+      key: "table",
     },
   ];
 
@@ -343,9 +390,9 @@ export const Start: React.FC<StartProps> = ({
             className="px-2 py-1 [&>.ant-space-item]:flex [&>.ant-space-item]:items-center"
           >
             <Space>
-              <div className="text-tobar-text text-xs">{title}</div>
+              <div className="text-topbar-text text-xs">{title}</div>
               <CaretDownOutlined
-                className={`h-full text-tobar-text text-xs dropdown-icon ${
+                className={`h-full text-topbar-text text-xs dropdown-icon ${
                   isTitleOpen ? "open" : ""
                 }`}
               />
@@ -462,8 +509,8 @@ export const Start: React.FC<StartProps> = ({
           className="px-2 my-1 [&>.ant-space-item]:flex [&>.ant-space-item]:items-center"
         >
           <Space className="border border-transparent hover:border hover:border-neutral-300">
-            <div className="text-tobar-text text-xs">插入</div>
-            <CaretDownOutlined className="h-full text-tobar-text text-xs dropdown-icon" />
+            <div className="text-topbar-text text-xs">插入</div>
+            <CaretDownOutlined className="h-full text-topbar-text text-xs dropdown-icon" />
           </Space>
         </Dropdown>
       </div>
