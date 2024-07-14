@@ -8,7 +8,7 @@ import {
 } from "@blocknote/react";
 import "@blocknote/mantine/style.css";
 import { BlockNoteView } from "@blocknote/mantine";
-import { BlockNoteSchema, defaultStyleSpecs } from "@blocknote/core";
+import { Block, BlockNoteSchema, defaultStyleSpecs } from "@blocknote/core";
 
 import { CustomSideMenu } from "./CustomSideMenu";
 import { CustomFormattingToolbar } from "./CustomFormattingToolBar";
@@ -68,11 +68,10 @@ const Editor = () => {
   });
   const dispatch = useDispatch();
 
-  const handleMouseUp = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.stopPropagation(); // 阻止冒泡
+  const handleMouseUp = () => {
     const { startOffset, endOffset } = useRange();
     dispatch({ type: "SET_RANGE", payload: { startOffset, endOffset } });
-    const blockToUpdate = editor.getTextCursorPosition().block;
+    const blockToUpdate = editor.getTextCursorPosition().block as Block;
     dispatch({ type: "SET_BLOCK_TO_UPDATE", payload: blockToUpdate });
   };
 
@@ -89,7 +88,7 @@ const Editor = () => {
       onSelectionChange={() => {
         dispatch({ type: "SWITCH_VISIBILITY", payload: DisplayStyle.HIDDEN });
       }}
-      onMouseUp={(e) => handleMouseUp(e)}
+      onMouseUp={handleMouseUp}
       onKeyDownCapture={(e) => {
         if (e.ctrlKey && e.key === "s") {
           e.preventDefault();

@@ -1,4 +1,4 @@
-import { Block, BlockIdentifier, BlockNoteEditor } from "@blocknote/core";
+import { Block } from "@blocknote/core";
 import { createContext } from "react";
 
 export interface State {
@@ -18,8 +18,8 @@ export interface State {
   polishSelection: string; // 润色所选文本
   reviseSelection: string; // 修订所选文本
   summarySelection: string; // 总结所选文本
-  editor?: BlockNoteEditor; // 编辑器对象
-  blockToUpdate?: BlockIdentifier; // 要替换的文本所在的块的标识符
+  editor?: any; // 编辑器对象
+  blockToUpdate?: Block; // 要替换的文本所在的块的标识符
   range: RangeType; // 选中的文本的startIndex和endIndex
 }
 
@@ -59,7 +59,7 @@ export type Action =
   | { type: "REPLACE_POLISH_SELECTION"; payload: string }
   | { type: "REPLACE_REVISE_SELECTION"; payload: string }
   | { type: "REPLACE_SUMMARY_SELECTION"; payload: string }
-  | { type: "SET_EDITOR"; payload: BlockNoteEditor }
+  | { type: "SET_EDITOR"; payload: any }
   | { type: "SET_BLOCK_TO_UPDATE"; payload: Block }
   | { type: "SET_RANGE"; payload: RangeType };
 

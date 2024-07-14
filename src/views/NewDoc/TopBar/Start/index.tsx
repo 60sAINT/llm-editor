@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   AlignCenterOutlined,
   AlignLeftOutlined,
@@ -109,7 +109,7 @@ export const Start: React.FC<StartProps> = ({
       // 根据光标选择了文本
       if (state.editor?.getSelection()) {
         const blocks = state.editor?.getSelection()?.blocks;
-        blocks!.map((block) => {
+        blocks!.map((block: Block) => {
           state.editor?.updateBlock(block, {
             type: "paragraph",
           });
@@ -128,7 +128,7 @@ export const Start: React.FC<StartProps> = ({
       setLevel(parseInt(key.substring(7)) as 2 | 1 | 3 | undefined);
       if (state.editor?.getSelection()) {
         const blocks = state.editor?.getSelection()?.blocks;
-        const updatedBlocks = blocks!.map((block) => {
+        const updatedBlocks = blocks!.map((block: Block) => {
           console.log(block);
           return block;
         });
@@ -174,7 +174,7 @@ export const Start: React.FC<StartProps> = ({
     // 光标选择了文本
     if (state.editor?.getSelection()) {
       const blocks = state.editor?.getSelection()?.blocks;
-      blocks!.map((block) => {
+      blocks!.map((block: Block) => {
         const newProps = { ...block.props, textAlignment };
         console.log(block);
         state.editor?.updateBlock(block, {
@@ -213,7 +213,7 @@ export const Start: React.FC<StartProps> = ({
     // 光标选择了文本
     if (state.editor?.getSelection()) {
       const blocks = state.editor?.getSelection()?.blocks;
-      blocks!.map((block) => {
+      blocks!.map((block: Block) => {
         state.editor?.updateBlock(block, {
           type,
         });
@@ -227,14 +227,83 @@ export const Start: React.FC<StartProps> = ({
     }
   };
 
-  // 插入
+  // 插入图片
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
+  const handleImageClick = () => {
+    const selection = state.editor?.getSelection();
+    const lastBlock = selection?.blocks[selection?.blocks.length - 1];
+    if (!lastBlock && !state.editor?.getTextCursorPosition().block) {
+      showError("请选择图片插入位置");
+      return;
+    }
+    fileInputRef.current?.click();
+  };
+  useEffect(() => {
+    const selection = state.editor?.getSelection();
+    const lastBlock = selection?.blocks[selection?.blocks.length - 1];
+    if (lastBlock) {
+      state.editor?.insertBlocks(
+        [
+          {
+            type: "image",
+            props: {
+              textAlignment: "center",
+              url: imageSrc,
+            },
+          },
+        ],
+        lastBlock!,
+        "after"
+      );
+    } else if (state.editor?.getTextCursorPosition().block) {
+      state.editor?.insertBlocks(
+        [
+          {
+            type: "image",
+            props: {
+              textAlignment: "center",
+              url: imageSrc,
+            },
+          },
+        ],
+        state.editor?.getTextCursorPosition().block,
+        "after"
+      );
+    } else {
+      return;
+    }
+  }, [imageSrc]);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImageSrc(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  // ”插入“的dropdown列表
   const insertItems: MenuProps["items"] = [
     {
       label: (
-        <div className="text-xs w-28 h-5 leading-5">
-          <FileImageOutlined className="mr-2.5" onClick={() => {}} />
-          图片
-        </div>
+        <>
+          <div
+            className="text-xs w-28 h-5 leading-5"
+            onClick={handleImageClick}
+          >
+            <FileImageOutlined className="mr-2.5" />
+            图片
+          </div>
+          <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            accept="image/*"
+            onChange={handleFileChange}
+          />
+        </>
       ),
       key: "paragraph",
     },
