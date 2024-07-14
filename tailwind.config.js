@@ -6,7 +6,8 @@ module.exports = {
       colors: {
         'primary': "#d67b88",
         'description': "#8e8e8e",
-        'dropdown-text': "#606266"
+        'dropdown-text': "#606266",
+        'tobar-text': "#4b4b4b",
       },
     },
   },

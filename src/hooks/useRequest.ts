@@ -1,4 +1,4 @@
-import { showError } from "@/views/Login/utils/message";
+import { showError } from "@/common/utils/message";
 import { useRequest as useCustomRequest } from "ahooks";
 import { Service, Options } from "ahooks/lib/useRequest/src/types";
 

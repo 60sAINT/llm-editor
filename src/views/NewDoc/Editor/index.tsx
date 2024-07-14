@@ -3,10 +3,12 @@ import "@blocknote/core/fonts/inter.css";
 import {
   FormattingToolbarController,
   SideMenuController,
+  createReactStyleSpec,
   useCreateBlockNote,
 } from "@blocknote/react";
 import "@blocknote/mantine/style.css";
 import { BlockNoteView } from "@blocknote/mantine";
+import { BlockNoteSchema, defaultStyleSpecs } from "@blocknote/core";
 
 import { CustomSideMenu } from "./CustomSideMenu";
 import { CustomFormattingToolbar } from "./CustomFormattingToolBar";
@@ -14,12 +16,43 @@ import { useDispatch } from "../utils/provider";
 import { DisplayStyle } from "../utils/context";
 import useRange from "../hooks/useRange";
 
+const customSchema = BlockNoteSchema.create({
+  styleSpecs: {
+    // Adds all default styles.
+    ...defaultStyleSpecs,
+    font: createReactStyleSpec(
+      {
+        type: "font",
+        propSchema: "string",
+      },
+      {
+        render: (props) => (
+          <span style={{ fontFamily: props.value }} ref={props.contentRef} />
+        ),
+      }
+    ),
+  },
+});
+
 const Editor = () => {
   const editor = useCreateBlockNote({
+    schema: customSchema,
     initialContent: [
       {
         type: "paragraph",
         content: "Welcome to llm-editor!",
+      },
+      {
+        type: "paragraph",
+        content: [
+          {
+            type: "text",
+            text: "Comic Sans MS",
+            styles: {
+              font: "Comic Sans MS",
+            },
+          },
+        ],
       },
     ],
     uploadFile: async (file: File) => {

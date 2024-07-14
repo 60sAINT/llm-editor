@@ -8,7 +8,7 @@ import {
 } from "../utils";
 import { useRequest } from "@/hooks/useRequest";
 import { loginApi } from "../api";
-import { showMessage } from "../utils/message";
+import { showMessage } from "../../../common/utils/message";
 
 const { Option } = Select;
 

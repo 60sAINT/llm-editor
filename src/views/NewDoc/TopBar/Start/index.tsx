@@ -1,9 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { CaretDownOutlined, UpOutlined } from "@ant-design/icons";
-import { Dropdown, MenuProps, Space, Tooltip } from "antd";
+import {
+  AlignCenterOutlined,
+  AlignLeftOutlined,
+  AlignRightOutlined,
+  CaretDownOutlined,
+  FileImageOutlined,
+  MenuFoldOutlined,
+  MenuOutlined,
+  MenuUnfoldOutlined,
+  OrderedListOutlined,
+  UnorderedListOutlined,
+  UpOutlined,
+} from "@ant-design/icons";
+import { Divider, Dropdown, MenuProps, Space, Tooltip } from "antd";
 import "./index.css";
 import { useNewDocState } from "../../utils/provider";
 import { Block } from "@blocknote/core";
+import { showError } from "@/common/utils/message";
 
 interface StartProps {
   animateReverse: boolean;
@@ -26,6 +39,7 @@ export const Start: React.FC<StartProps> = ({
     setAnimateReverse(true);
   };
 
+  // "标题"dropdown配置
   const [newParaBlocks, setNewParaBlocks] = useState<Block[]>([]);
   const [level, setLevel] = useState<2 | 1 | 3 | undefined>(1);
   useEffect(() => {
@@ -38,27 +52,57 @@ export const Start: React.FC<StartProps> = ({
     });
   }, [newParaBlocks, level]);
   const [title, setTitle] = useState<string>("正文");
-  const [isOpen, setIsOpen] = useState(false);
-  const items: MenuProps["items"] = [
+  const [isTitleOpen, setIsTitleOpen] = useState(false);
+  const titleItems: MenuProps["items"] = [
     {
-      label: <div>正文</div>,
+      label: (
+        <div
+          className={`font-bold w-36 ${title == "正文" ? "text-primary" : ""}`}
+        >
+          正文
+        </div>
+      ),
       key: "paragraph",
     },
     {
-      label: <div>标题1</div>,
+      label: (
+        <div
+          className={`text-[26px] font-bold ${
+            title == "标题1" ? "text-primary" : ""
+          }`}
+        >
+          标题1
+        </div>
+      ),
       key: "heading1",
     },
     {
-      label: <div>标题2</div>,
+      label: (
+        <div
+          className={`text-[22px] font-bold ${
+            title == "标题2" ? "text-primary" : ""
+          }`}
+        >
+          标题2
+        </div>
+      ),
       key: "heading2",
     },
     {
-      label: <div>标题3</div>,
+      label: (
+        <div
+          className={`text-xl font-bold ${
+            title == "标题3" ? "text-primary" : ""
+          }`}
+        >
+          标题3
+        </div>
+      ),
       key: "heading3",
     },
   ];
   const handleTitleClick: MenuProps["onClick"] = ({ key }) => {
-    setIsOpen(!isOpen);
+    setIsTitleOpen(!isTitleOpen);
     // 如果想转成paragraph
     if (key == "paragraph") {
       setTitle("正文");
@@ -95,35 +139,267 @@ export const Start: React.FC<StartProps> = ({
     }
   };
 
+  // “增加缩进”配置
+  const handleNestClick = () => {
+    if (state.editor?.canNestBlock()) {
+      state.editor.nestBlock();
+    } else {
+      if (
+        state.editor?.getSelection() ||
+        state.editor?.getTextCursorPosition().block
+      ) {
+        console.log(state.editor?.getTextCursorPosition().block);
+        showError("selected block(s) can't be nested");
+      }
+    }
+  };
+
+  // “减少缩进”配置
+  const handleUnnestClick = () => {
+    if (state.editor?.canUnnestBlock()) {
+      state.editor.unnestBlock();
+    } else {
+      if (
+        state.editor?.getSelection() ||
+        state.editor?.getTextCursorPosition().block
+      ) {
+        console.log(state.editor?.getTextCursorPosition().block);
+        showError("selected block(s) can't be un-nested");
+      }
+    }
+  };
+
+  // “左对齐” "居中对齐" “右对齐” “两端对齐”配置
+  const handleAlignClick = (textAlignment: string) => {
+    // 光标选择了文本
+    if (state.editor?.getSelection()) {
+      const blocks = state.editor?.getSelection()?.blocks;
+      blocks!.map((block) => {
+        const newProps = { ...block.props, textAlignment };
+        console.log(block);
+        state.editor?.updateBlock(block, {
+          props: newProps,
+        });
+      });
+    }
+    // 光标未选择文本，但放在某处
+    else {
+      const block = state.editor?.getTextCursorPosition().block!;
+      const newProps = {
+        ...block.props,
+        textAlignment,
+      };
+      state.editor?.updateBlock(block, {
+        props: newProps,
+      });
+    }
+  };
+
+  // 有序列表 or 无序列表
+  const handleChangeBlockTypeClick = (
+    type:
+      | "paragraph"
+      | "heading"
+      | "bulletListItem"
+      | "numberedListItem"
+      | "checkListItem"
+      | "table"
+      | "file"
+      | "image"
+      | "video"
+      | "audio"
+      | undefined
+  ) => {
+    // 光标选择了文本
+    if (state.editor?.getSelection()) {
+      const blocks = state.editor?.getSelection()?.blocks;
+      blocks!.map((block) => {
+        state.editor?.updateBlock(block, {
+          type,
+        });
+      });
+    }
+    // 光标未选择文本，但放在某处
+    else {
+      state.editor?.updateBlock(state.editor?.getTextCursorPosition().block, {
+        type: "numberedListItem",
+      });
+    }
+  };
+
+  // 插入
+  const insertItems: MenuProps["items"] = [
+    {
+      label: (
+        <div className="text-xs w-28 h-5 leading-5">
+          <FileImageOutlined className="mr-2.5" onClick={() => {}} />
+          图片
+        </div>
+      ),
+      key: "paragraph",
+    },
+    {
+      label: <div>标题1</div>,
+      key: "heading1",
+    },
+    {
+      label: <div>标题2</div>,
+      key: "heading2",
+    },
+    {
+      label: <div>标题3</div>,
+      key: "heading3",
+    },
+  ];
+
   return (
     <div
       className={`shadow-md border-b border-gray-300 h-9 w-full ${
         animateReverse ? "animateReverse" : ""
-      }  ${animate ? "animate" : "hidden"}`}
+      } ${animate ? "animate" : "hidden"} flex justify-center`}
     >
-      <Tooltip
-        title={<div className="text-black">标题</div>}
-        color="#fff"
-        autoAdjustOverflow={false}
-        placement="bottom"
-      >
-        <Dropdown
-          menu={{ items, onClick: handleTitleClick }}
-          trigger={["click"]}
-          onOpenChange={(open) => setIsOpen(open)}
+      <div className="flex pr-10 float-left justify-evenly w-11/12">
+        <Tooltip
+          title={<div className="text-neutral-500 text-xs">标题</div>}
+          color="#fff"
+          autoAdjustOverflow={false}
+          placement="bottom"
+          mouseEnterDelay={0.03}
+          mouseLeaveDelay={0.03}
         >
-          <a onClick={(e) => e.preventDefault()}>
+          <Dropdown
+            menu={{ items: titleItems, onClick: handleTitleClick }}
+            trigger={["click"]}
+            onOpenChange={(open) => setIsTitleOpen(open)}
+            className="px-2 py-1 [&>.ant-space-item]:flex [&>.ant-space-item]:items-center"
+          >
             <Space>
-              {title}
+              <div className="text-tobar-text text-xs">{title}</div>
               <CaretDownOutlined
-                className={`dropdown-icon ${isOpen ? "open" : ""}`}
+                className={`h-full text-tobar-text text-xs dropdown-icon ${
+                  isTitleOpen ? "open" : ""
+                }`}
               />
             </Space>
-          </a>
+          </Dropdown>
+        </Tooltip>
+        <Divider type="vertical" className="top-1.5 mx-1 h-6 border-zinc-200" />
+        <Tooltip
+          title={<div className="text-neutral-500">增加缩进</div>}
+          color="#fff"
+          autoAdjustOverflow={false}
+          placement="bottom"
+          mouseEnterDelay={0.03}
+          mouseLeaveDelay={0.03}
+        >
+          <div onClick={handleNestClick} className="py-1">
+            <MenuUnfoldOutlined className="px-3 py-1 text-neutral-500 text-sm" />
+          </div>
+        </Tooltip>
+        <Tooltip
+          title={<div className="text-neutral-500">减少缩进</div>}
+          color="#fff"
+          autoAdjustOverflow={false}
+          placement="bottom"
+          mouseEnterDelay={0.03}
+          mouseLeaveDelay={0.03}
+        >
+          <div onClick={handleUnnestClick} className="py-1">
+            <MenuFoldOutlined className="px-3 py-1 text-neutral-500 text-sm" />
+          </div>
+        </Tooltip>
+        <Tooltip
+          title={<div className="text-neutral-500">左对齐</div>}
+          color="#fff"
+          autoAdjustOverflow={false}
+          placement="bottom"
+          mouseEnterDelay={0.03}
+          mouseLeaveDelay={0.03}
+        >
+          <div onClick={() => handleAlignClick("left")} className="py-1">
+            <AlignLeftOutlined className="px-3 py-1 text-neutral-500 text-sm" />
+          </div>
+        </Tooltip>
+        <Tooltip
+          title={<div className="text-neutral-500">居中对齐</div>}
+          color="#fff"
+          autoAdjustOverflow={false}
+          placement="bottom"
+          mouseEnterDelay={0.03}
+          mouseLeaveDelay={0.03}
+        >
+          <div onClick={() => handleAlignClick("center")} className="py-1">
+            <AlignCenterOutlined className="px-3 py-1 text-neutral-500 text-sm" />
+          </div>
+        </Tooltip>
+        <Tooltip
+          title={<div className="text-neutral-500">右对齐</div>}
+          color="#fff"
+          autoAdjustOverflow={false}
+          placement="bottom"
+          mouseEnterDelay={0.03}
+          mouseLeaveDelay={0.03}
+        >
+          <div onClick={() => handleAlignClick("right")} className="py-1">
+            <AlignRightOutlined className="px-3 py-1 text-neutral-500 text-sm" />
+          </div>
+        </Tooltip>
+        <Tooltip
+          title={<div className="text-neutral-500">两端对齐</div>}
+          color="#fff"
+          autoAdjustOverflow={false}
+          placement="bottom"
+          mouseEnterDelay={0.03}
+          mouseLeaveDelay={0.03}
+        >
+          <div onClick={() => handleAlignClick("justify")} className="py-1">
+            <MenuOutlined className="px-3 py-1 text-neutral-500 text-sm" />
+          </div>
+        </Tooltip>
+        <Tooltip
+          title={<div className="text-neutral-500">有序列表</div>}
+          color="#fff"
+          autoAdjustOverflow={false}
+          placement="bottom"
+          mouseEnterDelay={0.03}
+          mouseLeaveDelay={0.03}
+        >
+          <div
+            onClick={() => handleChangeBlockTypeClick("numberedListItem")}
+            className="py-1"
+          >
+            <OrderedListOutlined className="px-3 py-1 text-neutral-500 text-sm" />
+          </div>
+        </Tooltip>
+        <Tooltip
+          title={<div className="text-neutral-500">无序列表</div>}
+          color="#fff"
+          autoAdjustOverflow={false}
+          placement="bottom"
+          mouseEnterDelay={0.03}
+          mouseLeaveDelay={0.03}
+        >
+          <div
+            onClick={() => handleChangeBlockTypeClick("bulletListItem")}
+            className="py-1"
+          >
+            <UnorderedListOutlined className="px-3 py-1 text-neutral-500 text-sm" />
+          </div>
+        </Tooltip>
+        <Divider type="vertical" className="top-1.5 mx-1 h-6 border-zinc-200" />
+        <Dropdown
+          menu={{ items: insertItems }}
+          trigger={["click"]}
+          className="px-2 my-1 [&>.ant-space-item]:flex [&>.ant-space-item]:items-center"
+        >
+          <Space className="border border-transparent hover:border hover:border-neutral-300">
+            <div className="text-tobar-text text-xs">插入</div>
+            <CaretDownOutlined className="h-full text-tobar-text text-xs dropdown-icon" />
+          </Space>
         </Dropdown>
-      </Tooltip>
+      </div>
       <UpOutlined
-        className="float-right inline-block leading-8 !font-black text-base mr-5"
+        className="float-right right-0 inline-block leading-7 !font-black text-base mr-5 h-full"
         onClick={handleFold}
       />
     </div>
