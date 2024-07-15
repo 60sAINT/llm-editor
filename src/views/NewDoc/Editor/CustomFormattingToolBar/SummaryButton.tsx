@@ -5,7 +5,7 @@ import { sideMenuApi } from "../../api/FormattingToolBar";
 import { useDispatch, useNewDocState } from "../../utils/provider";
 import { DisplayStyle } from "../../utils/context";
 
-export function SummaryButton() {
+export function SummaryButton({ a }: { a?: boolean }) {
   const dispatch = useDispatch();
   const state = useNewDocState();
   const Components = useComponentsContext()!;
@@ -48,7 +48,9 @@ export function SummaryButton() {
       dispatch({ type: "UNLOCK" });
     }
   };
-  return (
+  return a ? (
+    <div onClick={handleTextSummary}>文本摘要</div>
+  ) : (
     <Components.FormattingToolbar.Button
       mainTooltip="文本摘要"
       onClick={handleTextSummary}

@@ -20,6 +20,7 @@ import { useNewDocState } from "../../utils/provider";
 import { Block } from "@blocknote/core";
 import { showError } from "@/common/utils/message";
 import { TableSizeSelector } from "@/common/components/TableSizeSelector";
+import Rewrite from "./RewriteButton";
 
 interface StartProps {
   animateReverse: boolean;
@@ -502,6 +503,7 @@ export const Start: React.FC<StartProps> = ({
             <UnorderedListOutlined className="px-3 py-1 text-neutral-500 text-sm" />
           </div>
         </Tooltip>
+        <Rewrite />
         <Divider type="vertical" className="top-1.5 mx-1 h-6 border-zinc-200" />
         <Dropdown
           menu={{ items: insertItems }}
