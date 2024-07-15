@@ -246,7 +246,6 @@ export const Start: React.FC<StartProps> = ({
           {
             type: "image",
             props: {
-              textAlignment: "center",
               url: imageSrc,
             },
           },
@@ -260,7 +259,6 @@ export const Start: React.FC<StartProps> = ({
           {
             type: "image",
             props: {
-              textAlignment: "center",
               url: imageSrc,
             },
           },

@@ -9,13 +9,34 @@ import {
 import "@blocknote/mantine/style.css";
 import { BlockNoteView } from "@blocknote/mantine";
 import { Block, BlockNoteSchema, defaultStyleSpecs } from "@blocknote/core";
+import { FunctionComponent } from "react";
+import {
+  BasicTextStyleButton,
+  BlockTypeSelect,
+  ColorStyleButton,
+  CreateLinkButton,
+  FileCaptionButton,
+  FileReplaceButton,
+  FormattingToolbar,
+  FormattingToolbarProps,
+  NestBlockButton,
+  TextAlignButton,
+  UnnestBlockButton,
+} from "@blocknote/react";
 
 import { CustomSideMenu } from "./CustomSideMenu";
-import { CustomFormattingToolbar } from "./CustomFormattingToolBar";
+// import { CustomFormattingToolbar } from "./CustomFormattingToolBar";
 import { useDispatch } from "../utils/provider";
 import { DisplayStyle } from "../utils/context";
 import useRange from "../hooks/useRange";
+import { ContinuationButton } from "./CustomFormattingToolBar/ContinuationButton";
+import DisplayFrame from "./CustomFormattingToolBar/DisplayFrame";
+import { PolishButton } from "./CustomFormattingToolBar/PolishButton";
+import { RevisionButton } from "./CustomFormattingToolBar/RevisionButton";
+import { SummaryButton } from "./CustomFormattingToolBar/SummaryButton";
+import { TranslationButton } from "./CustomFormattingToolBar/TranslationButton";
 
+let showTextButton = true;
 const customSchema = BlockNoteSchema.create({
   styleSpecs: {
     // Adds all default styles.
@@ -33,6 +54,63 @@ const customSchema = BlockNoteSchema.create({
     ),
   },
 });
+const CustomFormattingToolbar: FunctionComponent<
+  FormattingToolbarProps
+> = () => {
+  // const state = useNewDocState();
+  return (
+    <div>
+      <FormattingToolbar>
+        <BlockTypeSelect key={"blockTypeSelect"} />
+
+        <FileCaptionButton key={"fileCaptionButton"} />
+        <FileReplaceButton key={"replaceFileButton"} />
+
+        <BasicTextStyleButton basicTextStyle={"bold"} key={"boldStyleButton"} />
+        <BasicTextStyleButton
+          basicTextStyle={"italic"}
+          key={"italicStyleButton"}
+        />
+        <BasicTextStyleButton
+          basicTextStyle={"underline"}
+          key={"underlineStyleButton"}
+        />
+        <BasicTextStyleButton
+          basicTextStyle={"strike"}
+          key={"strikeStyleButton"}
+        />
+        {/* Extra button to toggle code styles */}
+        <BasicTextStyleButton key={"codeStyleButton"} basicTextStyle={"code"} />
+
+        <TextAlignButton textAlignment={"left"} key={"textAlignLeftButton"} />
+        <TextAlignButton
+          textAlignment={"center"}
+          key={"textAlignCenterButton"}
+        />
+        <TextAlignButton textAlignment={"right"} key={"textAlignRightButton"} />
+
+        <ColorStyleButton key={"colorStyleButton"} />
+
+        <NestBlockButton key={"nestBlockButton"} />
+        <UnnestBlockButton key={"unnestBlockButton"} />
+
+        <CreateLinkButton key={"createLinkButton"} />
+
+        {/* custom buttons */}
+        {showTextButton ? (
+          <>
+            <ContinuationButton key={"textContinuationButton"} />
+            <TranslationButton key={"textTranslationButton"} />
+            <PolishButton key={"textPolishButton"} />
+            <RevisionButton key={"textRevisionButton"} />
+            <SummaryButton key={"textSummaryButton"} />
+          </>
+        ) : null}
+      </FormattingToolbar>
+      <DisplayFrame />
+    </div>
+  );
+};
 
 const Editor = () => {
   const editor = useCreateBlockNote({
@@ -74,6 +152,11 @@ const Editor = () => {
     const blockToUpdate = editor.getTextCursorPosition().block as Block;
     dispatch({ type: "SET_BLOCK_TO_UPDATE", payload: blockToUpdate });
   };
+  if (editor.getTextCursorPosition().block.type == "image") {
+    showTextButton = false;
+  } else {
+    showTextButton = true;
+  }
 
   useEffect(() => {
     dispatch({ type: "SET_EDITOR", payload: editor });
