@@ -3,9 +3,10 @@ import { useRequest } from "@/hooks/useRequest";
 import { useComponentsContext } from "@blocknote/react";
 import { sideMenuApi } from "../../api/FormattingToolBar";
 import { useDispatch, useNewDocState } from "../../utils/provider";
-import { DisplayStyle } from "../../utils/context";
+import { DisplayStyle, State } from "../../utils/context";
+import { flatMap as _flatMap } from "lodash";
 
-export function SummaryButton({ a }: { a?: boolean }) {
+export function SummaryButton({ isFull }: { isFull?: boolean }) {
   const dispatch = useDispatch();
   const state = useNewDocState();
   const Components = useComponentsContext()!;
@@ -14,9 +15,12 @@ export function SummaryButton({ a }: { a?: boolean }) {
     const res = await sideMenuApi.textSummary(text);
     return res;
   });
+
   const handleTextSummary = async (): Promise<void> => {
     dispatch({ type: "SWITCH_VISIBILITY", payload: DisplayStyle.BLOCK });
-    const selection = state.editor?.getSelectedText();
+    const selection = isFull
+      ? getFullText(state)
+      : state.editor?.getSelectedText();
     if (selection && !state.syncLock) {
       dispatch({ type: "LOCK" });
       const selectedText = selection.toString();
@@ -48,7 +52,7 @@ export function SummaryButton({ a }: { a?: boolean }) {
       dispatch({ type: "UNLOCK" });
     }
   };
-  return a ? (
+  return isFull ? (
     <div onClick={handleTextSummary}>文本摘要</div>
   ) : (
     <Components.FormattingToolbar.Button
@@ -59,3 +63,11 @@ export function SummaryButton({ a }: { a?: boolean }) {
     </Components.FormattingToolbar.Button>
   );
 }
+
+export const getFullText = (state: State) => {
+  const document = state.editor.document;
+  const text = _flatMap(document, (item) =>
+    item.content.map((i: { text: string }) => i.text)
+  ).join("");
+  return text;
+};

@@ -5,25 +5,28 @@ import {
   // CaretUpOutlined,
 } from "@ant-design/icons";
 import { SummaryButton } from "../../Editor/CustomFormattingToolBar/SummaryButton";
+import { PolishButton } from "../../Editor/CustomFormattingToolBar/PolishButton";
+import { TranslationButton } from "../../Editor/CustomFormattingToolBar/TranslationButton";
 
 const RewriteButton = () => {
   const rewriteItems = useMemo(
     () => [
       {
         key: "translate",
-        label: <div onClick={() => {}}>翻译</div>,
+        label: <TranslationButton isFull />,
       },
       {
         key: "polish",
-        label: <div onClick={() => {}}>润色</div>,
+        label: <PolishButton isFull />,
       },
       {
         key: "summary",
-        label: <SummaryButton a />,
+        label: <SummaryButton isFull />,
       },
     ],
     []
   );
+
   return (
     <>
       <Divider type="vertical" className="top-1.5 mx-1 h-6 border-zinc-200" />

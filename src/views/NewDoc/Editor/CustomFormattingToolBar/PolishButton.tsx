@@ -5,7 +5,7 @@ import { sideMenuApi } from "../../api/FormattingToolBar";
 import { useDispatch, useNewDocState } from "../../utils/provider";
 import { DisplayStyle } from "../../utils/context";
 
-export function PolishButton() {
+export function PolishButton({ isFull }: { isFull?: boolean }) {
   const dispatch = useDispatch();
   const state = useNewDocState();
   const Components = useComponentsContext()!;
@@ -16,7 +16,10 @@ export function PolishButton() {
   });
   const handleTextPolish = async (): Promise<void> => {
     dispatch({ type: "SWITCH_VISIBILITY", payload: DisplayStyle.BLOCK });
-    const selection = state.editor?.getSelectedText();
+    // todo api params
+    const selection = isFull
+      ? JSON.stringify(state.editor.document)
+      : state.editor?.getSelectedText();
     if (selection && !state.syncLock) {
       dispatch({ type: "LOCK" });
       const selectedText = selection.toString();
@@ -45,7 +48,9 @@ export function PolishButton() {
       dispatch({ type: "UNLOCK" });
     }
   };
-  return (
+  return isFull ? (
+    <div onClick={handleTextPolish}>文本润色</div>
+  ) : (
     <Components.FormattingToolbar.Button
       mainTooltip="文本润色"
       onClick={handleTextPolish}
