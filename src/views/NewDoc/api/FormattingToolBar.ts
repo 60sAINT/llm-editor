@@ -26,6 +26,13 @@ export class ToolBarApi {
     return result.body;
   }
 
+  public async textPolishDoc(text: string) {
+    const result = await fetch.get(
+      `${apikeyPrefix}/text/polish_doc?text=${text}`
+    );
+    return result.body;
+  }
+
   public async textSummary(text: string) {
     const result = await fetch.get(`${apikeyPrefix}/text/summary?text=${text}`);
     return result.body;

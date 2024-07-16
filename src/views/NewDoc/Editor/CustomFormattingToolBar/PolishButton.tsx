@@ -11,7 +11,9 @@ export function PolishButton({ isFull }: { isFull?: boolean }) {
   const Components = useComponentsContext()!;
 
   const { runAsync: textPolish } = useRequest(async (text) => {
-    const res = await sideMenuApi.textPolish(text);
+    const res = isFull
+      ? await sideMenuApi.textPolishDoc(text)
+      : await sideMenuApi.textPolish(text);
     return res;
   });
   const handleTextPolish = async (): Promise<void> => {
