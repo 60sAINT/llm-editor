@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   AppstoreOutlined,
   ClockCircleOutlined,
@@ -25,8 +25,11 @@ import {
 import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
 import Main from "./Content";
+import Knowledge from "./Knowledge";
 
 const Home: React.FC = () => {
+  const [selectKey, setSelectKey] = useState<string>("1");
+
   const dropdownContent = (
     <div className="bg-white shadow-lg p-3 mt-3 rounded border border-gray-300 text-zinc-600 text-sm">
       <div className="grid grid-cols-2 gap-4 mt-1.5 mx-2.5">
@@ -90,7 +93,7 @@ const Home: React.FC = () => {
     {
       key: "5",
       icon: <AppstoreOutlined />,
-      label: "应用中心",
+      label: "知识库",
     },
     {
       key: "6",
@@ -98,6 +101,11 @@ const Home: React.FC = () => {
       label: "实验室",
     },
   ];
+
+  const contents: Record<string, React.JSX.Element> = {
+    "1": <Main />,
+    "5": <Knowledge />,
+  };
 
   return (
     <ConfigProvider
@@ -141,11 +149,12 @@ const Home: React.FC = () => {
             </Dropdown>
             <Menu
               mode="inline"
-              defaultSelectedKeys={["1"]}
+              defaultSelectedKeys={[selectKey]}
               defaultOpenKeys={["sub1"]}
               style={{ height: "100%", borderRight: 0 }}
               className="mt-6"
               items={menuItems}
+              onClick={(e) => setSelectKey(e.key)}
             />
           </Sider>
           <Content
@@ -155,7 +164,7 @@ const Home: React.FC = () => {
               minHeight: 280,
             }}
           >
-            <Main />
+            {contents[selectKey]}
           </Content>
         </Layout>
       </Layout>
