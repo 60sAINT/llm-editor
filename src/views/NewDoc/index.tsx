@@ -30,10 +30,10 @@ const NewDoc = () => {
             <div className="h-screen flex flex-col bg-gray-200">
               <TopBar getShowCards={getShowCards} getFullText={setFullText} />
               <Row className="flex-grow justify-center items-start p-4 overflow-auto">
-                <Col span={4}>
+                <Col span={6}>
                   {showCards && <CardList dataSource={[0, 1, 2, 3, 4]} />}
                 </Col>
-                <Col span={16}>
+                <Col span={12}>
                   <div
                     className="w-full bg-white shadow-md"
                     style={{
@@ -47,7 +47,7 @@ const NewDoc = () => {
                     <Editor />
                   </div>
                 </Col>
-                <Col span={4}>
+                <Col span={6} className="h-full">
                   {fullText && (
                     <CardList
                       dataSource={[fullText]}
