@@ -31,10 +31,10 @@ export class ToolBarApi {
     return result.body;
   }
 
-  public async imageOcr(base64Url: any) {
-    const result = await fetch.post(
-      `${apikeyPrefix}/image/ocr?image_b64=${base64Url}`
-    );
+  public async imageOcr(base64: string) {
+    const result = await fetch.post(`${apikeyPrefix}/image/ocr`, {
+      base64,
+    });
     return result.body;
   }
 }

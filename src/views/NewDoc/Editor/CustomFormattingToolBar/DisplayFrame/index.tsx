@@ -56,24 +56,6 @@ const DisplayFrame = () => {
       )[0].text.substring(range.endOffset),
     });
     editor?.insertBlocks(blocksToInsert, lastBlock!, "after");
-    // const originBlock = editor!.getBlock(blockToUpdate!);
-    // const originContentArr = originBlock!.content as Array<
-    //   StyledText<StyleSchema>
-    // >;
-    // if (originBlock?.type == "paragraph") {
-    //   const newContentArr = originContentArr.map((item) => {
-    //     const newText =
-    //       item.text.substring(0, range.startOffset) +
-    //       continText +
-    //       item.text.substring(range.endOffset);
-    //     return { ...item, text: newText };
-    //   });
-    //   editor?.updateBlock(blockToUpdate!, {
-    //     content: newContentArr,
-    //   });
-    // } else {
-    //   return;
-    // }
   }, [
     editor,
     blockToUpdate,

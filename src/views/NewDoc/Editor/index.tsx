@@ -38,6 +38,7 @@ import { TranslationButton } from "./CustomFormattingToolBar/TranslationButton";
 import { OcrButton } from "./CustomFormattingToolBar/OcrButton";
 import { useDocDispatch } from "../utils/docProvider";
 import { IsSavedType } from "../utils/docContext";
+import { OcrFrame } from "./CustomFormattingToolBar/OcrFrame";
 
 let showTextButton = true;
 let showOcrButton = true;
@@ -113,7 +114,7 @@ const CustomFormattingToolbar: FunctionComponent<
         {showOcrButton ? <OcrButton key={"imageOcrButton"} /> : null}
       </FormattingToolbar>
       <DisplayFrame />
-      {/* <OcrFrame /> */}
+      <OcrFrame />
     </div>
   );
 };
@@ -182,6 +183,7 @@ const Editor = () => {
       formattingToolbar={false}
       onSelectionChange={() => {
         dispatch({ type: "SWITCH_VISIBILITY", payload: DisplayStyle.HIDDEN });
+        dispatch({ type: "OCR_FRAME_DISPLAY", payload: false });
       }}
       onMouseUp={handleMouseUp}
       onKeyDownCapture={(e) => {

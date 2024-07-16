@@ -22,6 +22,10 @@ export const reducer = (state: State, action: Action): State => {
       return { ...state, reviseText: state.reviseText + action.payload }; // 不断更新显示从后端获取的续写文本
     case "SUMMARY_TEXT":
       return { ...state, summaryText: state.summaryText + action.payload }; // 不断更新显示从后端获取的续写文本
+    case "OCR_TEXT":
+      return { ...state, ocrText: action.payload };
+    case "OCR_FRAME_DISPLAY":
+      return { ...state, ocrFrameDisplay: action.payload };
     // case "EDIT_CONTINUE_TEXT":
     //   return { ...state, frameText: action.payload }; // 编辑续写文本
     case "REPLACE_SELECTION":

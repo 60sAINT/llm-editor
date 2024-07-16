@@ -21,6 +21,8 @@ export interface State {
   editor?: any; // 编辑器对象
   blockToUpdate?: Block; // 要替换的文本所在的块的标识符
   range: RangeType; // 选中的文本的startIndex和endIndex
+  ocrText: string;
+  ocrFrameDisplay: boolean;
 }
 
 export enum DisplayStyle {
@@ -44,6 +46,7 @@ export type Action =
   | { type: "TRANSLATE_TEXT"; payload: string }
   | { type: "REVISE_TEXT"; payload: string }
   | { type: "SUMMARY_TEXT"; payload: string }
+  | { type: "OCR_TEXT"; payload: string }
   // RESET
   | { type: "RESET_FRAME_TEXT" }
   | { type: "RESET_CONTINUE_TEXT" }
@@ -61,7 +64,9 @@ export type Action =
   | { type: "REPLACE_SUMMARY_SELECTION"; payload: string }
   | { type: "SET_EDITOR"; payload: any }
   | { type: "SET_BLOCK_TO_UPDATE"; payload: Block }
-  | { type: "SET_RANGE"; payload: RangeType };
+  | { type: "SET_RANGE"; payload: RangeType }
+  // FRAME
+  | { type: "OCR_FRAME_DISPLAY"; payload: boolean };
 
 export const initialState: State = {
   syncLock: false,
@@ -79,6 +84,8 @@ export const initialState: State = {
   reviseSelection: "",
   summarySelection: "",
   range: { startOffset: 0, endOffset: 0 },
+  ocrText: "",
+  ocrFrameDisplay: false,
 };
 
 export const StateContext = createContext<State | undefined>(undefined);

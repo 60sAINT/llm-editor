@@ -2,7 +2,6 @@ import React from "react";
 import { useRequest } from "@/hooks/useRequest";
 import { useComponentsContext } from "@blocknote/react";
 import { sideMenuApi } from "../../api/FormattingToolBar";
-import { DisplayStyle } from "../../utils/context";
 import { useDispatch, useNewDocState } from "../../utils/provider";
 import { showError } from "@/common/utils/message";
 
@@ -45,7 +44,16 @@ export const OcrButton = () => {
     return base64String.replace(regex, "");
   }
   const handleImageOcr = async (): Promise<void> => {
-    dispatch({ type: "SWITCH_VISIBILITY", payload: DisplayStyle.BLOCK });
+    dispatch({ type: "OCR_FRAME_DISPLAY", payload: true });
+    console.log("state.blockToUpdate", state.blockToUpdate);
+    console.log(
+      "state.editor.getTextCursorPosition().block",
+      state.editor.getTextCursorPosition().block
+    );
+    if (state.blockToUpdate !== state.editor.getTextCursorPosition().block) {
+      dispatch({ type: "OCR_TEXT", payload: "" });
+      console.log("执行了");
+    }
     const imageBlock = state.editor?.getTextCursorPosition().block;
     if (imageBlock.type == "image") {
       let urlString = imageBlock.props.url;
@@ -53,20 +61,16 @@ export const OcrButton = () => {
         urlString = await base64(urlString);
       }
       const removlePrefixString = removeBase64Prefix(urlString);
-      try {
-        const response = await imageOcr(removlePrefixString);
-        const reader = response!
-          .pipeThrough(new TextDecoderStream())
-          .getReader();
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) {
-            break;
-          }
-          console.log(value);
+      const response = await imageOcr(removlePrefixString);
+      const reader = response!.pipeThrough(new TextDecoderStream()).getReader();
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          break;
         }
-      } catch (error) {
-        console.error("Error converting image to Base64:", error);
+        const match = value.match(/"data":"(.*?)"/);
+        const ocrText = match ? match[1] : "";
+        dispatch({ type: "OCR_TEXT", payload: ocrText });
       }
     } else {
       showError("请选择一张图片");
