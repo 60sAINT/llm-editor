@@ -37,6 +37,7 @@ export function TranslationButton({ isFull }: { isFull?: boolean }) {
       } else {
         dispatch({ type: "RESET_FRAME_TEXT" });
         dispatch({ type: "RESET_TRANSLATE_TEXT" });
+        dispatch({ type: "RESET_CARD_TEXT" });
         dispatch({
           type: "REPLACE_TRANSLATE_SELECTION",
           payload: selectedText,
@@ -52,6 +53,7 @@ export function TranslationButton({ isFull }: { isFull?: boolean }) {
           }
           dispatch({ type: "FRAME_TEXT", payload: value });
           dispatch({ type: "TRANSLATE_TEXT", payload: value });
+          isFull && dispatch({ type: "CARD_TEXT", payload: value });
         }
       }
       dispatch({ type: "UNLOCK" });

@@ -7,24 +7,30 @@ import {
 import { SummaryButton } from "../../Editor/CustomFormattingToolBar/SummaryButton";
 import { PolishButton } from "../../Editor/CustomFormattingToolBar/PolishButton";
 import { TranslationButton } from "../../Editor/CustomFormattingToolBar/TranslationButton";
+import { useNewDocState } from "../../utils/provider";
 
 const RewriteButton = () => {
+  const { syncLock } = useNewDocState();
+
   const rewriteItems = useMemo(
     () => [
       {
         key: "translate",
         label: <TranslationButton isFull />,
+        disabled: syncLock,
       },
       {
         key: "polish",
         label: <PolishButton isFull />,
+        disabled: syncLock,
       },
       {
         key: "summary",
         label: <SummaryButton isFull />,
+        disabled: syncLock,
       },
     ],
-    []
+    [syncLock]
   );
 
   return (

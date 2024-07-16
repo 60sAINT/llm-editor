@@ -31,6 +31,7 @@ export function PolishButton({ isFull }: { isFull?: boolean }) {
       } else {
         dispatch({ type: "RESET_FRAME_TEXT" });
         dispatch({ type: "RESET_POLISH_TEXT" });
+        dispatch({ type: "RESET_CARD_TEXT" });
         dispatch({ type: "REPLACE_POLISH_SELECTION", payload: selectedText });
         const response = await textPolish(selectedText);
         const reader = response!
@@ -43,6 +44,7 @@ export function PolishButton({ isFull }: { isFull?: boolean }) {
           }
           dispatch({ type: "FRAME_TEXT", payload: value });
           dispatch({ type: "POLISH_TEXT", payload: value });
+          isFull && dispatch({ type: "CARD_TEXT", payload: value });
         }
       }
       dispatch({ type: "UNLOCK" });

@@ -1,23 +1,33 @@
 import React from "react";
 import "./index.css"; // 确保你有一个 CSS 文件来定义动画
+// import { Spin } from "antd";
 
-const CardList: React.FC = () => {
-  const cards = Array.from({ length: 5 }, (_, index) => index + 1);
+interface CardListProps {
+  dataSource: any[];
+  loading?: boolean;
+  classname?: string;
+}
 
+const CardList = ({ dataSource, classname }: CardListProps) => {
   return (
-    <div className="card-list">
-      {cards.map((_, index) => (
-        <Card key={index} index={index} />
+    // <Spin spinning={loading}>
+    <div className={`card-list ${classname}`}>
+      {dataSource.map((item, index) => (
+        <Card key={index} index={index}>
+          {item}
+        </Card>
       ))}
     </div>
+    // </Spin>
   );
 };
 
 interface CardProps {
   index: number;
+  children?: React.ReactNode;
 }
-const Card: React.FC<CardProps> = ({ index }) => {
-  return <div className={`card card-${index}`}>Card {index + 1}</div>;
+const Card: React.FC<CardProps> = ({ index, children }) => {
+  return <div className={`card card-${index}`}>{children}</div>;
 };
 
 export default CardList;
