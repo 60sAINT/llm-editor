@@ -5,6 +5,8 @@ import {
   ImportOutlined,
   OpenAIOutlined,
 } from "@ant-design/icons";
+import { useRequest } from "@/hooks/useRequest";
+import { docApi } from "../NewDoc/api/Doc";
 
 enum OPERATE {
   CREATE = "create",
@@ -12,6 +14,13 @@ enum OPERATE {
   UPLOAD = "upload",
 }
 const Content = () => {
+  const { run: getDocList, data: docList } = useRequest(
+    async () => {
+      const res = await docApi.getDocList();
+      return res;
+    },
+    { manual: false }
+  );
   const operates = useMemo(
     () => [
       {

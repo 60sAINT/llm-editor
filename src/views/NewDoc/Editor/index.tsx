@@ -35,8 +35,12 @@ import { PolishButton } from "./CustomFormattingToolBar/PolishButton";
 import { RevisionButton } from "./CustomFormattingToolBar/RevisionButton";
 import { SummaryButton } from "./CustomFormattingToolBar/SummaryButton";
 import { TranslationButton } from "./CustomFormattingToolBar/TranslationButton";
+import { OcrButton } from "./CustomFormattingToolBar/OcrButton";
+import { useDocDispatch } from "../utils/docProvider";
+import { IsSavedType } from "../utils/docContext";
 
 let showTextButton = true;
+let showOcrButton = true;
 const customSchema = BlockNoteSchema.create({
   styleSpecs: {
     // Adds all default styles.
@@ -106,8 +110,10 @@ const CustomFormattingToolbar: FunctionComponent<
             <SummaryButton key={"textSummaryButton"} />
           </>
         ) : null}
+        {showOcrButton ? <OcrButton key={"imageOcrButton"} /> : null}
       </FormattingToolbar>
       <DisplayFrame />
+      {/* <OcrFrame /> */}
     </div>
   );
 };
@@ -121,16 +127,15 @@ const Editor = () => {
         content: "Welcome to llm-editor!",
       },
       {
-        type: "paragraph",
-        content: [
-          {
-            type: "text",
-            text: "Comic Sans MS",
-            styles: {
-              font: "Comic Sans MS",
-            },
-          },
-        ],
+        type: "image",
+        props: {
+          url: "https://pic3.zhimg.com/v2-a2184227abddb98b3b7405e6033651ff_r.jpg",
+          caption:
+            "From https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg",
+        },
+      },
+      {
+        type: "video",
       },
     ],
     uploadFile: async (file: File) => {
@@ -145,6 +150,7 @@ const Editor = () => {
     },
   });
   const dispatch = useDispatch();
+  const docDispatch = useDocDispatch();
 
   const handleMouseUp = () => {
     const { startOffset, endOffset } = useRange();
@@ -154,12 +160,18 @@ const Editor = () => {
   };
   if (editor.getTextCursorPosition().block.type == "image") {
     showTextButton = false;
+    showOcrButton = true;
   } else {
     showTextButton = true;
+    showOcrButton = false;
   }
 
   useEffect(() => {
     dispatch({ type: "SET_EDITOR", payload: editor });
+    docDispatch({
+      type: "SAVE_DOC_CONTENT",
+      payload: JSON.stringify(editor.document),
+    });
   }, [editor]);
 
   // Renders the editor instance.
@@ -176,6 +188,13 @@ const Editor = () => {
         if (e.ctrlKey && e.key === "s") {
           e.preventDefault();
         }
+      }}
+      onChange={() => {
+        docDispatch({ type: "SAVE_DOC_STATUS", payload: IsSavedType.False });
+        docDispatch({
+          type: "SAVE_DOC_CONTENT",
+          payload: JSON.stringify(editor.document),
+        });
       }}
     >
       <FormattingToolbarController

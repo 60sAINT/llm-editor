@@ -10,7 +10,7 @@ const fetchInstance = {
     });
     return handleResponse(response);
   },
-  post: async (url: string, data: any, config: RequestInit = {}) => {
+  post: async (url: string, data?: any, config: RequestInit = {}) => {
     const response = await fetch(`${baseUrl}${url}`, {
       ...config,
       method: "POST",

@@ -121,7 +121,7 @@ const DisplayFrame = () => {
       });
       editor?.insertBlocks(blocksToInsert, firstBlock!, "after");
     }
-    selection?.blocks.map((block, index) => {
+    selection?.blocks.map((block: BlockIdentifier, index: number) => {
       if (index !== 0 && index !== selection?.blocks.length - 1) {
         blocksToRemove.push(block);
       }

@@ -30,6 +30,13 @@ export class ToolBarApi {
     const result = await fetch.get(`${apikeyPrefix}/text/summary?text=${text}`);
     return result.body;
   }
+
+  public async imageOcr(base64Url: any) {
+    const result = await fetch.post(
+      `${apikeyPrefix}/image/ocr?image_b64=${base64Url}`
+    );
+    return result.body;
+  }
 }
 
 export const sideMenuApi = new ToolBarApi();

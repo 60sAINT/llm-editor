@@ -18,7 +18,7 @@ const TopBarTitle = () => {
         className="text-sm outline-none ml-4 text-[#1f1f1f] leading-7"
         style={{
           minWidth: "50px",
-          maxWidth: "500px",
+          maxWidth: "183px",
           width: `${Math.max(50, title.length * 8)}px`,
         }}
       />
