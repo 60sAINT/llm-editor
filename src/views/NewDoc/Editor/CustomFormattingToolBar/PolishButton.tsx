@@ -51,7 +51,7 @@ export function PolishButton({ isFull }: { isFull?: boolean }) {
     }
   };
   return isFull ? (
-    <div onClick={handleTextPolish}>文本润色</div>
+    <div onClick={handleTextPolish}>全文润色</div>
   ) : (
     <Components.FormattingToolbar.Button
       mainTooltip="文本润色"

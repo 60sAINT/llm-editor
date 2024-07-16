@@ -55,7 +55,7 @@ export function SummaryButton({ isFull }: { isFull?: boolean }) {
     }
   };
   return isFull ? (
-    <div onClick={handleTextSummary}>文本摘要</div>
+    <div onClick={handleTextSummary}>全文摘要</div>
   ) : (
     <Components.FormattingToolbar.Button
       mainTooltip="文本摘要"

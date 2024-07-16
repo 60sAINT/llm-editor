@@ -60,7 +60,7 @@ export function TranslationButton({ isFull }: { isFull?: boolean }) {
     }
   };
   return isFull ? (
-    <div onClick={handleTextTranslation}>文本翻译</div>
+    <div onClick={handleTextTranslation}>全文翻译</div>
   ) : (
     <Components.FormattingToolbar.Button
       mainTooltip="文本翻译"
