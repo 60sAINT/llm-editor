@@ -8,16 +8,20 @@ import "./index.css";
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Col, Row } from "antd";
 import { Start } from "./Start";
+import { useNewDocState } from "../utils/provider";
 
 interface TopBarProps {
   getShowCards: (showCards: boolean) => void;
+  getFullText: (text: string) => void;
 }
 const TopBar: React.FC<TopBarProps> = ({
   getShowCards: sendShowCardsToTopBar,
+  getFullText,
 }) => {
   const [animate, setAnimate] = useState(false);
   const [animateReverse, setAnimateReverse] = useState(false);
   const [showCards, setShowCards] = useState(false);
+  const { cardText } = useNewDocState();
 
   // 点击“开始”后
   const handleStartClick = () => {
@@ -32,6 +36,10 @@ const TopBar: React.FC<TopBarProps> = ({
   useEffect(() => {
     sendShowCardsToTopBar(showCards);
   }, [showCards]);
+
+  useEffect(() => {
+    getFullText(cardText);
+  }, [cardText]);
 
   return (
     <div className={`${!animate && "shadow-md border-b border-gray-300"}`}>

@@ -5,11 +5,12 @@ import { sideMenuApi } from "../../api/FormattingToolBar";
 import { useDispatch, useNewDocState } from "../../utils/provider";
 import { DisplayStyle } from "../../utils/context";
 import { targetLanguage } from "@/common/utils";
+import { getFullText } from "./SummaryButton";
 
 // TODO 添加认证逻辑
 // TODO 添加目标翻译语言选择按钮
 
-export function TranslationButton() {
+export function TranslationButton({ isFull }: { isFull?: boolean }) {
   const dispatch = useDispatch();
   const state = useNewDocState();
   const Components = useComponentsContext()!;
@@ -21,7 +22,9 @@ export function TranslationButton() {
   // 翻译逻辑
   const handleTextTranslation = async (): Promise<void> => {
     dispatch({ type: "SWITCH_VISIBILITY", payload: DisplayStyle.BLOCK });
-    const selection = state.editor?.getSelectedText();
+    const selection = isFull
+      ? getFullText(state)
+      : state.editor?.getSelectedText();
     const targetLang = targetLanguage(selection);
     if (selection && !state.syncLock) {
       dispatch({ type: "LOCK" });
@@ -34,6 +37,7 @@ export function TranslationButton() {
       } else {
         dispatch({ type: "RESET_FRAME_TEXT" });
         dispatch({ type: "RESET_TRANSLATE_TEXT" });
+        dispatch({ type: "RESET_CARD_TEXT" });
         dispatch({
           type: "REPLACE_TRANSLATE_SELECTION",
           payload: selectedText,
@@ -49,12 +53,15 @@ export function TranslationButton() {
           }
           dispatch({ type: "FRAME_TEXT", payload: value });
           dispatch({ type: "TRANSLATE_TEXT", payload: value });
+          isFull && dispatch({ type: "CARD_TEXT", payload: value });
         }
       }
       dispatch({ type: "UNLOCK" });
     }
   };
-  return (
+  return isFull ? (
+    <div onClick={handleTextTranslation}>全文翻译</div>
+  ) : (
     <Components.FormattingToolbar.Button
       mainTooltip="文本翻译"
       onClick={handleTextTranslation}

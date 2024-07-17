@@ -5,18 +5,23 @@ import { sideMenuApi } from "../../api/FormattingToolBar";
 import { useDispatch, useNewDocState } from "../../utils/provider";
 import { DisplayStyle } from "../../utils/context";
 
-export function PolishButton() {
+export function PolishButton({ isFull }: { isFull?: boolean }) {
   const dispatch = useDispatch();
   const state = useNewDocState();
   const Components = useComponentsContext()!;
 
   const { runAsync: textPolish } = useRequest(async (text) => {
-    const res = await sideMenuApi.textPolish(text);
+    const res = isFull
+      ? await sideMenuApi.textPolishDoc(text)
+      : await sideMenuApi.textPolish(text);
     return res;
   });
   const handleTextPolish = async (): Promise<void> => {
     dispatch({ type: "SWITCH_VISIBILITY", payload: DisplayStyle.BLOCK });
-    const selection = state.editor?.getSelectedText();
+    // todo api params
+    const selection = isFull
+      ? JSON.stringify(state.editor.document)
+      : state.editor?.getSelectedText();
     if (selection && !state.syncLock) {
       dispatch({ type: "LOCK" });
       const selectedText = selection.toString();
@@ -28,6 +33,7 @@ export function PolishButton() {
       } else {
         dispatch({ type: "RESET_FRAME_TEXT" });
         dispatch({ type: "RESET_POLISH_TEXT" });
+        dispatch({ type: "RESET_CARD_TEXT" });
         dispatch({ type: "REPLACE_POLISH_SELECTION", payload: selectedText });
         const response = await textPolish(selectedText);
         const reader = response!
@@ -40,12 +46,15 @@ export function PolishButton() {
           }
           dispatch({ type: "FRAME_TEXT", payload: value });
           dispatch({ type: "POLISH_TEXT", payload: value });
+          isFull && dispatch({ type: "CARD_TEXT", payload: value });
         }
       }
       dispatch({ type: "UNLOCK" });
     }
   };
-  return (
+  return isFull ? (
+    <div onClick={handleTextPolish}>全文润色</div>
+  ) : (
     <Components.FormattingToolbar.Button
       mainTooltip="文本润色"
       onClick={handleTextPolish}
