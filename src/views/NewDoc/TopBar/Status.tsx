@@ -11,18 +11,28 @@ import { docApi } from "../api/Doc";
 import { useRequest } from "@/hooks/useRequest";
 import { showMessage } from "@/common/utils/message";
 import { useAuth } from "@/provider/authProvider";
+import { useDispatch, useNewDocState } from "../utils/provider";
 
 const Status = () => {
   const { token } = useAuth() as { token: string };
   const { isSaved, docId, title, docContent } = useDocState();
+  const { saveKeyDown } = useNewDocState();
+  const dispatch = useDispatch();
   const docDispatch = useDocDispatch();
   const [saveState, setSaveState] = useState<IsSavedType>(isSaved);
   useEffect(() => {
     setSaveState(isSaved);
   }, [isSaved]);
+  useEffect(() => {
+    if (saveKeyDown) {
+      handleSaveDoc();
+      dispatch({ type: "SAVE_KEY_DOWN" });
+    }
+  }, [saveKeyDown]);
   // 保存新文档
   const { runAsync: saveNewDoc } = useRequest(async (title, content) => {
     const res = await docApi.newDoc(title, content);
+    setSaveState(IsSavedType.True);
     return res;
   });
   // 保存现有文档
@@ -54,14 +64,10 @@ const Status = () => {
     }
     // 保存新文档，暂无id
     else {
-      try {
-        await saveNewDoc(title, docContent);
-        showMessage("保存成功！", 0.65);
-        setSaveState(IsSavedType.True);
-        docDispatch({ type: "SAVE_DOC_STATUS", payload: IsSavedType.True });
-      } catch (err) {
-        console.log(err);
-      }
+      await saveNewDoc(title, docContent);
+      // setSaveState(IsSavedType.True);
+      showMessage("保存成功！", 0.65);
+      docDispatch({ type: "SAVE_DOC_STATUS", payload: IsSavedType.True });
     }
   };
   return (

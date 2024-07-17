@@ -179,6 +179,7 @@ const Editor: React.FC<EditorProps> = ({ docData }) => {
       onKeyDownCapture={(e) => {
         if (e.ctrlKey && e.key === "s") {
           e.preventDefault();
+          dispatch({ type: "SAVE_KEY_DOWN" });
         }
       }}
       onChange={() => {

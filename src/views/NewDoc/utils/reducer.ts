@@ -66,6 +66,8 @@ export const reducer = (state: State, action: Action): State => {
       return { ...state, loadingDisplay: action.payload };
     case "FULL_TEXT_LOADING":
       return { ...state, fullTextLoading: action.payload };
+    case "SAVE_KEY_DOWN":
+      return { ...state, saveKeyDown: !state.saveKeyDown };
     default:
       return state;
   }
