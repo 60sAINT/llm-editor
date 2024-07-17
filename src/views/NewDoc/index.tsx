@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import Editor from "./Editor";
 import { DispatchContext, StateContext, initialState } from "./utils/context";
 import { reducer } from "./utils/reducer";
@@ -22,6 +22,12 @@ const NewDoc = () => {
   const [docState, docDispatch] = useReducer(docReducer, initialDocState);
   const [showCards, setShowCards] = useState<boolean>(false);
   const [fullText, setFullText] = useState<string>("");
+  const [fullTextLoading, setFullTextLoading] = useState<boolean>(
+    state.fullTextLoading
+  );
+  useEffect(() => {
+    setFullTextLoading(state.fullTextLoading);
+  }, [state.fullTextLoading]);
   const getShowCards = (showCards: boolean) => {
     setShowCards(showCards);
   };
@@ -47,6 +53,16 @@ const NewDoc = () => {
     }
   }, [title, doc]);
 
+  // 全文改写文字框高度逻辑
+  const leftColRef = useRef<HTMLDivElement>(null);
+  const [leftColHeight, setLeftColHeight] = useState(0);
+
+  useEffect(() => {
+    if (leftColRef.current) {
+      setLeftColHeight(leftColRef.current.clientHeight);
+    }
+  }, [docId, docData]);
+
   return (
     <DocStateContext.Provider value={docState}>
       <DocDispatchContext.Provider value={docDispatch}>
@@ -54,11 +70,11 @@ const NewDoc = () => {
           <DispatchContext.Provider value={dispatch}>
             <div className="h-screen flex flex-col bg-gray-200">
               <TopBar getShowCards={getShowCards} getFullText={setFullText} />
-              <Row className="flex-grow justify-center items-start p-4 overflow-auto">
-                <Col span={6}>
+              <Row className="flex-grow justify-center items-start py-4 px-2 overflow-auto">
+                <Col span={fullText || fullTextLoading ? 4 : 6}>
                   {showCards && <CardList dataSource={[0, 1, 2, 3, 4]} />}
                 </Col>
-                <Col span={12}>
+                <Col span={12} ref={leftColRef}>
                   <div
                     className="w-full bg-white shadow-md [&>.bn-container>div:first-child]:px-12"
                     style={{
@@ -87,15 +103,21 @@ const NewDoc = () => {
                     )}
                   </div>
                 </Col>
-                <Col span={6} className="h-full">
-                  {fullText && (
+                {fullText || fullTextLoading ? (
+                  <Col
+                    span={8}
+                    className={`max-h-[${leftColHeight}px] min-h-64`}
+                  >
                     <CardList
                       dataSource={[fullText]}
                       // loading={fullText.loading}
-                      classname="pl-4"
+                      classname="pl-2 !pr-0 [&>div]:flex [&>div]:items-stretch [&>div]:min-h-64 [&>div]:!mb-0"
+                      maxHeight={`${leftColHeight}px`}
                     />
-                  )}
-                </Col>
+                  </Col>
+                ) : (
+                  <Col span={6} />
+                )}
               </Row>
             </div>
           </DispatchContext.Provider>

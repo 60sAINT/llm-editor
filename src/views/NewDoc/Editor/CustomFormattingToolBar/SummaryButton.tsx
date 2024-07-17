@@ -18,6 +18,7 @@ export function SummaryButton({ isFull }: { isFull?: boolean }) {
 
   const handleTextSummary = async (): Promise<void> => {
     dispatch({ type: "SWITCH_VISIBILITY", payload: DisplayStyle.BLOCK });
+    dispatch({ type: "FULL_TEXT_LOADING", payload: true });
     const selection = isFull
       ? getFullText(state)
       : state.editor?.getSelectedText();
@@ -44,6 +45,7 @@ export function SummaryButton({ isFull }: { isFull?: boolean }) {
         while (true) {
           const { done, value } = await reader.read();
           if (done) {
+            dispatch({ type: "FULL_TEXT_LOADING", payload: false });
             break;
           }
           dispatch({ type: "FRAME_TEXT", payload: value });
