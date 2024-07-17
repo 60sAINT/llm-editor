@@ -23,6 +23,7 @@ export interface State {
   range: RangeType; // 选中的文本的startIndex和endIndex
   ocrText: string;
   ocrFrameDisplay: boolean;
+  loadingDisplay: boolean;
 }
 
 export enum DisplayStyle {
@@ -66,7 +67,9 @@ export type Action =
   | { type: "SET_BLOCK_TO_UPDATE"; payload: Block }
   | { type: "SET_RANGE"; payload: RangeType }
   // FRAME
-  | { type: "OCR_FRAME_DISPLAY"; payload: boolean };
+  | { type: "OCR_FRAME_DISPLAY"; payload: boolean }
+  // LOADING
+  | { type: "LOADING_DISPLAY"; payload: boolean };
 
 export const initialState: State = {
   syncLock: false,
@@ -86,6 +89,7 @@ export const initialState: State = {
   range: { startOffset: 0, endOffset: 0 },
   ocrText: "",
   ocrFrameDisplay: false,
+  loadingDisplay: true,
 };
 
 export const StateContext = createContext<State | undefined>(undefined);

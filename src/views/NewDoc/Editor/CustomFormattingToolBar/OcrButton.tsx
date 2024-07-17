@@ -45,6 +45,7 @@ export const OcrButton = () => {
   }
   const handleImageOcr = async (): Promise<void> => {
     dispatch({ type: "OCR_FRAME_DISPLAY", payload: true });
+    dispatch({ type: "LOADING_DISPLAY", payload: true });
     console.log("state.blockToUpdate", state.blockToUpdate);
     console.log(
       "state.editor.getTextCursorPosition().block",
@@ -65,6 +66,7 @@ export const OcrButton = () => {
       const reader = response!.pipeThrough(new TextDecoderStream()).getReader();
       while (true) {
         const { done, value } = await reader.read();
+        dispatch({ type: "LOADING_DISPLAY", payload: false });
         if (done) {
           break;
         }

@@ -58,6 +58,8 @@ export const reducer = (state: State, action: Action): State => {
       return { ...state, blockToUpdate: action.payload }; // 设置要更新的块对象
     case "SET_RANGE":
       return { ...state, range: action.payload }; // 设置鼠标选择的文字的startIndex和endIndex
+    case "LOADING_DISPLAY":
+      return { ...state, loadingDisplay: action.payload };
     default:
       return state;
   }

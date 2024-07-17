@@ -45,6 +45,7 @@ export class CopyButton extends Component<ICopyButtonProps> {
             type={this.props.buttonType || "default"}
             data-clipboard-text={this.props.copyText}
             disabled={!this.props.copyText}
+            size="small"
           >
             {this.props.title}
           </Button>
