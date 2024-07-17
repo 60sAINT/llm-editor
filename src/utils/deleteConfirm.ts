@@ -1,6 +1,6 @@
 import { Modal } from "antd";
 
-export const useDeleteConfirm = (onOk?: (...args: any[]) => any) => {
+export const deleteConfirm = (onOk?: (...args: any[]) => any) => {
     Modal.confirm({
         title: "确认删除",
         // icon: <ExclamationCircleFilled />,

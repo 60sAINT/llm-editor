@@ -36,6 +36,20 @@ export class KnowledgeApi {
         );
         return result.data.data.file_list;
     }
+
+    public async delFile(db_name: string, file_name: string) {
+        const result = await axios.post(
+            `${apikeyPrefix}/file/delete?db_name=${db_name}&file_name=${file_name}`
+        );
+        return result.data;
+    }
+
+    public async downloadFile(db_name: string, file_name: string) {
+        const result = await axios.get(
+            `${apikeyPrefix}/file/download?db_name=${db_name}&file_name=${file_name}`
+        );
+        return result.data;
+    }
 }
 
 export const knowledgeApi = new KnowledgeApi();

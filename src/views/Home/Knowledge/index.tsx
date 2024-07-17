@@ -3,7 +3,7 @@ import { Input, Button, Modal, Form, List, Card } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useRequest } from "@/hooks/useRequest";
 import { knowledgeApi } from "./api";
-import { useDeleteConfirm } from "@/utils/deleteConfirm";
+import { deleteConfirm } from "@/utils/deleteConfirm";
 
 const KnowledgeBaseApp: React.FC = () => {
     const [form] = Form.useForm();
@@ -75,7 +75,7 @@ const KnowledgeBaseApp: React.FC = () => {
                             {item.description}
                             <a
                                 onClick={() =>
-                                    useDeleteConfirm(
+                                    deleteConfirm(
                                         async () => await deleteDb(item.name)
                                     )
                                 }
