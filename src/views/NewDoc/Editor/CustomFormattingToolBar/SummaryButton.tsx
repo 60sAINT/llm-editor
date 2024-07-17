@@ -69,7 +69,7 @@ export function SummaryButton({ isFull }: { isFull?: boolean }) {
 export const getFullText = (state: State) => {
   const document = state.editor.document;
   const text = _flatMap(document, (item) =>
-    item.content.map((i: { text: string }) => i.text)
+    item.content?.map((i: { text: string }) => i.text)
   ).join("");
   return text;
 };
