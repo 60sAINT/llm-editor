@@ -22,6 +22,20 @@ export class KnowledgeApi {
         });
         return result.data;
     }
+
+    public async downloadKnowledge(db_name: string) {
+        const result = await axios.get(
+            `${apikeyPrefix}/db/download?db_name=${db_name}`
+        );
+        return result.data;
+    }
+
+    public async getFiles(db_name: string) {
+        const result = await axios.get(
+            `${apikeyPrefix}/file/list?db_name=${db_name}`
+        );
+        return result.data.file_list;
+    }
 }
 
 export const knowledgeApi = new KnowledgeApi();

@@ -37,6 +37,9 @@ const KnowledgeBaseApp: React.FC = () => {
         setIsModalVisible(false);
     };
 
+    const toDb = (db_name: string) =>
+        window.open(`./db?db_name=${db_name}`, "_blank");
+
     return (
         <div className="p-4">
             <div className="flex justify-between items-center mb-4">
@@ -60,7 +63,11 @@ const KnowledgeBaseApp: React.FC = () => {
                 loading={loading}
                 renderItem={(item) => (
                     <List.Item>
-                        <Card title={item.name} className="shadow-md">
+                        <Card
+                            title={item.name}
+                            className="shadow-md"
+                            onClick={() => toDb(item.name)}
+                        >
                             {item.description}
                             <a
                                 onClick={() =>
