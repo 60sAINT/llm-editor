@@ -26,6 +26,8 @@ export const reducer = (state: State, action: Action): State => {
       return { ...state, ocrText: action.payload };
     case "OCR_FRAME_DISPLAY":
       return { ...state, ocrFrameDisplay: action.payload };
+    case "CARD_TEXT":
+      return { ...state, cardText: state.cardText + action.payload }; // 不断更新显示从后端获取的续写文本
     // case "EDIT_CONTINUE_TEXT":
     //   return { ...state, frameText: action.payload }; // 编辑续写文本
     case "REPLACE_SELECTION":
@@ -52,6 +54,8 @@ export const reducer = (state: State, action: Action): State => {
       return { ...state, reviseText: "" }; // 把润色的文本清除
     case "RESET_SUMMARY_TEXT":
       return { ...state, summaryText: "" }; // 把润色的文本清除
+    case "RESET_CARD_TEXT":
+      return { ...state, cardText: "" }; // 把卡片的文本清除
     case "SET_EDITOR":
       return { ...state, editor: action.payload }; // 设置编辑器对象
     case "SET_BLOCK_TO_UPDATE":

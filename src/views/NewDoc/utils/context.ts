@@ -11,6 +11,7 @@ export interface State {
   polishText: string; // 润色框中展示的文本
   reviseText: string; // 订正框中展示的文本
   summaryText: string; // 摘要框中展示的文本
+  cardText: string; // 右侧卡片的文本
   // SELECTION
   selection: string; // 光标选择的的文本
   continueSelection: string; // 续写所选文本
@@ -47,6 +48,7 @@ export type Action =
   | { type: "TRANSLATE_TEXT"; payload: string }
   | { type: "REVISE_TEXT"; payload: string }
   | { type: "SUMMARY_TEXT"; payload: string }
+  | { type: "CARD_TEXT"; payload: string }
   | { type: "OCR_TEXT"; payload: string }
   // RESET
   | { type: "RESET_FRAME_TEXT" }
@@ -55,6 +57,7 @@ export type Action =
   | { type: "RESET_TRANSLATE_TEXT" }
   | { type: "RESET_REVISE_TEXT" }
   | { type: "RESET_SUMMARY_TEXT" }
+  | { type: "RESET_CARD_TEXT" }
   // SELECTION
   // | { type: "EDIT_CONTINUE_TEXT"; payload: string }
   | { type: "REPLACE_SELECTION"; payload: string }
@@ -75,6 +78,7 @@ export const initialState: State = {
   syncLock: false,
   buttonDisplay: DisplayStyle.HIDDEN,
   frameText: "",
+  cardText: "",
   continueText: "",
   translateText: "",
   polishText: "",
