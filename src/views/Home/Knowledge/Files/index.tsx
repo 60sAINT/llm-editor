@@ -79,7 +79,12 @@ const Files = () => {
         },
     ];
 
-    return <Table dataSource={data} columns={columns} loading={loading} />;
+    return (
+        <div className="p-4">
+            <Button type="primary">上传文件</Button>
+            <Table dataSource={data} columns={columns} loading={loading} />
+        </div>
+    );
 };
 
 export default Files;

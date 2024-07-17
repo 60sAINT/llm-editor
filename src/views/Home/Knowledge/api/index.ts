@@ -50,6 +50,14 @@ export class KnowledgeApi {
         );
         return result.data;
     }
+
+    public async uploadFile(db_name: string, knowledge_files: []) {
+        const result = await axios.post(
+            `${apikeyPrefix}/file/download?db_name=${db_name}`,
+            { knowledge_files }
+        );
+        return result.data;
+    }
 }
 
 export const knowledgeApi = new KnowledgeApi();
