@@ -35,7 +35,7 @@ export const OcrFrame = () => {
       } bg-white border-x border-b border-gray-100 rounded-e-md shadow-lg pt-5 pb-2.5 px-2.5`}
     >
       {loadingDisplay ? (
-        <Skeleton title={false} paragraph={{ rows: 3 }} />
+        <Skeleton title={false} paragraph={{ rows: 3 }} active />
       ) : (
         <TextArea
           autoSize={{ minRows: 1, maxRows: 5 }}

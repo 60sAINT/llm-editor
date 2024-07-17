@@ -65,13 +65,22 @@ const NewDoc = () => {
                       minHeight: "1123px",
                     }}
                   >
-                    <DocTitle />
                     {!docId ? (
-                      <Editor />
+                      <>
+                        <DocTitle />
+                        <Editor />
+                      </>
                     ) : docData ? (
-                      <Editor docData={docData} />
+                      <>
+                        <DocTitle />
+                        <Editor docData={docData} />
+                      </>
                     ) : (
-                      <Skeleton className="px-12" />
+                      <Skeleton
+                        className="px-12 !pt-14 [&_.ant-skeleton-paragraph>li]:!mt-7 [&_.ant-skeleton-paragraph>li:first-child]:!mt-10"
+                        active
+                        paragraph={{ rows: 21 }}
+                      />
                     )}
                   </div>
                 </Col>
