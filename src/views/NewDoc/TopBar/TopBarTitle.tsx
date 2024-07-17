@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDocState, useDocDispatch } from "../utils/docProvider";
 import { Tooltip } from "antd";
 
 const TopBarTitle = () => {
-  const { title } = useDocState();
+  const state = useDocState();
   const docDispatch = useDocDispatch();
+  const [title, setTitle] = useState("");
+  useEffect(() => {
+    setTitle(state.title);
+  }, [state.title]);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
     docDispatch({ type: "EDIT_TITLE", payload: e.target.value });
   };
   return (
@@ -15,10 +20,8 @@ const TopBarTitle = () => {
         placeholder="无标题"
         value={title}
         onChange={handleChange}
-        className="text-sm outline-none ml-4 text-[#1f1f1f] leading-7"
+        className="text-sm outline-none ml-4 text-[#1f1f1f] leading-7 min-w-12 max-w-44"
         style={{
-          minWidth: "50px",
-          maxWidth: "183px",
           width: `${Math.max(50, title.length * 8)}px`,
         }}
       />

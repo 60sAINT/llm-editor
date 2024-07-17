@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDocState, useDocDispatch } from "./utils/docProvider";
 
 const DocTitle = () => {
-  const { title } = useDocState();
+  // const { title } = useDocState();
+  const state = useDocState();
+  const [title, setTitle] = useState("");
+  useEffect(() => {
+    setTitle(state.title);
+  }, [state.title]);
   const docDispatch = useDocDispatch();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     docDispatch({ type: "EDIT_TITLE", payload: e.target.value });
+    setTitle(e.target.value);
   };
   return (
-    <div style={{ padding: "40px 54px 20px 54px" }}>
+    <div className="px-12 pt-10 pb-5">
       <input
         type="text"
         placeholder="无标题"

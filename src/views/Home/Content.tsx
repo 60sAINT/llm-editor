@@ -1,26 +1,66 @@
 import React, { useMemo } from "react";
-import { Space, Table } from "antd";
+import { Button, Flex, Space, Table, Tooltip, Modal } from "antd";
 import {
+  DeleteOutlined,
   FileAddOutlined,
+  FileTextOutlined,
   ImportOutlined,
   OpenAIOutlined,
+  ExclamationCircleFilled,
 } from "@ant-design/icons";
 import { useRequest } from "@/hooks/useRequest";
 import { docApi } from "../NewDoc/api/Doc";
+import { useAuth } from "@/provider/authProvider";
+import { ColumnType } from "antd/es/table";
+import { OPERATE, TableData } from "./model";
+import { formatDate } from "@/common/utils";
 
-enum OPERATE {
-  CREATE = "create",
-  WRITE = "write",
-  UPLOAD = "upload",
-}
+// const menuItems: MenuProps["items"] = [
+//   { key: "1", label: "当前标签页打开" },
+//   { key: "2", label: "新建标签页打开" },
+//   { key: "3", label: "协作" },
+//   { key: "4", label: "分享链接" },
+//   { key: "5", label: "重命名" },
+//   { key: "6", label: "移动到" },
+//   { key: "7", label: "创建副本" },
+//   { key: "8", label: "下载Word文档" },
+//   { key: "9", label: "删除", danger: true },
+// ];
+
 const Content = () => {
-  const { run: getDocList, data: docList } = useRequest(
+  const { token } = useAuth();
+  const {
+    run: getDocList,
+    data: docList,
+    loading: docListLoading,
+  } = useRequest(
     async () => {
-      const res = await docApi.getDocList();
-      return res;
+      const res = await docApi.getDocList("Bearer " + token || "");
+      return res.data.doc_list;
     },
     { manual: false }
   );
+
+  const { confirm } = Modal;
+  const { runAsync: deleteDoc } = useRequest(async (docId) => {
+    const res = await docApi.deleteDoc(docId);
+    return res.data;
+  });
+  const showDeleteConfirm = (docId: string) => {
+    confirm({
+      title: "确认删除",
+      icon: <ExclamationCircleFilled />,
+      content: "确认删除文件？",
+      okText: "删除",
+      okType: "danger",
+      cancelText: "取消",
+      onOk() {
+        deleteDoc(docId);
+        getDocList();
+      },
+      onCancel() {},
+    });
+  };
   const operates = useMemo(
     () => [
       {
@@ -51,26 +91,62 @@ const Content = () => {
     }
   };
 
-  const columns = useMemo(
+  const columns: ColumnType<TableData>[] = useMemo(
     () => [
       {
         title: "文件名",
-        dataIndex: "name",
-        width: "50%",
+        dataIndex: "title",
+        width: "40%",
+        ellipsis: {
+          showTitle: false,
+        },
+        render: (fileName: string, record: { doc_id: any }) => (
+          <div
+            className="text-topbar-text font-normal flex justify-start"
+            onClick={() => {
+              window.open(`./newDoc?doc_id=${record.doc_id}`, "_blank");
+            }}
+          >
+            <Tooltip title={fileName}>
+              <FileTextOutlined className="mr-2 text-topbar-text" />
+              {fileName}
+            </Tooltip>
+          </div>
+        ),
       },
       {
-        title: "创建者",
-        dataIndex: "creator",
+        title: "最后打开时间",
+        dataIndex: "last_saved_at",
+        width: "40%",
+        render: (timeString: string) => formatDate(timeString),
+        sorter: (a: TableData, b: TableData) =>
+          new Date(b.last_saved_at).getTime() -
+          new Date(a.last_saved_at).getTime(),
+        defaultSortOrder: "ascend",
+      },
+      {
+        title: "操作",
+        dataIndex: "operation",
         width: "20%",
-      },
-      {
-        title: "打开时间",
-        dataIndex: "time",
-        width: "30%",
+        render: (_, record) => (
+          <Flex>
+            <Button
+              type="link"
+              className="text-primary hover:!text-[#e2a3ac] gap-1 pl-0 justify-start"
+              onClick={() => {
+                showDeleteConfirm(record.doc_id);
+              }}
+            >
+              <DeleteOutlined />
+              删除
+            </Button>
+          </Flex>
+        ),
       },
     ],
     []
   );
+  console.log(docList);
 
   return (
     <div className="w-full h-full overflow-auto">
@@ -93,7 +169,13 @@ const Content = () => {
       <h3 className="mt-6 mb-5 font-bold text-neutral-700 text-base">
         最近文件
       </h3>
-      <Table rowKey={"id"} dataSource={[]} columns={columns} />
+      <Table
+        rowKey={"doc_id"}
+        dataSource={docList}
+        columns={columns}
+        loading={docListLoading}
+        className="[&_.ant-spin-dot-spin]:text-primary [&_.ant-table-column-sorter-down.active]:text-primary [&_.ant-table-column-sorter-up.active]:text-primary [&_.ant-pagination-item-active]:border-primary [&_.ant-pagination-item-active:hover]:border-primary [&_.ant-pagination-item-active>a]:text-primary [&_.ant-pagination-item-active>a:hover]:text-primary"
+      />
     </div>
   );
 };

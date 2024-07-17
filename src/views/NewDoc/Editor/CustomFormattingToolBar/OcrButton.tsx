@@ -46,14 +46,8 @@ export const OcrButton = () => {
   const handleImageOcr = async (): Promise<void> => {
     dispatch({ type: "OCR_FRAME_DISPLAY", payload: true });
     dispatch({ type: "LOADING_DISPLAY", payload: true });
-    console.log("state.blockToUpdate", state.blockToUpdate);
-    console.log(
-      "state.editor.getTextCursorPosition().block",
-      state.editor.getTextCursorPosition().block
-    );
     if (state.blockToUpdate !== state.editor.getTextCursorPosition().block) {
       dispatch({ type: "OCR_TEXT", payload: "" });
-      console.log("执行了");
     }
     const imageBlock = state.editor?.getTextCursorPosition().block;
     if (imageBlock.type == "image") {

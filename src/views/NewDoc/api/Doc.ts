@@ -6,6 +6,7 @@ export type UpdateDocParams = {
   docId: string;
   title: string;
   content: string;
+  token: string;
 };
 export class DocApi {
   public async newDoc(title: string, content: string) {
@@ -15,17 +16,29 @@ export class DocApi {
     });
     return result.data;
   }
-  public async updateDoc({ docId, title, content }: UpdateDocParams) {
+  public async updateDoc({ docId, title, content, token }: UpdateDocParams) {
     const result = await axios.post(`${apikeyPrefix}/doc/update`, {
       docId,
       title,
       content,
+      headers: { Authorization: token },
     });
     return result.data;
   }
-  public async getDocList() {
-    const result = await axios.get(`${apikeyPrefix}/doc/list`);
-    console.log("result", result);
+  public async getDocList(token: string) {
+    const result = await axios.get(`${apikeyPrefix}/doc/list`, {
+      headers: { Authorization: token },
+    });
+    return result.data;
+  }
+  public async getDocByDocId(docId: string) {
+    const result = await axios.get(`${apikeyPrefix}/doc?doc_id=${docId}`);
+    return result.data;
+  }
+  public async deleteDoc(doc_id: string) {
+    const result = await axios.post(`${apikeyPrefix}/doc/delete`, {
+      doc_id,
+    });
     return result.data;
   }
 }

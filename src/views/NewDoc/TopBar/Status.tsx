@@ -10,13 +10,14 @@ import { IsSavedType } from "../utils/docContext";
 import { docApi } from "../api/Doc";
 import { useRequest } from "@/hooks/useRequest";
 import { showMessage } from "@/common/utils/message";
+import { useAuth } from "@/provider/authProvider";
 
 const Status = () => {
+  const { token } = useAuth() as { token: string };
   const { isSaved, docId, title, docContent } = useDocState();
   const docDispatch = useDocDispatch();
   const [saveState, setSaveState] = useState<IsSavedType>(isSaved);
   useEffect(() => {
-    console.log(isSaved);
     setSaveState(isSaved);
   }, [isSaved]);
   // 保存新文档
@@ -27,13 +28,12 @@ const Status = () => {
   // 保存现有文档
   const { runAsync: saveDoc } = useRequest(
     async ({ docId, title, content }) => {
-      const res = await docApi.updateDoc({ docId, title, content });
+      const res = await docApi.updateDoc({ docId, title, content, token });
       return res;
     }
   );
 
   const handleSaveDoc = async () => {
-    console.log(docContent, isSaved, docId, title);
     setSaveState(IsSavedType.Saving);
     // 已有id，不是新文档
     if (docId) {

@@ -62,7 +62,6 @@ const customSchema = BlockNoteSchema.create({
 const CustomFormattingToolbar: FunctionComponent<
   FormattingToolbarProps
 > = () => {
-  // const state = useNewDocState();
   return (
     <div>
       <FormattingToolbar>
@@ -119,26 +118,18 @@ const CustomFormattingToolbar: FunctionComponent<
   );
 };
 
-const Editor = () => {
+interface EditorProps {
+  docData?: { content: string };
+}
+const Editor: React.FC<EditorProps> = ({ docData }) => {
+  const dispatch = useDispatch();
+  const docDispatch = useDocDispatch();
+  const initialContent = docData?.content
+    ? JSON.parse(docData?.content)
+    : [{ type: "paragraph", content: "Welcom to llm editor!" }];
   const editor = useCreateBlockNote({
     schema: customSchema,
-    initialContent: [
-      {
-        type: "paragraph",
-        content: "Welcome to llm-editor!",
-      },
-      {
-        type: "image",
-        props: {
-          url: "https://pic3.zhimg.com/v2-a2184227abddb98b3b7405e6033651ff_r.jpg",
-          caption:
-            "From https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg",
-        },
-      },
-      {
-        type: "video",
-      },
-    ],
+    initialContent,
     uploadFile: async (file: File) => {
       const base64String = await new Promise<string>((resolve) => {
         const fileReader = new FileReader();
@@ -150,16 +141,14 @@ const Editor = () => {
       return base64String;
     },
   });
-  const dispatch = useDispatch();
-  const docDispatch = useDocDispatch();
 
   const handleMouseUp = () => {
     const { startOffset, endOffset } = useRange();
     dispatch({ type: "SET_RANGE", payload: { startOffset, endOffset } });
-    const blockToUpdate = editor.getTextCursorPosition().block as Block;
+    const blockToUpdate = editor?.getTextCursorPosition().block as Block;
     dispatch({ type: "SET_BLOCK_TO_UPDATE", payload: blockToUpdate });
   };
-  if (editor.getTextCursorPosition().block.type == "image") {
+  if (editor?.getTextCursorPosition().block.type == "image") {
     showTextButton = false;
     showOcrButton = true;
   } else {
@@ -171,7 +160,7 @@ const Editor = () => {
     dispatch({ type: "SET_EDITOR", payload: editor });
     docDispatch({
       type: "SAVE_DOC_CONTENT",
-      payload: JSON.stringify(editor.document),
+      payload: JSON.stringify(editor?.document),
     });
   }, [editor]);
 
@@ -195,7 +184,7 @@ const Editor = () => {
         docDispatch({ type: "SAVE_DOC_STATUS", payload: IsSavedType.False });
         docDispatch({
           type: "SAVE_DOC_CONTENT",
-          payload: JSON.stringify(editor.document),
+          payload: JSON.stringify(editor?.document),
         });
       }}
     >
