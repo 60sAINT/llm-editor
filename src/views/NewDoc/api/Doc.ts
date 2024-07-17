@@ -3,7 +3,7 @@ import { axios } from "../../../api/AxiosInstance";
 const apikeyPrefix = "/api/v1";
 
 export type UpdateDocParams = {
-  docId: string;
+  doc_id: string;
   title: string;
   content: string;
   token: string;
@@ -16,9 +16,9 @@ export class DocApi {
     });
     return result.data;
   }
-  public async updateDoc({ docId, title, content, token }: UpdateDocParams) {
+  public async updateDoc({ doc_id, title, content, token }: UpdateDocParams) {
     const result = await axios.post(`${apikeyPrefix}/doc/update`, {
-      docId,
+      doc_id,
       title,
       content,
       headers: { Authorization: token },

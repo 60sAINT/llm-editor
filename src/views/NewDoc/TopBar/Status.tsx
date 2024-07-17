@@ -28,7 +28,12 @@ const Status = () => {
   // 保存现有文档
   const { runAsync: saveDoc } = useRequest(
     async ({ docId, title, content }) => {
-      const res = await docApi.updateDoc({ docId, title, content, token });
+      const res = await docApi.updateDoc({
+        doc_id: docId,
+        title,
+        content,
+        token,
+      });
       return res;
     }
   );
@@ -38,7 +43,8 @@ const Status = () => {
     // 已有id，不是新文档
     if (docId) {
       try {
-        await saveDoc({ docId, title, docContent });
+        console.log(docContent);
+        await saveDoc({ docId, title, content: docContent });
         showMessage("保存成功！", 0.65);
         setSaveState(IsSavedType.True);
         docDispatch({ type: "SAVE_DOC_STATUS", payload: IsSavedType.True });

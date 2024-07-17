@@ -119,13 +119,14 @@ const CustomFormattingToolbar: FunctionComponent<
 };
 
 interface EditorProps {
-  docData?: { content: string };
+  docData?: any;
 }
 const Editor: React.FC<EditorProps> = ({ docData }) => {
   const dispatch = useDispatch();
   const docDispatch = useDocDispatch();
+  console.log(docData);
   const initialContent = docData?.content
-    ? JSON.parse(docData?.content)
+    ? docData?.content
     : [{ type: "paragraph", content: "Welcom to llm editor!" }];
   const editor = useCreateBlockNote({
     schema: customSchema,
