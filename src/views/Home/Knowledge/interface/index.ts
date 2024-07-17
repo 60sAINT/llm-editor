@@ -1,10 +1,10 @@
 export interface KnowledgeBase {
-  id: number;
-  title: string;
-  description: string;
+    id: number;
+    name: string;
+    description: string;
 }
 
 export interface CreateKnowledgeParams {
-  title: string;
-  description: string;
+    db_name: string;
+    description: string;
 }
