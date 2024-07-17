@@ -3,7 +3,7 @@ import { Input, Button, Modal, Form, List, Card } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useRequest } from "@/hooks/useRequest";
 import { knowledgeApi } from "./api";
-import { useDeleteConfirm } from "@/utils/deleteConfirm";
+import { deleteConfirm } from "@/utils/deleteConfirm";
 
 const KnowledgeBaseApp: React.FC = () => {
     const [form] = Form.useForm();
@@ -21,9 +21,10 @@ const KnowledgeBaseApp: React.FC = () => {
         knowledgeApi.createKnowledge(v)
     );
 
-    const { runAsync: deleteDb } = useRequest((v) =>
-        knowledgeApi.delKnowledge(v)
-    );
+    const { runAsync: deleteDb } = useRequest(async (v) => {
+        const res = await knowledgeApi.delKnowledge(v);
+        if (res) refresh();
+    });
 
     const dataSource = useMemo(
         () => data?.filter((item) => item.name.includes(filteredData)),
@@ -36,6 +37,9 @@ const KnowledgeBaseApp: React.FC = () => {
         refresh();
         setIsModalVisible(false);
     };
+
+    const toDb = (db_name: string) =>
+        window.open(`./db?db_name=${db_name}`, "_blank");
 
     return (
         <div className="p-4">
@@ -60,11 +64,18 @@ const KnowledgeBaseApp: React.FC = () => {
                 loading={loading}
                 renderItem={(item) => (
                     <List.Item>
-                        <Card title={item.name} className="shadow-md">
+                        <Card
+                            title={
+                                <span onClick={() => toDb(item.name)}>
+                                    {item.name}
+                                </span>
+                            }
+                            className="shadow-md"
+                        >
                             {item.description}
                             <a
                                 onClick={() =>
-                                    useDeleteConfirm(
+                                    deleteConfirm(
                                         async () => await deleteDb(item.name)
                                     )
                                 }
