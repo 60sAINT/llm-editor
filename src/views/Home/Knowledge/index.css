@@ -1,0 +1,34 @@
+.card-hover {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card-hover:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid #d67b88;
+  /* 边框颜色 */
+}
+
+.card-footer {
+  display: none;
+  text-align: center;
+  padding: 10px;
+  border-end-end-radius: 8px;
+  border-end-start-radius: 8px;
+}
+
+.delete {
+  display: none;
+}
+
+.delete:hover {
+  background-color: #e4e4e7;
+}
+
+.card-hover:hover .card-footer {
+  display: block;
+}
+
+.card-hover:hover .delete {
+  display: block;
+}
