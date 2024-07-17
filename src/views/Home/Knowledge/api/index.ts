@@ -1,5 +1,5 @@
 import { axios } from "@/api/AxiosInstance";
-import { CreateKnowledgeParams, KnowledgeBase } from "../interface";
+import { CreateKnowledgeParams, FileBase, KnowledgeBase } from "../interface";
 
 const apikeyPrefix = "/api/v1/knowledge";
 
@@ -17,9 +17,9 @@ export class KnowledgeApi {
     }
 
     public async delKnowledge(db_name: string) {
-        const result = await axios.post(`${apikeyPrefix}/db/delete`, {
-            db_name,
-        });
+        const result = await axios.post(
+            `${apikeyPrefix}/db/delete?db_name=${db_name}`
+        );
         return result.data;
     }
 
@@ -30,11 +30,11 @@ export class KnowledgeApi {
         return result.data;
     }
 
-    public async getFiles(db_name: string) {
+    public async getFiles(db_name: string): Promise<FileBase[]> {
         const result = await axios.get(
             `${apikeyPrefix}/file/list?db_name=${db_name}`
         );
-        return result.data.file_list;
+        return result.data.data.file_list;
     }
 }
 

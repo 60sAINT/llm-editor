@@ -21,9 +21,10 @@ const KnowledgeBaseApp: React.FC = () => {
         knowledgeApi.createKnowledge(v)
     );
 
-    const { runAsync: deleteDb } = useRequest((v) =>
-        knowledgeApi.delKnowledge(v)
-    );
+    const { runAsync: deleteDb } = useRequest(async (v) => {
+        const res = await knowledgeApi.delKnowledge(v);
+        if (res) refresh();
+    });
 
     const dataSource = useMemo(
         () => data?.filter((item) => item.name.includes(filteredData)),
@@ -64,9 +65,12 @@ const KnowledgeBaseApp: React.FC = () => {
                 renderItem={(item) => (
                     <List.Item>
                         <Card
-                            title={item.name}
+                            title={
+                                <span onClick={() => toDb(item.name)}>
+                                    {item.name}
+                                </span>
+                            }
                             className="shadow-md"
-                            onClick={() => toDb(item.name)}
                         >
                             {item.description}
                             <a
