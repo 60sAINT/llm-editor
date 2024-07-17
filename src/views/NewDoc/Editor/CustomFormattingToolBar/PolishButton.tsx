@@ -18,6 +18,7 @@ export function PolishButton({ isFull }: { isFull?: boolean }) {
   });
   const handleTextPolish = async (): Promise<void> => {
     dispatch({ type: "SWITCH_VISIBILITY", payload: DisplayStyle.BLOCK });
+    dispatch({ type: "FULL_TEXT_LOADING", payload: true });
     // todo api params
     const selection = isFull
       ? JSON.stringify(state.editor.document)
@@ -42,6 +43,7 @@ export function PolishButton({ isFull }: { isFull?: boolean }) {
         while (true) {
           const { done, value } = await reader.read();
           if (done) {
+            dispatch({ type: "FULL_TEXT_LOADING", payload: false });
             break;
           }
           dispatch({ type: "FRAME_TEXT", payload: value });

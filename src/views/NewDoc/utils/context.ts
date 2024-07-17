@@ -25,6 +25,7 @@ export interface State {
   ocrText: string;
   ocrFrameDisplay: boolean;
   loadingDisplay: boolean;
+  fullTextLoading: boolean;
 }
 
 export enum DisplayStyle {
@@ -72,7 +73,8 @@ export type Action =
   // FRAME
   | { type: "OCR_FRAME_DISPLAY"; payload: boolean }
   // LOADING
-  | { type: "LOADING_DISPLAY"; payload: boolean };
+  | { type: "LOADING_DISPLAY"; payload: boolean }
+  | { type: "FULL_TEXT_LOADING"; payload: boolean };
 
 export const initialState: State = {
   syncLock: false,
@@ -94,6 +96,7 @@ export const initialState: State = {
   ocrText: "",
   ocrFrameDisplay: false,
   loadingDisplay: true,
+  fullTextLoading: false,
 };
 
 export const StateContext = createContext<State | undefined>(undefined);

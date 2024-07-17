@@ -20,7 +20,7 @@ const DocTitle = () => {
         placeholder="无标题"
         value={title}
         onChange={handleChange}
-        className="text-3xl font-bold outline-none flex-grow"
+        className="text-3xl font-bold outline-none flex-grow w-full"
       />
     </div>
   );

@@ -6,12 +6,16 @@ interface CardListProps {
   dataSource: any[];
   loading?: boolean;
   classname?: string;
+  maxHeight?: string;
 }
 
-const CardList = ({ dataSource, classname }: CardListProps) => {
+const CardList = ({ dataSource, classname, maxHeight }: CardListProps) => {
   return (
     // <Spin spinning={loading}>
-    <div className={`card-list ${classname}`}>
+    <div
+      className={`card-list ${classname}`}
+      style={maxHeight ? { maxHeight: maxHeight } : {}}
+    >
       {dataSource.map((item, index) => (
         <Card key={index} index={index}>
           {item}

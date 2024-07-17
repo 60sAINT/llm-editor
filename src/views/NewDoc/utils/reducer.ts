@@ -64,6 +64,8 @@ export const reducer = (state: State, action: Action): State => {
       return { ...state, range: action.payload }; // 设置鼠标选择的文字的startIndex和endIndex
     case "LOADING_DISPLAY":
       return { ...state, loadingDisplay: action.payload };
+    case "FULL_TEXT_LOADING":
+      return { ...state, fullTextLoading: action.payload };
     default:
       return state;
   }
