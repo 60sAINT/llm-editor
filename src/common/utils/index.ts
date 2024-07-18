@@ -1,3 +1,5 @@
+import { saveAs } from "file-saver";
+
 export const targetLanguage = (str: string | undefined) => {
   if (!str) {
     return "英文";
@@ -67,3 +69,14 @@ export function exportFile(data: any, fileName: string) {
   downloadLink.click();
   document.body.removeChild(downloadLink);
 }
+
+const downloadZipFile = (blob: BlobPart, filename = "downloaded.zip") => {
+  try {
+    const zipBlob = new Blob([blob], { type: "application/zip" });
+    saveAs(zipBlob, filename);
+  } catch (error) {
+    console.error("下载文件失败:", error);
+  }
+};
+
+export default downloadZipFile;

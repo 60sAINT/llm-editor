@@ -4,7 +4,11 @@ import { knowledgeApi } from "../api";
 import { useSearchParams } from "react-router-dom";
 import { Button, Space, Table, Upload, UploadProps } from "antd";
 import { FileBase } from "../interface";
-import { bytesToSize, exportFile, formatDate } from "@/common/utils";
+import downloadZipFile, {
+  bytesToSize,
+  exportFile,
+  formatDate,
+} from "@/common/utils";
 import { deleteConfirm } from "@/utils/deleteConfirm";
 import { showError, showMessage } from "@/common/utils/message";
 import { useAuth } from "@/provider/authProvider";
@@ -53,7 +57,7 @@ const Files = () => {
 
   const exportDb = async () => {
     const res = await downloadKnowledge();
-    exportFile(res, db_name!);
+    downloadZipFile(res, db_name!);
   };
 
   const columns = [
@@ -136,7 +140,7 @@ const Files = () => {
 
   return (
     <div className="p-20">
-      <Space className="w-full flex justify-between">
+      <Space>
         <Upload {...uploadProps}>
           <Button type="primary" className="mb-[22px]">
             上传文件
