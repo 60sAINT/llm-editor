@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import "@blocknote/core/fonts/inter.css";
 import {
   FormattingToolbarController,
-  SideMenuController,
   createReactStyleSpec,
   useCreateBlockNote,
 } from "@blocknote/react";
@@ -29,7 +28,6 @@ import {
   UnnestBlockButton,
 } from "@blocknote/react";
 
-import { CustomSideMenu } from "./CustomSideMenu";
 // import { CustomFormattingToolbar } from "./CustomFormattingToolBar";
 import { useDispatch, useNewDocState } from "../utils/provider";
 import { DisplayStyle } from "../utils/context";
@@ -301,7 +299,6 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
   return (
     <BlockNoteView
       editor={editor}
-      sideMenu={false}
       formattingToolbar={false}
       onSelectionChange={() => {
         dispatch({ type: "SWITCH_VISIBILITY", payload: DisplayStyle.HIDDEN });
@@ -325,7 +322,6 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
       <FormattingToolbarController
         formattingToolbar={CustomFormattingToolbar}
       />
-      <SideMenuController sideMenu={CustomSideMenu} />
     </BlockNoteView>
   );
 };
