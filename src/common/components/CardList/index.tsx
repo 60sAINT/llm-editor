@@ -25,7 +25,7 @@ const CardList = ({
       {dataSource.map((item, index) => (
         <Card key={index} index={index}>
           {item}
-          {fullBtn}
+          <div className="absolute bottom-5 right-5">{fullBtn}</div>
         </Card>
       ))}
     </div>

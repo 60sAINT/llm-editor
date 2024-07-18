@@ -173,13 +173,14 @@ const NewDoc = () => {
                     <CardList
                       dataSource={[fullText]}
                       // loading={fullText.loading}
-                      classname="pl-2 !pr-0 [&>div]:flex [&>div]:items-stretch [&>div]:min-h-64 [&>div]:!mb-0"
+                      classname="pl-2 !pr-0 [&>div]:min-h-64 [&>div]:!mb-0 [&>div]:!px-5 [&>div]:!pt-5 [&>div]:!pb-14"
                       maxHeight={`${leftColHeight}px`}
                       fullBtn={
                         isDone ? (
                           <Button
                             size="small"
                             type="primary"
+                            className="h-7 w-20 rounded-sm"
                             onClick={replaceHandle}
                           >
                             替换全文
