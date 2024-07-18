@@ -7,9 +7,15 @@ interface CardListProps {
   loading?: boolean;
   classname?: string;
   maxHeight?: string;
+  fullBtn?: React.ReactNode;
 }
 
-const CardList = ({ dataSource, classname, maxHeight }: CardListProps) => {
+const CardList = ({
+  dataSource,
+  classname,
+  maxHeight,
+  fullBtn,
+}: CardListProps) => {
   return (
     // <Spin spinning={loading}>
     <div
@@ -19,6 +25,7 @@ const CardList = ({ dataSource, classname, maxHeight }: CardListProps) => {
       {dataSource.map((item, index) => (
         <Card key={index} index={index}>
           {item}
+          {fullBtn}
         </Card>
       ))}
     </div>

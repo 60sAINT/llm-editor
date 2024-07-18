@@ -16,12 +16,20 @@ export function PolishButton({ isFull }: { isFull?: boolean }) {
       : await sideMenuApi.textPolish(text);
     return res;
   });
+
+  const fullParams = (doc: any) => {
+    const p = doc?.map((item: { id: any; content: any }) => ({
+      id: item.id,
+      content: item.content,
+    }));
+    return JSON.stringify(p);
+  };
+
   const handleTextPolish = async (): Promise<void> => {
     dispatch({ type: "SWITCH_VISIBILITY", payload: DisplayStyle.BLOCK });
-    dispatch({ type: "FULL_TEXT_LOADING", payload: true });
-    // todo api params
+    isFull && dispatch({ type: "FULL_TEXT_LOADING", payload: true });
     const selection = isFull
-      ? JSON.stringify(state.editor.document)
+      ? fullParams(state.editor.document)
       : state.editor?.getSelectedText();
     if (selection && !state.syncLock) {
       dispatch({ type: "LOCK" });
@@ -43,7 +51,7 @@ export function PolishButton({ isFull }: { isFull?: boolean }) {
         while (true) {
           const { done, value } = await reader.read();
           if (done) {
-            dispatch({ type: "FULL_TEXT_LOADING", payload: false });
+            isFull && dispatch({ type: "FULL_TEXT_LOADING", payload: false });
             break;
           }
           dispatch({ type: "FRAME_TEXT", payload: value });
