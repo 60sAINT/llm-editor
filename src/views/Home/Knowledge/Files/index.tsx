@@ -2,10 +2,13 @@ import React from "react";
 import { useRequest } from "@/hooks/useRequest";
 import { knowledgeApi } from "../api";
 import { useSearchParams } from "react-router-dom";
-import { Button, Space, Table } from "antd";
+import { Button, Space, Table, Upload, UploadProps } from "antd";
 import { FileBase } from "../interface";
-import { bytesToSize, formatDate } from "@/common/utils";
+import { bytesToSize, exportFile, formatDate } from "@/common/utils";
 import { deleteConfirm } from "@/utils/deleteConfirm";
+import { showError, showMessage } from "@/common/utils/message";
+import { useAuth } from "@/provider/authProvider";
+import axios from "axios";
 
 const Files = () => {
   const [searchParams] = useSearchParams();
@@ -26,6 +29,13 @@ const Files = () => {
     }
   );
 
+  const { runAsync: downloadKnowledge } = useRequest(
+    () => knowledgeApi.downloadKnowledge(db_name!),
+    {
+      ready: !!db_name,
+    }
+  );
+
   const { runAsync: delFile } = useRequest(
     async (file_name) => {
       await knowledgeApi.delFile(db_name!, file_name);
@@ -37,7 +47,13 @@ const Files = () => {
   );
 
   const downloadHandle = async (file_name: string) => {
-    await downloadFile(file_name); // todo
+    const res = await downloadFile(file_name);
+    exportFile(res, file_name);
+  };
+
+  const exportDb = async () => {
+    const res = await downloadKnowledge();
+    exportFile(res, db_name!);
   };
 
   const columns = [
@@ -77,11 +93,59 @@ const Files = () => {
     },
   ];
 
+  const { token } = useAuth();
+  const action = `http://43.138.11.21:12099/api/v1/knowledge/file/upload?db_name=${db_name}`;
+  const handleChange = (info: any) => {
+    // if (info.file.status === "uploading") {
+    //   setLoading(true);
+    //   return;
+    // }
+    if (info.file.status === "done") {
+      const response = info.file.response;
+      if (!response) return;
+      showMessage(`${info.file.name} 文件上传成功`);
+    } else if (info.file.status === "error") {
+      showError(`${info.file.name} 文件上传失败`);
+    }
+  };
+
+  const accepts = [".pdf", ".txt", ".md", ".html"];
+  const uploadProps: UploadProps = {
+    accept: accepts.join(","),
+    name: "knowledge_files",
+    multiple: true,
+    onChange: handleChange,
+    showUploadList: false,
+    action,
+    customRequest: async (opt) => {
+      const formData = new FormData();
+      formData.append("knowledge_files", opt.file);
+      axios
+        .post(`${action}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          refresh();
+        });
+      // await uploadFile(formData);
+    },
+  };
+
   return (
     <div className="p-20">
-      <Button type="primary" className="mb-[22px]">
-        上传文件
-      </Button>
+      <Space className="w-full flex justify-between">
+        <Upload {...uploadProps}>
+          <Button type="primary" className="mb-[22px]">
+            上传文件
+          </Button>
+        </Upload>
+        <Button className="mb-[22px]" onClick={exportDb}>
+          导出知识库
+        </Button>
+      </Space>
       <Table dataSource={data} columns={columns} loading={loading} />
     </div>
   );
