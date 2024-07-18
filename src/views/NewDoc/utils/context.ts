@@ -27,6 +27,8 @@ export interface State {
   loadingDisplay: boolean;
   fullTextLoading: boolean;
   saveKeyDown: boolean;
+  formatKeyDown: boolean;
+  fullFormatting?: any;
 }
 
 export enum DisplayStyle {
@@ -36,6 +38,22 @@ export enum DisplayStyle {
 export type RangeType = {
   startOffset: number;
   endOffset: number;
+};
+export type FullFormattingType = {
+  "heading1-fontFamily": string;
+  "heading1-fontSize": number;
+  "heading2-fontFamily": string;
+  "heading2-fontSize": number;
+  "heading3-fontFamily": string;
+  "heading3-fontSize": number;
+  padding: string;
+  "paragraph-fontFamily": string;
+  "paragraph-fontSize": number;
+  segSpacing: number;
+  paddingBottom: string;
+  paddingLeft: string;
+  paddingRight: string;
+  paddingTop: string;
 };
 
 export type Action =
@@ -77,7 +95,10 @@ export type Action =
   | { type: "LOADING_DISPLAY"; payload: boolean }
   | { type: "FULL_TEXT_LOADING"; payload: boolean }
   // KEYEVENT
-  | { type: "SAVE_KEY_DOWN" };
+  | { type: "SAVE_KEY_DOWN" }
+  // FULLFORMATTING
+  | { type: "SET_FULLTEXT_FORMATTING"; payload: FullFormattingType }
+  | { type: "FORMAT_KEY_DOWN" };
 
 export const initialState: State = {
   syncLock: false,
@@ -101,6 +122,23 @@ export const initialState: State = {
   loadingDisplay: true,
   fullTextLoading: false,
   saveKeyDown: false,
+  formatKeyDown: false,
+  fullFormatting: {
+    "heading1-fontFamily": "-apple-system",
+    "heading1-fontSize": 36,
+    "heading2-fontFamily": "-apple-system",
+    "heading2-fontSize": 24,
+    "heading3-fontFamily": "-apple-system",
+    "heading3-fontSize": 16,
+    "paragraph-fontFamily": "-apple-system",
+    "paragraph-fontSize": 12,
+    segSpacing: 1.0,
+    padding: "moderate",
+    paddingTop: "",
+    paddingBottom: "",
+    paddingRight: "",
+    paddingLeft: "",
+  },
 };
 
 export const StateContext = createContext<State | undefined>(undefined);

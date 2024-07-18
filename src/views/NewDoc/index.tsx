@@ -16,6 +16,7 @@ import { useLocation } from "react-router-dom";
 import { useRequest } from "@/hooks/useRequest";
 import { docApi } from "./api/Doc";
 import { useDocId } from "./hooks/useDocId";
+import { Efficiency } from "./Efficiency";
 
 const NewDoc = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -53,10 +54,52 @@ const NewDoc = () => {
     }
   }, [title, doc]);
 
+  // 全文格式化
+  const initialFormat = {
+    "heading1-fontFamily": "-apple-system",
+    "heading1-fontSize": 36,
+    "heading2-fontFamily": "-apple-system",
+    "heading2-fontSize": 24,
+    "heading3-fontFamily": "-apple-system",
+    "heading3-fontSize": 16,
+    "paragraph-fontFamily": "-apple-system",
+    "paragraph-fontSize": 12,
+    segSpacing: 1.0,
+    padding: "moderate",
+    paddingTop: "",
+    paddingLeft: "",
+    paddingRight: "",
+    paddingBottom: "",
+  };
+  const { fullFormatting } = state;
+  const [fullFormat, setFullFormat] = useState(initialFormat);
+  // const [segPadding, setSegPadding] = useState(3);
+  const [paddingProperty, setPaddingProperty] = useState("20px");
+  useEffect(() => {
+    if (JSON.stringify(fullFormatting) !== JSON.stringify(initialFormat)) {
+      setFullFormat(state.fullFormatting);
+      // setSegPadding(state.fullFormatting.segSpacing);
+      if (state.fullFormatting.padding == "moderate") {
+        setPaddingProperty("20px");
+      } else if (state.fullFormatting.padding == "narrow") {
+        setPaddingProperty("12.7px");
+      } else if (state.fullFormatting.padding == "wide") {
+        setPaddingProperty("25.4px 50.8px 25.4px 50.8px");
+      } else {
+        setPaddingProperty(
+          `${parseFloat(state.fullFormatting.paddingTop) * 10}px ${
+            parseFloat(state.fullFormatting.paddingRight) * 10
+          }px ${parseFloat(state.fullFormatting.paddingBottom) * 10}px ${
+            parseFloat(state.fullFormatting.paddingLeft) * 10
+          }px`
+        );
+      }
+    }
+  }, [state.fullFormatting]);
+
   // 全文改写文字框高度逻辑
   const leftColRef = useRef<HTMLDivElement>(null);
   const [leftColHeight, setLeftColHeight] = useState(0);
-
   useEffect(() => {
     if (leftColRef.current) {
       setLeftColHeight(leftColRef.current.clientHeight);
@@ -72,14 +115,14 @@ const NewDoc = () => {
               <TopBar getShowCards={getShowCards} getFullText={setFullText} />
               <Row className="flex-grow justify-center items-start py-4 px-2 overflow-auto">
                 <Col span={fullText || fullTextLoading ? 4 : 6}>
-                  {showCards && <CardList dataSource={[0, 1, 2, 3, 4]} />}
+                  {showCards && <Efficiency />}
                 </Col>
                 <Col span={12} ref={leftColRef}>
                   <div
                     className="w-full bg-white shadow-md [&>.bn-container>div:first-child]:px-12"
                     style={{
                       borderRadius: "0",
-                      padding: "20px 20px 20px 20px",
+                      padding: paddingProperty,
                       boxSizing: "border-box",
                       minHeight: "1123px",
                     }}
@@ -87,12 +130,12 @@ const NewDoc = () => {
                     {!docId ? (
                       <>
                         <DocTitle />
-                        <Editor />
+                        <Editor fullFormat={fullFormat} />
                       </>
                     ) : docData ? (
                       <>
                         <DocTitle />
-                        <Editor docData={docData} />
+                        <Editor docData={docData} fullFormat={fullFormat} />
                       </>
                     ) : (
                       <Skeleton

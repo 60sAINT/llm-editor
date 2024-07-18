@@ -1,0 +1,56 @@
+/* 字体族 */
+[data-style-type="fontFamily"][data-value="FangSong"] {
+  font-family: "FangSong";
+}
+[data-style-type="fontFamily"][data-value="SimSun"] {
+  font-family: "SimSun";
+}
+[data-style-type="fontFamily"][data-value="-apple-system"] {
+  font-family: "-apple-system";
+}
+[data-style-type="fontFamily"][data-value="SimHei"] {
+  font-family: "SimHei";
+}[data-style-type="fontFamily"][data-value="KaiTi"] {
+  font-family: "KaiTi";
+}
+
+/* 字号 */
+[data-style-type="fontSize"][data-value="9"] {
+  font-size: 12px!important;
+}
+[data-style-type="fontSize"][data-value="10"] {
+  font-size: 13px!important;
+}
+[data-style-type="fontSize"][data-value="11"] {
+  font-size: 15px!important;
+}
+[data-style-type="fontSize"][data-value="12"] {
+  font-size: 16px!important;
+}
+[data-style-type="fontSize"][data-value="13"] {
+  font-size: 17px!important;
+}
+[data-style-type="fontSize"][data-value="14"] {
+  font-size: 19px!important;
+}
+[data-style-type="fontSize"][data-value="16"] {
+  font-size: 22px!important;
+}
+[data-style-type="fontSize"][data-value="18"] {
+  font-size: 24px!important;
+}
+[data-style-type="fontSize"][data-value="20"] {
+  font-size: 26px!important;
+}
+[data-style-type="fontSize"][data-value="22"] {
+  font-size: 29px!important;
+}
+[data-style-type="fontSize"][data-value="24"] {
+  font-size: 32px!important;
+}
+[data-style-type="fontSize"][data-value="30"] {
+  font-size: 40px!important;
+}
+[data-style-type="fontSize"][data-value="36"] {
+  font-size: 48px!important;
+}

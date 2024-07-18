@@ -68,6 +68,10 @@ export const reducer = (state: State, action: Action): State => {
       return { ...state, fullTextLoading: action.payload };
     case "SAVE_KEY_DOWN":
       return { ...state, saveKeyDown: !state.saveKeyDown };
+    case "FORMAT_KEY_DOWN":
+      return { ...state, formatKeyDown: !state.formatKeyDown };
+    case "SET_FULLTEXT_FORMATTING":
+      return { ...state, fullFormatting: action.payload };
     default:
       return state;
   }

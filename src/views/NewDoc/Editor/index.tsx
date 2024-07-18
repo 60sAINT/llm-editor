@@ -26,7 +26,7 @@ import {
 
 import { CustomSideMenu } from "./CustomSideMenu";
 // import { CustomFormattingToolbar } from "./CustomFormattingToolBar";
-import { useDispatch } from "../utils/provider";
+import { useDispatch, useNewDocState } from "../utils/provider";
 import { DisplayStyle } from "../utils/context";
 import useRange from "../hooks/useRange";
 import { ContinuationButton } from "./CustomFormattingToolBar/ContinuationButton";
@@ -39,6 +39,7 @@ import { OcrButton } from "./CustomFormattingToolBar/OcrButton";
 import { useDocDispatch } from "../utils/docProvider";
 import { IsSavedType } from "../utils/docContext";
 import { OcrFrame } from "./CustomFormattingToolBar/OcrFrame";
+import "./index.css";
 
 let showTextButton = true;
 let showOcrButton = true;
@@ -46,14 +47,25 @@ const customSchema = BlockNoteSchema.create({
   styleSpecs: {
     // Adds all default styles.
     ...defaultStyleSpecs,
-    font: createReactStyleSpec(
+    fontFamily: createReactStyleSpec(
       {
-        type: "font",
+        type: "fontFamily",
         propSchema: "string",
       },
       {
         render: (props) => (
           <span style={{ fontFamily: props.value }} ref={props.contentRef} />
+        ),
+      }
+    ),
+    fontSize: createReactStyleSpec(
+      {
+        type: "fontSize",
+        propSchema: "string",
+      },
+      {
+        render: (props) => (
+          <span style={{ fontSize: props.value }} ref={props.contentRef} />
         ),
       }
     ),
@@ -120,11 +132,12 @@ const CustomFormattingToolbar: FunctionComponent<
 
 interface EditorProps {
   docData?: any;
+  fullFormat?: any;
 }
-const Editor: React.FC<EditorProps> = ({ docData }) => {
+const Editor: React.FC<EditorProps> = ({ docData, fullFormat }) => {
   const dispatch = useDispatch();
   const docDispatch = useDocDispatch();
-  console.log(docData);
+  const { formatKeyDown } = useNewDocState();
   const initialContent = docData?.content
     ? docData?.content
     : [{ type: "paragraph", content: "Welcom to llm editor!" }];
@@ -164,6 +177,71 @@ const Editor: React.FC<EditorProps> = ({ docData }) => {
       payload: JSON.stringify(editor?.document),
     });
   }, [editor]);
+  useEffect(() => {
+    if (formatKeyDown) {
+      editor.forEachBlock((block) => {
+        if (block.type == "heading" && block.props.level == 1) {
+          const newStyles = {
+            fontFamily: fullFormat
+              ? fullFormat["heading1-fontFamily"]
+              : "-apple-system",
+            fontSize: fullFormat ? fullFormat["heading1-fontSize"] : 36,
+          };
+          const newContent = [
+            {
+              ...block.content[0],
+              styles: newStyles,
+            },
+          ];
+          editor.updateBlock(block, { content: newContent });
+        } else if (block.type == "heading" && block.props.level == 2) {
+          const newStyles = {
+            fontFamily: fullFormat
+              ? fullFormat["heading2-fontFamily"]
+              : "-apple-system",
+            fontSize: fullFormat ? fullFormat["heading2-fontSize"] : 24,
+          };
+          const newContent = [
+            {
+              ...block.content[0],
+              styles: newStyles,
+            },
+          ];
+          editor.updateBlock(block, { content: newContent });
+        } else if (block.type == "heading" && block.props.level == 3) {
+          const newStyles = {
+            fontFamily: fullFormat
+              ? fullFormat["heading3-fontFamily"]
+              : "-apple-system",
+            fontSize: fullFormat ? fullFormat["heading3-fontSize"] : 16,
+          };
+          const newContent = [
+            {
+              ...block.content[0],
+              styles: newStyles,
+            },
+          ];
+          editor.updateBlock(block, { content: newContent });
+        } else if (block.type == "paragraph") {
+          const newStyles = {
+            fontFamily: fullFormat
+              ? fullFormat["paragraph-fontFamily"]
+              : "-apple-system",
+            fontSize: fullFormat ? fullFormat["paragraph-fontSize"] : 12,
+          };
+          const newContent = [
+            {
+              ...block.content[0],
+              styles: newStyles,
+            },
+          ];
+          editor.updateBlock(block, { content: newContent });
+        }
+        return true;
+      });
+    }
+    dispatch({ type: "FORMAT_KEY_DOWN" });
+  }, [fullFormat]);
 
   // Renders the editor instance.
   return (
