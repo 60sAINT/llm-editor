@@ -10,6 +10,8 @@ export const docReducer = (state: DocState, action: DocAction): DocState => {
       return { ...state, docId: action.payload };
     case "SAVE_DOC_CONTENT":
       return { ...state, docContent: action.payload };
+    case "SET_EDITOR":
+      return { ...state, editor: action.payload }; // 设置编辑器对象
     default:
       throw new Error("Unknown action type: " + state);
   }

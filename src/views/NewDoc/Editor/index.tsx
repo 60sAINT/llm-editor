@@ -178,6 +178,7 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
 
   useEffect(() => {
     dispatch({ type: "SET_EDITOR", payload: editor });
+    docDispatch({ type: "SET_EDITOR", payload: editor });
     docDispatch({
       type: "SAVE_DOC_CONTENT",
       payload: JSON.stringify(editor?.document),

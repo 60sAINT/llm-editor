@@ -18,7 +18,8 @@ export type DocAction =
   | { type: "EDIT_TITLE"; payload: string }
   | { type: "SAVE_DOC_STATUS"; payload: IsSavedType }
   | { type: "SAVE_DOC_ID"; payload: string }
-  | { type: "SAVE_DOC_CONTENT"; payload: string };
+  | { type: "SAVE_DOC_CONTENT"; payload: string }
+  | { type: "SET_EDITOR"; payload: any };
 
 export const initialDocState: DocState = {
   title: "",

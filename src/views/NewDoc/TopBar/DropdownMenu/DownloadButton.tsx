@@ -5,16 +5,18 @@ import { Modal, Select } from "antd";
 
 const DownloadButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { editor } = useDocState();
+  const [template, setTemplate] =
+    useState("电子科技大学研究生学位论文撰写规范");
+  const { editor, title } = useDocState();
 
   const handleClick = () => {
     setIsModalOpen(true);
   };
   const handleSelectChange = (value: string) => {
-    console.log(`selected ${value}`);
+    setTemplate(value);
   };
 
-  const handleConfirm = async (template: string) => {
+  const handleConfirm = async () => {
     try {
       const html = await editor?.blocksToHTMLLossy();
       const res = await dropdownMenuApi.downloadDoc(html!, template);
@@ -23,13 +25,14 @@ const DownloadButton = () => {
       const url = window.URL.createObjectURL(new Blob([res]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "document.docx"); // or the name you prefer
+      link.setAttribute("download", `${title}.docx`); // or the name you prefer
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     } catch (error) {
       console.error("Failed to download the file", error);
     }
+    setIsModalOpen(false);
   };
 
   return (
@@ -43,7 +46,7 @@ const DownloadButton = () => {
       <Modal
         title="选择模板"
         open={isModalOpen}
-        onOk={() => handleConfirm}
+        onOk={() => handleConfirm()}
         onCancel={() => setIsModalOpen(false)}
       >
         <Select
