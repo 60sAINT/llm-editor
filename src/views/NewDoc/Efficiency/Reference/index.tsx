@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import "./index.css";
 import TextArea from "antd/es/input/TextArea";
 import { Button, Divider } from "antd";
@@ -35,7 +34,6 @@ const Reference: React.FC = () => {
   const handleSearch = async () => {
     setLoading(true);
     const response = await getReference(query);
-    console.log("response", response);
     const reader = response!.pipeThrough(new TextDecoderStream()).getReader();
     while (true) {
       const { done, value } = await reader.read();
@@ -43,11 +41,9 @@ const Reference: React.FC = () => {
         setLoading(false);
         break;
       }
-      console.log(value);
       setPapers(JSON.parse(JSON.parse(value).data));
     }
   };
-  console.log(papers);
 
   return (
     <>
@@ -88,14 +84,7 @@ const Reference: React.FC = () => {
                       onClick={() => window.open(paper.link, "_blank")}
                     >
                       <ExportOutlined className="mr-0.5 text-[10px] text-blue-500" />
-                      <a
-                        // href={paper.link}
-                        // target="_blank"
-                        // rel="noopener noreferrer"
-                        className="text-blue-500 text-[10px]"
-                      >
-                        查看
-                      </a>
+                      <a className="text-blue-500 text-[10px]">查看</a>
                     </div>
                   </div>
                 </div>
