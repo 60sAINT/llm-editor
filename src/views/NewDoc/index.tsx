@@ -11,11 +11,12 @@ import {
 } from "./utils/docContext";
 import { docReducer } from "./utils/docReducer";
 import CardList from "@/common/components/CardList";
-import { Col, Row, Skeleton } from "antd";
+import { Button, Col, Row, Skeleton } from "antd";
 import { useLocation } from "react-router-dom";
 import { useRequest } from "@/hooks/useRequest";
 import { docApi } from "./api/Doc";
 import { useDocId } from "./hooks/useDocId";
+import { BlockNoteEditor } from "@blocknote/core";
 
 const NewDoc = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -34,6 +35,7 @@ const NewDoc = () => {
 
   // 根据id获取当前doc的内容
   const [docData, setDocData] = useState();
+  const [editor, setEditor] = useState<BlockNoteEditor>();
   const [title, setTitle] = useState("");
   const { search } = useLocation();
   const docId = useDocId(search) as string;
@@ -56,12 +58,25 @@ const NewDoc = () => {
   // 全文改写文字框高度逻辑
   const leftColRef = useRef<HTMLDivElement>(null);
   const [leftColHeight, setLeftColHeight] = useState(0);
+  const isDone = !!(fullText && !fullTextLoading);
 
   useEffect(() => {
     if (leftColRef.current) {
       setLeftColHeight(leftColRef.current.clientHeight);
     }
   }, [docId, docData]);
+
+  const analysis = (s = "") => {
+    const parts = s.split("```");
+    if (parts.length < 2) return "";
+    const jsonPart = parts[1].split("json");
+    return jsonPart.length > 1 ? jsonPart[1].trim() : "";
+  };
+
+  const replaceHandle = () => {
+    const content = JSON.parse(analysis(fullText));
+    editor?.replaceBlocks(editor?.document, content);
+  };
 
   return (
     <DocStateContext.Provider value={docState}>
@@ -92,7 +107,10 @@ const NewDoc = () => {
                     ) : docData ? (
                       <>
                         <DocTitle />
-                        <Editor docData={docData} />
+                        <Editor
+                          docData={docData}
+                          getEditor={(e) => setEditor(e)}
+                        />
                       </>
                     ) : (
                       <Skeleton
@@ -113,6 +131,19 @@ const NewDoc = () => {
                       // loading={fullText.loading}
                       classname="pl-2 !pr-0 [&>div]:flex [&>div]:items-stretch [&>div]:min-h-64 [&>div]:!mb-0"
                       maxHeight={`${leftColHeight}px`}
+                      fullBtn={
+                        isDone ? (
+                          <Button
+                            size="small"
+                            type="primary"
+                            onClick={replaceHandle}
+                          >
+                            替换全文
+                          </Button>
+                        ) : (
+                          <></>
+                        )
+                      }
                     />
                   </Col>
                 ) : (

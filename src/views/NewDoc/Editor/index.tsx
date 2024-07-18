@@ -8,7 +8,12 @@ import {
 } from "@blocknote/react";
 import "@blocknote/mantine/style.css";
 import { BlockNoteView } from "@blocknote/mantine";
-import { Block, BlockNoteSchema, defaultStyleSpecs } from "@blocknote/core";
+import {
+  Block,
+  BlockNoteEditor,
+  BlockNoteSchema,
+  defaultStyleSpecs,
+} from "@blocknote/core";
 import { FunctionComponent } from "react";
 import {
   BasicTextStyleButton,
@@ -120,11 +125,11 @@ const CustomFormattingToolbar: FunctionComponent<
 
 interface EditorProps {
   docData?: any;
+  getEditor?: (editor: BlockNoteEditor) => void;
 }
-const Editor: React.FC<EditorProps> = ({ docData }) => {
+const Editor: React.FC<EditorProps> = ({ docData, getEditor }) => {
   const dispatch = useDispatch();
   const docDispatch = useDocDispatch();
-  console.log(docData);
   const initialContent = docData?.content
     ? docData?.content
     : [{ type: "paragraph", content: "Welcom to llm editor!" }];
@@ -163,6 +168,7 @@ const Editor: React.FC<EditorProps> = ({ docData }) => {
       type: "SAVE_DOC_CONTENT",
       payload: JSON.stringify(editor?.document),
     });
+    getEditor?.(editor);
   }, [editor]);
 
   // Renders the editor instance.
