@@ -15,6 +15,18 @@
 }
 
 /* 字号 */
+[data-style-type="fontSize"][data-value="5"] {
+  font-size: 6.7px !important;
+}
+[data-style-type="fontSize"][data-value="6"] {
+  font-size: 7.3px !important;
+}
+[data-style-type="fontSize"][data-value="7"] {
+  font-size: 8.7px !important;
+}
+[data-style-type="fontSize"][data-value="8"] {
+  font-size: 10px !important;
+}
 [data-style-type="fontSize"][data-value="9"] {
   font-size: 12px!important;
 }
@@ -27,11 +39,11 @@
 [data-style-type="fontSize"][data-value="12"] {
   font-size: 16px!important;
 }
-[data-style-type="fontSize"][data-value="13"] {
-  font-size: 17px!important;
-}
 [data-style-type="fontSize"][data-value="14"] {
-  font-size: 19px!important;
+  font-size: 18.7px!important;
+}
+[data-style-type="fontSize"][data-value="15"] {
+  font-size: 20px !important;
 }
 [data-style-type="fontSize"][data-value="16"] {
   font-size: 22px!important;
@@ -39,20 +51,29 @@
 [data-style-type="fontSize"][data-value="18"] {
   font-size: 24px!important;
 }
-[data-style-type="fontSize"][data-value="20"] {
-  font-size: 26px!important;
-}
 [data-style-type="fontSize"][data-value="22"] {
   font-size: 29px!important;
 }
 [data-style-type="fontSize"][data-value="24"] {
   font-size: 32px!important;
 }
-[data-style-type="fontSize"][data-value="30"] {
-  font-size: 40px!important;
+[data-style-type="fontSize"][data-value="26"] {
+  font-size: 34.7px !important;
 }
 [data-style-type="fontSize"][data-value="36"] {
   font-size: 48px!important;
+}
+[data-style-type="fontSize"][data-value="42"] {
+  font-size: 56px !important;
+}
+[data-style-type="fontSize"][data-value="54"] {
+  font-size: 71.7px !important;
+}
+[data-style-type="fontSize"][data-value="63"] {
+  font-size: 83.7px !important;
+}
+[data-style-type="fontSize"][data-value="72"] {
+  font-size: 95.6px !important;
 }
 
 /* 段间距 */

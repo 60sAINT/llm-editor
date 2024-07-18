@@ -4,56 +4,80 @@ import { useDispatch } from "../../utils/provider";
 
 const fontSizeOptions = [
   {
-    value: 9,
-    label: 9,
+    value: 5,
+    label: "八号",
   },
   {
-    value: 10,
-    label: 10,
+    value: 6,
+    label: "七号",
+  },
+  {
+    value: 7,
+    label: "小六",
+  },
+  {
+    value: 8,
+    label: "六号",
+  },
+  {
+    value: 9,
+    label: "小五",
   },
   {
     value: 11,
-    label: 11,
+    label: "五号",
   },
   {
     value: 12,
-    label: 12,
-  },
-  {
-    value: 13,
-    label: 13,
+    label: "小四",
   },
   {
     value: 14,
-    label: 14,
+    label: "四号",
+  },
+  {
+    value: 15,
+    label: "小三",
   },
   {
     value: 16,
-    label: 16,
+    label: "三号",
   },
   {
     value: 18,
-    label: 18,
-  },
-  {
-    value: 20,
-    label: 20,
+    label: "小二",
   },
   {
     value: 22,
-    label: 22,
+    label: "二号",
   },
   {
     value: 24,
-    label: 24,
+    label: "小一",
   },
   {
-    value: 30,
-    label: 30,
+    value: 26,
+    label: "一号",
   },
   {
     value: 36,
-    label: 36,
+    label: "小初",
+  },
+  {
+    value: 42,
+    label: "初号",
+  },
+  {
+    value: 54,
+    label: "特号",
+  },
+  {
+    value: 63,
+    label: "大特号",
+  },
+  {
+    value: 72,
+    label: "1英寸",
   },
 ];
 const segSpacingOptions = [
@@ -222,7 +246,9 @@ export const FormattingDoc = () => {
             showSearch
             placeholder="请选择字号"
             optionFilterProp="label"
-            filterSort={(optionA, optionB) => optionA.label - optionB.label}
+            filterSort={(optionA, optionB) =>
+              (optionA.value as number) - (optionB.value as number)
+            }
             options={fontSizeOptions}
           />
         </Form.Item>
@@ -261,7 +287,9 @@ export const FormattingDoc = () => {
             showSearch
             placeholder="请选择字号"
             optionFilterProp="label"
-            filterSort={(optionA, optionB) => optionA.label - optionB.label}
+            filterSort={(optionA, optionB) =>
+              (optionA.value as number) - (optionB.value as number)
+            }
             options={fontSizeOptions}
           />
         </Form.Item>
@@ -300,7 +328,9 @@ export const FormattingDoc = () => {
             showSearch
             placeholder="请选择字号"
             optionFilterProp="label"
-            filterSort={(optionA, optionB) => optionA.label - optionB.label}
+            filterSort={(optionA, optionB) =>
+              (optionA.value as number) - (optionB.value as number)
+            }
             options={fontSizeOptions}
           />
         </Form.Item>
@@ -339,7 +369,9 @@ export const FormattingDoc = () => {
             showSearch
             placeholder="请选择字号"
             optionFilterProp="label"
-            filterSort={(optionA, optionB) => optionA.label - optionB.label}
+            filterSort={(optionA, optionB) =>
+              (optionA.value as number) - (optionB.value as number)
+            }
             options={fontSizeOptions}
           />
         </Form.Item>
