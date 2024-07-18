@@ -80,7 +80,7 @@ const Reference: React.FC = () => {
                       {paper.title}
                     </span>
                     <div
-                      className="bg-blue-50 rounded-[3px] pt-0.5 px-1 pb-1"
+                      className="bg-blue-50 rounded-[3px] pt-0.5 px-1 pb-1 min-w-10 ml-1"
                       onClick={() => window.open(paper.link, "_blank")}
                     >
                       <ExportOutlined className="mr-0.5 text-[10px] text-blue-500" />
