@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Row, Select } from "antd";
+import { Button, Col, Form, Input, Row, Select, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "../../utils/provider";
 
@@ -82,6 +82,24 @@ const segSpacingOptions = [
     label: 3.0,
   },
 ];
+const dataSource = [
+  {
+    key: "1",
+    position: "段前",
+    heading1: "before",
+    heading2: "before",
+    heading3: "before",
+    paragraph: "before",
+  },
+  {
+    key: "2",
+    position: "段后",
+    heading1: "after",
+    heading2: "after",
+    heading3: "after",
+    paragraph: "after",
+  },
+];
 const paddingOptions = [
   { label: "窄", value: "narrow" },
   { label: "适中", value: "moderate" },
@@ -158,6 +176,14 @@ export const FormattingDoc = () => {
           paddingLeft: "",
           paddingRight: "",
           paddingBottom: "",
+          "segSpacing-before-heading1": 1,
+          "segSpacing-after-heading1": 1,
+          "segSpacing-before-heading2": 1,
+          "segSpacing-after-heading2": 1,
+          "segSpacing-before-heading3": 1,
+          "segSpacing-after-heading3": 1,
+          "segSpacing-before-paragraph": 1,
+          "segSpacing-after-paragraph": 1,
         }}
         style={{ maxWidth: 600 }}
         form={form}
@@ -191,7 +217,7 @@ export const FormattingDoc = () => {
             </Option>
           </Select>
         </Form.Item>
-        <Form.Item name="heading1-fontSize" label="字号">
+        <Form.Item name="heading1-fontSize" label="字号" className="mb-[21px]">
           <Select
             showSearch
             placeholder="请选择字号"
@@ -230,7 +256,7 @@ export const FormattingDoc = () => {
             </Option>
           </Select>
         </Form.Item>
-        <Form.Item name="heading2-fontSize" label="字号">
+        <Form.Item name="heading2-fontSize" label="字号" className="mb-[21px]">
           <Select
             showSearch
             placeholder="请选择字号"
@@ -269,7 +295,7 @@ export const FormattingDoc = () => {
             </Option>
           </Select>
         </Form.Item>
-        <Form.Item name="heading3-fontSize" label="字号">
+        <Form.Item name="heading3-fontSize" label="字号" className="mb-[21px]">
           <Select
             showSearch
             placeholder="请选择字号"
@@ -308,7 +334,7 @@ export const FormattingDoc = () => {
             </Option>
           </Select>
         </Form.Item>
-        <Form.Item name="paragraph-fontSize" label="字号">
+        <Form.Item name="paragraph-fontSize" label="字号" className="mb-[21px]">
           <Select
             showSearch
             placeholder="请选择字号"
@@ -320,19 +346,106 @@ export const FormattingDoc = () => {
 
         <Form.Item
           label="段间距"
-          className="mb-3 font-semibold [&_label]:!text-base"
+          className="mb-1.5 font-semibold [&_label]:!text-base"
           colon={false}
         ></Form.Item>
         <Form.Item
           name="segSpacing"
+          className="mb-5"
           hasFeedback
-          wrapperCol={{ offset: 1, span: 22 }}
+          wrapperCol={{ offset: 1, span: 23 }}
         >
-          <Select
-            placeholder="请选择段间距"
-            optionFilterProp="label"
-            filterSort={(optionA, optionB) => optionA.label - optionB.label}
-            options={segSpacingOptions}
+          <Table
+            pagination={false}
+            dataSource={dataSource}
+            className="[&_.ant-table-cell]:!px-0 [&_.ant-table-cell]:!py-2 [&_th]:!font-medium"
+            size="middle"
+            columns={[
+              {
+                title: "",
+                align: "center",
+                dataIndex: "position",
+                key: "position",
+                render: (text) => <>{text}</>,
+                width: "10%",
+              },
+              {
+                title: "标题1",
+                align: "center",
+                dataIndex: "heading1",
+                key: "heading1",
+                render: (position) => (
+                  <Form.Item
+                    name={`segSpacing-${position}-heading1`}
+                    className="mb-0"
+                  >
+                    <Select
+                      options={segSpacingOptions}
+                      variant="borderless"
+                      className="w-full text-center [&>.ant-select-selector]:!px-0 [&_.ant-select-selection-item]:!pr-0 [&>.ant-select-arrow]:right-1.5"
+                    />
+                  </Form.Item>
+                ),
+                width: "22.5%",
+              },
+              {
+                title: "标题2",
+                align: "center",
+                dataIndex: "heading2",
+                key: "heading2",
+                render: (position) => (
+                  <Form.Item
+                    name={`segSpacing-${position}-heading2`}
+                    className="mb-0"
+                  >
+                    <Select
+                      options={segSpacingOptions}
+                      variant="borderless"
+                      className="w-full text-center [&>.ant-select-selector]:!px-0 [&_.ant-select-selection-item]:!pr-0 [&>.ant-select-arrow]:right-1.5"
+                    />
+                  </Form.Item>
+                ),
+                width: "22.5%",
+              },
+              {
+                title: "标题3",
+                align: "center",
+                dataIndex: "heading3",
+                key: "heading3",
+                render: (position) => (
+                  <Form.Item
+                    name={`segSpacing-${position}-heading3`}
+                    className="mb-0"
+                  >
+                    <Select
+                      options={segSpacingOptions}
+                      variant="borderless"
+                      className="w-full text-center [&>.ant-select-selector]:!px-0 [&_.ant-select-selection-item]:!pr-0 [&>.ant-select-arrow]:right-1.5"
+                    />
+                  </Form.Item>
+                ),
+                width: "22.5%",
+              },
+              {
+                title: "段落",
+                align: "center",
+                dataIndex: "paragraph",
+                key: "paragraph",
+                render: (position) => (
+                  <Form.Item
+                    name={`segSpacing-${position}-paragraph`}
+                    className="mb-0"
+                  >
+                    <Select
+                      options={segSpacingOptions}
+                      variant="borderless"
+                      className="w-full text-center [&>.ant-select-selector]:!px-0 [&_.ant-select-selection-item]:!pr-0 [&>.ant-select-arrow]:right-1.5"
+                    />
+                  </Form.Item>
+                ),
+                width: "22.5%",
+              },
+            ]}
           />
         </Form.Item>
 
@@ -345,11 +458,10 @@ export const FormattingDoc = () => {
         <Form.Item
           name="padding"
           hasFeedback
-          wrapperCol={{ offset: 1, span: 22 }}
+          wrapperCol={{ offset: 2, span: 21 }}
           className="mb-5"
         >
           <Select
-            placeholder="请选择段间距"
             optionFilterProp="label"
             options={paddingOptions}
             onChange={handleSelectChange}
@@ -407,6 +519,7 @@ export const FormattingDoc = () => {
         className="float-right mr-1.5 mb-3.5 mt-1"
         onClick={async () => {
           const fullTextFormatting = await form.validateFields();
+          console.log(fullTextFormatting);
           dispatch({
             type: "SET_FULLTEXT_FORMATTING",
             payload: fullTextFormatting,

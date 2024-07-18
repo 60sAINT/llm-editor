@@ -16,6 +16,7 @@ export const Efficiency = () => {
           children: <FormattingDoc />,
         },
       ]}
+      className="[&_.ant-collapse-content-box]:!px-1.5 [&_.ant-collapse-content-box]:!py-1.5"
     />,
   ];
   return <CardList dataSource={effectDataSource} />;

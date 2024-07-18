@@ -54,3 +54,53 @@
 [data-style-type="fontSize"][data-value="36"] {
   font-size: 48px!important;
 }
+
+/* 段间距 */
+[data-style-type="marginTop"][data-value="1"] {
+  display: inline-block;
+  margin-top: 0!important;
+}
+[data-style-type="marginBottom"][data-value="1"] {
+  display: inline-block;
+  margin-bottom: 0!important;
+}
+[data-style-type="marginTop"][data-value="1.15"] {
+  display: inline-block;
+  margin-top: 6.9px!important;
+}
+[data-style-type="marginBottom"][data-value="1.15"] {
+  display: inline-block;
+  margin-bottom: 6.9px!important;
+}
+[data-style-type="marginTop"][data-value="1.5"] {
+  display: inline-block;
+  margin-top: 9px!important;
+}
+[data-style-type="marginBottom"][data-value="1.5"] {
+  display: inline-block;
+  margin-bottom: 9px!important;
+}
+[data-style-type="marginTop"][data-value="2"] {
+  display: inline-block;
+  margin-top: 12px!important;
+}
+[data-style-type="marginBottom"][data-value="2"] {
+  display: inline-block;
+  margin-bottom: 12px!important;
+}
+[data-style-type="marginTop"][data-value="2.5"] {
+  display: inline-block;
+  margin-top: 15px!important;
+}
+[data-style-type="marginBottom"][data-value="2.5"] {
+  display: inline-block;
+  margin-bottom: 15px!important;
+}
+[data-style-type="marginTop"][data-value="3"] {
+  display: inline-block;
+  margin-top: 18px!important;
+}
+[data-style-type="marginBottom"][data-value="3"] {
+  display: inline-block;
+  margin-bottom: 18px!important;
+}

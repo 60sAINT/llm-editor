@@ -74,6 +74,28 @@ const customSchema = BlockNoteSchema.create({
         ),
       }
     ),
+    marginTop: createReactStyleSpec(
+      {
+        type: "marginTop",
+        propSchema: "string",
+      },
+      {
+        render: (props) => (
+          <span style={{ marginTop: props.value }} ref={props.contentRef} />
+        ),
+      }
+    ),
+    marginBottom: createReactStyleSpec(
+      {
+        type: "marginBottom",
+        propSchema: "string",
+      },
+      {
+        render: (props) => (
+          <span style={{ marginBottom: props.value }} ref={props.contentRef} />
+        ),
+      }
+    ),
   },
 });
 const CustomFormattingToolbar: FunctionComponent<
@@ -193,6 +215,12 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
               ? fullFormat["heading1-fontFamily"]
               : "-apple-system",
             fontSize: fullFormat ? fullFormat["heading1-fontSize"] : 36,
+            marginTop: fullFormat
+              ? fullFormat["segSpacing-before-heading1"]
+              : 1,
+            marginBottom: fullFormat
+              ? fullFormat["segSpacing-after-heading1"]
+              : 1,
           };
           const newContent = [
             {
@@ -207,6 +235,12 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
               ? fullFormat["heading2-fontFamily"]
               : "-apple-system",
             fontSize: fullFormat ? fullFormat["heading2-fontSize"] : 24,
+            marginTop: fullFormat
+              ? fullFormat["segSpacing-before-heading2"]
+              : 1,
+            marginBottom: fullFormat
+              ? fullFormat["segSpacing-after-heading2"]
+              : 1,
           };
           const newContent = [
             {
@@ -221,6 +255,12 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
               ? fullFormat["heading3-fontFamily"]
               : "-apple-system",
             fontSize: fullFormat ? fullFormat["heading3-fontSize"] : 16,
+            marginTop: fullFormat
+              ? fullFormat["segSpacing-before-heading3"]
+              : 1,
+            marginBottom: fullFormat
+              ? fullFormat["segSpacing-after-heading3"]
+              : 1,
           };
           const newContent = [
             {
@@ -235,6 +275,12 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
               ? fullFormat["paragraph-fontFamily"]
               : "-apple-system",
             fontSize: fullFormat ? fullFormat["paragraph-fontSize"] : 12,
+            marginTop: fullFormat
+              ? fullFormat["segSpacing-before-paragraph"]
+              : 1,
+            marginBottom: fullFormat
+              ? fullFormat["segSpacing-after-paragraph"]
+              : 1,
           };
           const newContent = [
             {
