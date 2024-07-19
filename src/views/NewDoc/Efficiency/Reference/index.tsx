@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "./index.css";
 import TextArea from "antd/es/input/TextArea";
 import { Button, Divider } from "antd";
 import {
