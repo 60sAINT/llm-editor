@@ -5,7 +5,8 @@ module.exports = {
   entry: path.resolve(__dirname, "./src/index.tsx"),
   output: {
     path: path.resolve(__dirname, "./dist"), // 打包后的代码放在dist目录下
-    filename: "[name].[hash:8].js", // 打包的文件名
+    filename: "[name].[contenthash].js", // 使用 contenthash 以便于缓存
+    clean: true, // 在生成文件之前清空 output 目录
   },
   resolve: {
     // 配置 extensions 来告诉 webpack 在没有书写后缀时，以什么样的顺序去寻找文件
@@ -42,11 +43,20 @@ module.exports = {
         test: /\.(png|jpe?g|gif)$/i,
         type: "asset/resource",
       },
+      {
+        test: /\.css$/,
+        use: [
+          "style-loader", // Adds CSS to the DOM by injecting a <style> tag
+          "css-loader", // Interprets @import and url() like import/require() and will resolve them
+        ],
+        include: /node_modules/, // 包括 node_modules 目录
+      },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "./index.html"), // 使用自定义模板
+      inject: "body", // 将所有资源注入到 body 元素中
     }),
   ],
 };
