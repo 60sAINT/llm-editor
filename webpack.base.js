@@ -9,7 +9,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "./dist"), // 打包后的代码放在dist目录下
     filename: "[name].[contenthash].js", // 使用 contenthash 以便于缓存
-    clean: true, // 在生成文件之前清空 output 目录
+    clean: true,
+    publicPath: "/",
   },
   resolve: {
     // 配置 extensions 来告诉 webpack 在没有书写后缀时，以什么样的顺序去寻找文件
