@@ -43,6 +43,7 @@ module.exports = merge(base, {
           },
           "postcss-loader", // Processes CSS with PostCSS
         ],
+        exclude: /node_modules/, // 排除 node_modules 目录
       },
     ],
   },

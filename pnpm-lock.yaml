@@ -108,6 +108,12 @@ importers:
       file-loader:
         specifier: ^6.2.0
         version: 6.2.0(webpack@5.92.1(webpack-cli@5.1.4))
+      html-inline-css-webpack-plugin:
+        specifier: ^1.11.2
+        version: 1.11.2(html-webpack-plugin@5.6.0(webpack@5.92.1(webpack-cli@5.1.4)))
+      html-webpack-inline-source-plugin:
+        specifier: 0.0.10
+        version: 0.0.10
       html-webpack-plugin:
         specifier: ^5.6.0
         version: 5.6.0(webpack@5.92.1(webpack-cli@5.1.4))
@@ -129,6 +135,9 @@ importers:
       postcss-preset-env:
         specifier: ^9.5.14
         version: 9.5.14(postcss@8.4.38)
+      script-ext-html-webpack-plugin:
+        specifier: ^2.1.5
+        version: 2.1.5(html-webpack-plugin@5.6.0(webpack@5.92.1(webpack-cli@5.1.4)))(webpack@5.92.1(webpack-cli@5.1.4))
       style-loader:
         specifier: ^4.0.0
         version: 4.0.0(webpack@5.92.1(webpack-cli@5.1.4))
@@ -3904,6 +3913,11 @@ packages:
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
 
+  html-inline-css-webpack-plugin@1.11.2:
+    resolution: {integrity: sha512-jzJptIAOrYQh9ITxiDeNWQvPwk1nHZIo0P9/ZlLsfSYKqggMENJdO+Hcw67xSHoxtL2t+X9QO00eHu6W/c8V0Q==}
+    peerDependencies:
+      html-webpack-plugin: ^3.0.0 || ^4.0.0 || ^5.0.0
+
   html-minifier-terser@6.1.0:
     resolution: {integrity: sha512-YXxSlJBZTP7RS3tWnQw74ooKa6L9b9i9QYXY21eUEvhZ3u9XLfv6OnFsQq6RxkhHygsaUMvYsZRV5rU/OVNZxw==}
     engines: {node: '>=12'}
@@ -3911,6 +3925,9 @@ packages:
 
   html-void-elements@2.0.1:
     resolution: {integrity: sha512-0quDb7s97CfemeJAnW9wC0hw78MtW7NU3hqtCD75g2vFlDLt36llsYD7uB7SUzojLMP24N5IatXf7ylGXiGG9A==}
+
+  html-webpack-inline-source-plugin@0.0.10:
+    resolution: {integrity: sha512-0ZNU57u7283vrXSF5a4VDnVOMWiSwypKIp1z/XfXWoVHLA1r3Xmyxx5+Lz+mnthz/UvxL1OAf41w5UIF68Jngw==}
 
   html-webpack-plugin@5.6.0:
     resolution: {integrity: sha512-iwaY4wzbe48AfKLZ/Cc8k0L+FKG6oSNRaZ8x5A/T/IVDGyXcbHncM9TdDa93wn0FsSm82FhTKW7f3vS61thXAw==}
@@ -6742,6 +6759,13 @@ packages:
     resolution: {integrity: sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==}
     engines: {node: '>=0.10.0'}
 
+  script-ext-html-webpack-plugin@2.1.5:
+    resolution: {integrity: sha512-nMjd5dtsnoB8dS+pVM9ZL4mC9O1uVtTxrDS99OGZsZxFbkZE6pw0HCMued/cncDrKivIShO9vwoyOTvsGqQHEQ==}
+    engines: {node: '>=6.11.5'}
+    peerDependencies:
+      html-webpack-plugin: ^3.0.0 || ^4.0.0
+      webpack: ^1.0.0 || ^2.0.0 || ^3.0.0 || ^4.0.0
+
   scroll-into-view-if-needed@3.1.0:
     resolution: {integrity: sha512-49oNpRjWRvnU8NyGVmUaYG4jtTkNonFZI86MmGRDqBphEK2EXT9gdEUoQPZhuBM8yWHxCWbobltqYO5M4XrUvQ==}
 
@@ -6829,6 +6853,10 @@ packages:
   sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
 
+  slash@1.0.0:
+    resolution: {integrity: sha512-3TYDR7xWt4dIqV2JauJr+EJeW356RXijHeUlO+8djJ+uBXPn8/2dpzBc8yQhh583sVvc9CvFAeQVgijsH+PNNg==}
+    engines: {node: '>=0.10.0'}
+
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
@@ -6855,6 +6883,10 @@ packages:
 
   source-map-support@0.5.21:
     resolution: {integrity: sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==}
+
+  source-map-url@0.4.1:
+    resolution: {integrity: sha512-cPiFOTLUKvJFIg4SKVScy4ilPPW6rFgMgfuZJPNoDuMs3nC1HbMUycBoJw77xFIp6z1UJQJOfx6C9GMH80DiTw==}
+    deprecated: See https://github.com/lydell/source-map-url#deprecated
 
   source-map@0.6.1:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
@@ -12447,6 +12479,12 @@ snapshots:
 
   html-escaper@2.0.2: {}
 
+  html-inline-css-webpack-plugin@1.11.2(html-webpack-plugin@5.6.0(webpack@5.92.1(webpack-cli@5.1.4))):
+    dependencies:
+      html-webpack-plugin: 5.6.0(webpack@5.92.1(webpack-cli@5.1.4))
+      lodash: 4.17.21
+      tslib: 2.6.3
+
   html-minifier-terser@6.1.0:
     dependencies:
       camel-case: 4.1.2
@@ -12458,6 +12496,12 @@ snapshots:
       terser: 5.31.2
 
   html-void-elements@2.0.1: {}
+
+  html-webpack-inline-source-plugin@0.0.10:
+    dependencies:
+      escape-string-regexp: 1.0.5
+      slash: 1.0.0
+      source-map-url: 0.4.1
 
   html-webpack-plugin@5.6.0(webpack@5.92.1(webpack-cli@5.1.4)):
     dependencies:
@@ -15980,6 +16024,14 @@ snapshots:
 
   screenfull@5.2.0: {}
 
+  script-ext-html-webpack-plugin@2.1.5(html-webpack-plugin@5.6.0(webpack@5.92.1(webpack-cli@5.1.4)))(webpack@5.92.1(webpack-cli@5.1.4)):
+    dependencies:
+      debug: 4.3.5
+      html-webpack-plugin: 5.6.0(webpack@5.92.1(webpack-cli@5.1.4))
+      webpack: 5.92.1(webpack-cli@5.1.4)
+    transitivePeerDependencies:
+      - supports-color
+
   scroll-into-view-if-needed@3.1.0:
     dependencies:
       compute-scroll-into-view: 3.1.0
@@ -16091,6 +16143,8 @@ snapshots:
 
   sisteransi@1.0.5: {}
 
+  slash@1.0.0: {}
+
   slash@3.0.0: {}
 
   slash@4.0.0: {}
@@ -16116,6 +16170,8 @@ snapshots:
     dependencies:
       buffer-from: 1.1.2
       source-map: 0.6.1
+
+  source-map-url@0.4.1: {}
 
   source-map@0.6.1: {}
 
