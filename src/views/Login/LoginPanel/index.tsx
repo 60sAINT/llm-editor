@@ -19,7 +19,7 @@ function LoginPanel() {
                 <span className="font-extralight">基于</span>xxxxxx
                 <span className="font-extralight">的</span>
                 <br />
-                xxx编辑器
+                协心编辑器
               </h1>
               <p className="leading-loose font-extralight text-lg">
                 这里写对编辑器的介绍

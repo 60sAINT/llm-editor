@@ -3,9 +3,9 @@ import React from "react";
 const PrivacyPolicy = () => {
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-4">xxx编辑器隐私政策</h1>
+      <h1 className="text-2xl font-bold mb-4">协心编辑器隐私政策</h1>
       <p className="mb-4">
-        xxx编辑器非常重视用户的隐私和个人信息保护。本隐私政策将帮助您了解我们如何收集、使用和保护您的个人信息。
+        协心编辑器非常重视用户的隐私和个人信息保护。本隐私政策将帮助您了解我们如何收集、使用和保护您的个人信息。
       </p>
 
       <h2 className="text-xl font-semibold mt-6 mb-2">1. 信息收集</h2>
@@ -15,7 +15,7 @@ const PrivacyPolicy = () => {
 
       <h2 className="text-xl font-semibold mt-6 mb-2">2. 信息使用</h2>
       <p>
-        我们使用收集到的信息来提供、维护、保护和改进我们的服务，开发新的服务，并保护xxx编辑器和我们的用户。
+        我们使用收集到的信息来提供、维护、保护和改进我们的服务，开发新的服务，并保护协心编辑器和我们的用户。
       </p>
 
       <h2 className="text-xl font-semibold mt-6 mb-2">3. 信息共享</h2>
@@ -69,7 +69,7 @@ const PrivacyPolicy = () => {
 
       <h2 className="text-xl font-semibold mt-6 mb-2">11. 联系我们</h2>
       <p>如果您对本隐私政策有任何问题、意见或请求，请通过以下方式联系我们：</p>
-      <p>电子邮件：privacy@xxxeditor.com</p>
+      <p>电子邮件：privacy@llmeditor.com</p>
       <p>地址：[公司地址]</p>
 
       <p className="mt-8 text-sm text-gray-600">最后更新日期：[日期]</p>

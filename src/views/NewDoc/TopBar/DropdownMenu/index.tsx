@@ -10,11 +10,18 @@ import {
   DownloadOutlined,
   FileOutlined,
   HistoryOutlined,
+  SaveOutlined,
   ShareAltOutlined,
 } from "@ant-design/icons";
+import SaveCurrFormatButton from "./SaveCurrFormatButton";
 
 const DropdownMenu = () => {
   const items: MenuProps["items"] = [
+    {
+      key: "saveCurrFormat",
+      icon: <SaveOutlined className="text-dropdown-text !text-sm" />,
+      label: <SaveCurrFormatButton />,
+    },
     {
       key: "paperless",
       icon: <FileOutlined className="text-dropdown-text !text-sm" />,

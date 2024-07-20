@@ -106,10 +106,10 @@ function LoginForm() {
       <div className="relative h-full px-12">
         <div className="relative w-full text-center top-1/2 -translate-y-1/2">
           <h1 className="mx-0 mt-0 p-0 text-[22px] text-primary">
-            一键登录/注册xxx编辑器
+            一键登录/注册协心编辑器
           </h1>
           <span className="mt-2 mb-8 text-xs text-neutral-400">
-            首次验证通过即注册xxx编辑器账号
+            首次验证通过即注册协心编辑器账号
           </span>
           <div className="w-full mt-2.5">
             <ConfigProvider
@@ -223,7 +223,7 @@ function LoginForm() {
         <div className="absolute bottom-[9px] pl-3.5 pr-16 text-center leading-4">
           <Checkbox onChange={agreePolicyChange} checked={isAgreed}></Checkbox>
           <span className="pl-1.5 text-center text-xs text-zinc-500 inline">
-            已阅读并同意xxx编辑器
+            已阅读并同意协心编辑器
             <Button
               type="link"
               className="p-0 text-xs inline border-none h-full"
@@ -238,7 +238,7 @@ function LoginForm() {
             >
               《隐私政策》
             </Button>
-            ，允许xxx编辑器统一管理本人账号信息
+            ，允许协心编辑器统一管理本人账号信息
           </span>
         </div>
       </div>
@@ -253,7 +253,7 @@ function LoginForm() {
         width={400}
       >
         <p className="text-zinc-600 my-3.5">
-          请阅读并同意xxx编辑器
+          请阅读并同意协心编辑器
           <Button
             type="link"
             className="px-0 text-xs"
@@ -268,7 +268,7 @@ function LoginForm() {
           >
             《隐私政策》
           </Button>
-          ，允许xxx编辑器统一管理本人账号信息
+          ，允许协心编辑器统一管理本人账号信息
         </p>
       </Modal>
     </div>

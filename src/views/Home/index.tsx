@@ -127,7 +127,7 @@ const Home: React.FC = () => {
       <Layout>
         <Header className="h-14 bg-white pr-10 border-b border-gray-200">
           <div className="h-full leading-[56px] float-left text-primary text-2xl font-bold tracking-wide">
-            XXX Editor
+            协心 编辑器
           </div>
           <div className="float-right leading-[56px]">
             <Avatar icon={<UserOutlined />} size="small" />

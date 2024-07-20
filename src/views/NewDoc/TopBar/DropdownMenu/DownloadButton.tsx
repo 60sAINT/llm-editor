@@ -51,16 +51,24 @@ const DownloadButton = () => {
       >
         <Select
           className="w-full my-2"
-          defaultValue="电子科技大学研究生学位论文撰写规范"
+          defaultValue="a"
           onChange={handleSelectChange}
           options={[
             {
-              value: "电子科技大学研究生学位论文撰写规范",
-              label: "电子科技大学研究生学位论文撰写规范",
+              value: "a",
+              label: "A大学研究生学位论文撰写规范",
             },
             {
-              value: "电子科技大学研究生学位论文撰写规范2",
-              label: "电子科技大学研究生学位论文撰写规范2",
+              value: "b",
+              label: "B大学本科生实习报告撰写规范",
+            },
+            {
+              value: "c",
+              label: "C大学核心通识教育课程结课论文规范",
+            },
+            {
+              value: "d",
+              label: "D大学支教报告规范",
             },
           ]}
         />
