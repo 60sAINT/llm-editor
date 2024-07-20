@@ -10,6 +10,9 @@ module.exports = merge(base, {
     client: {
       overlay: false,
     },
+    static: {
+      directory: path.join(__dirname, "dist"),
+    },
   },
   module: {
     rules: [
@@ -43,6 +46,7 @@ module.exports = merge(base, {
           },
           "postcss-loader", // Processes CSS with PostCSS
         ],
+        exclude: /node_modules/, // 排除 node_modules 目录
       },
     ],
   },
