@@ -44,9 +44,14 @@ import { IsSavedType } from "../utils/docContext";
 import { OcrFrame } from "./CustomFormattingToolBar/OcrFrame";
 import "./index.css";
 import { DetectionButton } from "./CustomFormattingToolBar/DetectionButton";
+import { VideoDetectionButton } from "./CustomFormattingToolBar/VideoDetectionButton";
+import { VideoDetectionFrame } from "./CustomFormattingToolBar/VideoDetectionFrame";
+import { RecognitionButton } from "./CustomFormattingToolBar/RecognitionButton";
 
 let showTextButton = true;
 let showOcrButton = true;
+let showVideoButton = true;
+let shoDetectionButton = true;
 const customSchema = BlockNoteSchema.create({
   styleSpecs: {
     // Adds all default styles.
@@ -148,15 +153,20 @@ const CustomFormattingToolbar: FunctionComponent<
             <SummaryButton key={"textSummaryButton"} />
           </>
         ) : null}
-        {showOcrButton ? (
+        {showOcrButton ? <OcrButton key={"imageOcrButton"} /> : null}
+        {shoDetectionButton ? (
+          <DetectionButton key={"detectionButton"} />
+        ) : null}
+        {showVideoButton ? (
           <>
-            <OcrButton key={"imageOcrButton"} />
-            <DetectionButton key={"detectionButton"} />
+            <VideoDetectionButton key={"videoDetectionButton"} />
+            <RecognitionButton key={"recognitionButton"} />
           </>
         ) : null}
       </FormattingToolbar>
       <DisplayFrame />
       <OcrFrame />
+      <VideoDetectionFrame />
     </div>
   );
 };
@@ -197,9 +207,18 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
   if (editor?.getTextCursorPosition().block.type == "image") {
     showTextButton = false;
     showOcrButton = true;
+    shoDetectionButton = true;
+    showVideoButton = false;
+  } else if (editor?.getTextCursorPosition().block.type == "video") {
+    showTextButton = false;
+    showOcrButton = false;
+    shoDetectionButton = false;
+    showVideoButton = true;
   } else {
     showTextButton = true;
     showOcrButton = false;
+    shoDetectionButton = false;
+    showVideoButton = false;
   }
 
   useEffect(() => {

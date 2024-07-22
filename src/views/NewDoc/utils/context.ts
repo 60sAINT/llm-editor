@@ -23,9 +23,13 @@ export interface State {
   blockToUpdate?: Block; // 要替换的文本所在的块的标识符
   range: RangeType; // 选中的文本的startIndex和endIndex
   ocrText: string;
+  videoDetectionText: string;
   detectionText: string;
+  recognitionText: string;
   ocrFrameDisplay: boolean;
   detectionFrameDisplay: boolean;
+  videoDetectionFrameDisplay: boolean;
+  recognitionFrameDisplay: boolean;
   loadingDisplay: boolean;
   fullTextLoading: boolean;
   saveKeyDown: boolean;
@@ -73,6 +77,8 @@ export type Action =
   | { type: "CARD_TEXT"; payload: string }
   | { type: "OCR_TEXT"; payload: string }
   | { type: "DETECTION_TEXT"; payload: string }
+  | { type: "VIDEO_DETECTION_TEXT"; payload: string }
+  | { type: "RECOGNITION_TEXT"; payload: string }
   // RESET
   | { type: "RESET_FRAME_TEXT" }
   | { type: "RESET_CONTINUE_TEXT" }
@@ -95,6 +101,8 @@ export type Action =
   // FRAME
   | { type: "OCR_FRAME_DISPLAY"; payload: boolean }
   | { type: "DETECTION_FRAME_DISPLAY"; payload: boolean }
+  | { type: "VIDEO_DETECTION_FRAME_DISPLAY"; payload: boolean }
+  | { type: "RECOGNITION_FRAME_DISPLAY"; payload: boolean }
   // LOADING
   | { type: "LOADING_DISPLAY"; payload: boolean }
   | { type: "FULL_TEXT_LOADING"; payload: boolean }
@@ -123,8 +131,12 @@ export const initialState: State = {
   range: { startOffset: 0, endOffset: 0 },
   ocrText: "",
   detectionText: "",
+  videoDetectionText: "",
+  recognitionText: "",
   ocrFrameDisplay: false,
   detectionFrameDisplay: false,
+  videoDetectionFrameDisplay: false,
+  recognitionFrameDisplay: false,
   loadingDisplay: true,
   fullTextLoading: false,
   saveKeyDown: false,

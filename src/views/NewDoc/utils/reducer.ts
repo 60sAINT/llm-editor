@@ -30,6 +30,14 @@ export const reducer = (state: State, action: Action): State => {
       return { ...state, ocrText: action.payload };
     case "DETECTION_FRAME_DISPLAY":
       return { ...state, ocrFrameDisplay: action.payload };
+    case "VIDEO_DETECTION_TEXT":
+      return { ...state, videoDetectionText: action.payload };
+    case "VIDEO_DETECTION_FRAME_DISPLAY":
+      return { ...state, videoDetectionFrameDisplay: action.payload };
+    case "RECOGNITION_TEXT":
+      return { ...state, videoDetectionText: action.payload };
+    case "RECOGNITION_FRAME_DISPLAY":
+      return { ...state, videoDetectionFrameDisplay: action.payload };
     case "CARD_TEXT":
       return { ...state, cardText: state.cardText + action.payload }; // 不断更新显示从后端获取的续写文本
     // case "EDIT_CONTINUE_TEXT":

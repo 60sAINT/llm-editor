@@ -157,7 +157,7 @@ const MindMap: React.FC = () => {
       >
         生成内容
       </Button>
-      <div>
+      <div className="w-full">
         {loading ? (
           <div className="flex justify-center mt-4 mb-4">
             <LoadingOutlined

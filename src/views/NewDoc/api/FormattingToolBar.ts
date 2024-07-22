@@ -51,6 +51,20 @@ export class ToolBarApi {
     });
     return result.body;
   }
+
+  public async videoDetection(base64: string) {
+    const result = await fetch.post(`${apikeyPrefix}/video/detection`, {
+      base64,
+    });
+    return result.body;
+  }
+
+  public async recognition(base64: string) {
+    const result = await fetch.post(`${apikeyPrefix}/video/recognition`, {
+      base64,
+    });
+    return result.body;
+  }
 }
 
 export const sideMenuApi = new ToolBarApi();
