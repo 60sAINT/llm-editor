@@ -47,8 +47,8 @@ module.exports = merge(base, {
       filename: "assets/css/[hash:8].css", // 将css单独提测出来放在assets/css 下
     }),
     new HtmlInlineCssWebpackPlugin(),
-    new ScriptExtHtmlWebpackPlugin({
-      inline: /\.js$/,
-    }),
+    // new ScriptExtHtmlWebpackPlugin({
+    //   inline: /\.js$/,
+    // }),
   ],
 });
