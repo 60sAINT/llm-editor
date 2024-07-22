@@ -43,6 +43,7 @@ import { useDocDispatch } from "../utils/docProvider";
 import { IsSavedType } from "../utils/docContext";
 import { OcrFrame } from "./CustomFormattingToolBar/OcrFrame";
 import "./index.css";
+import { DetectionButton } from "./CustomFormattingToolBar/DetectionButton";
 
 let showTextButton = true;
 let showOcrButton = true;
@@ -147,7 +148,12 @@ const CustomFormattingToolbar: FunctionComponent<
             <SummaryButton key={"textSummaryButton"} />
           </>
         ) : null}
-        {showOcrButton ? <OcrButton key={"imageOcrButton"} /> : null}
+        {showOcrButton ? (
+          <>
+            <OcrButton key={"imageOcrButton"} />
+            <DetectionButton key={"detectionButton"} />
+          </>
+        ) : null}
       </FormattingToolbar>
       <DisplayFrame />
       <OcrFrame />

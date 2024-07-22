@@ -44,6 +44,13 @@ export class ToolBarApi {
     });
     return result.body;
   }
+
+  public async imageDetection(base64: string) {
+    const result = await fetch.post(`${apikeyPrefix}/image/detection`, {
+      base64,
+    });
+    return result.body;
+  }
 }
 
 export const sideMenuApi = new ToolBarApi();

@@ -23,7 +23,9 @@ export interface State {
   blockToUpdate?: Block; // 要替换的文本所在的块的标识符
   range: RangeType; // 选中的文本的startIndex和endIndex
   ocrText: string;
+  detectionText: string;
   ocrFrameDisplay: boolean;
+  detectionFrameDisplay: boolean;
   loadingDisplay: boolean;
   fullTextLoading: boolean;
   saveKeyDown: boolean;
@@ -70,6 +72,7 @@ export type Action =
   | { type: "SUMMARY_TEXT"; payload: string }
   | { type: "CARD_TEXT"; payload: string }
   | { type: "OCR_TEXT"; payload: string }
+  | { type: "DETECTION_TEXT"; payload: string }
   // RESET
   | { type: "RESET_FRAME_TEXT" }
   | { type: "RESET_CONTINUE_TEXT" }
@@ -91,6 +94,7 @@ export type Action =
   | { type: "SET_RANGE"; payload: RangeType }
   // FRAME
   | { type: "OCR_FRAME_DISPLAY"; payload: boolean }
+  | { type: "DETECTION_FRAME_DISPLAY"; payload: boolean }
   // LOADING
   | { type: "LOADING_DISPLAY"; payload: boolean }
   | { type: "FULL_TEXT_LOADING"; payload: boolean }
@@ -118,7 +122,9 @@ export const initialState: State = {
   summarySelection: "",
   range: { startOffset: 0, endOffset: 0 },
   ocrText: "",
+  detectionText: "",
   ocrFrameDisplay: false,
+  detectionFrameDisplay: false,
   loadingDisplay: true,
   fullTextLoading: false,
   saveKeyDown: false,

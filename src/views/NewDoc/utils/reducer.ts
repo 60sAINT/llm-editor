@@ -26,6 +26,10 @@ export const reducer = (state: State, action: Action): State => {
       return { ...state, ocrText: action.payload };
     case "OCR_FRAME_DISPLAY":
       return { ...state, ocrFrameDisplay: action.payload };
+    case "DETECTION_TEXT":
+      return { ...state, ocrText: action.payload };
+    case "DETECTION_FRAME_DISPLAY":
+      return { ...state, ocrFrameDisplay: action.payload };
     case "CARD_TEXT":
       return { ...state, cardText: state.cardText + action.payload }; // 不断更新显示从后端获取的续写文本
     // case "EDIT_CONTINUE_TEXT":
