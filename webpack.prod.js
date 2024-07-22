@@ -2,6 +2,9 @@ const { merge } = require("webpack-merge");
 const base = require("./webpack.base.js");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const HtmlInlineCssWebpackPlugin =
+  require("html-inline-css-webpack-plugin").default;
+const ScriptExtHtmlWebpackPlugin = require("script-ext-html-webpack-plugin");
 
 module.exports = merge(base, {
   mode: "production", // 生产模式
@@ -42,6 +45,10 @@ module.exports = merge(base, {
   plugins: [
     new MiniCssExtractPlugin({
       filename: "assets/css/[hash:8].css", // 将css单独提测出来放在assets/css 下
+    }),
+    new HtmlInlineCssWebpackPlugin(),
+    new ScriptExtHtmlWebpackPlugin({
+      inline: /\.js$/,
     }),
   ],
 });

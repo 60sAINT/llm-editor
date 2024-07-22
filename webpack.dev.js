@@ -10,9 +10,9 @@ module.exports = merge(base, {
     client: {
       overlay: false,
     },
-    static: {
-      directory: path.join(__dirname, "dist"),
-    },
+    // static: {
+    //   directory: path.join(__dirname, "dist"),
+    // },
   },
   module: {
     rules: [

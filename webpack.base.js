@@ -1,8 +1,5 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const HtmlInlineCssWebpackPlugin =
-  require("html-inline-css-webpack-plugin").default;
-const ScriptExtHtmlWebpackPlugin = require("script-ext-html-webpack-plugin");
 
 module.exports = {
   entry: path.resolve(__dirname, "./src/index.tsx"),
@@ -61,10 +58,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "./index.html"), // 使用自定义模板
       inject: "body",
-    }),
-    new HtmlInlineCssWebpackPlugin(),
-    new ScriptExtHtmlWebpackPlugin({
-      inline: /\.js$/,
     }),
   ],
 };
