@@ -26,10 +26,12 @@ export interface State {
   videoDetectionText: string;
   detectionText: string;
   recognitionText: string;
+  audioRecognitionText: string;
   ocrFrameDisplay: boolean;
   detectionFrameDisplay: boolean;
   videoDetectionFrameDisplay: boolean;
   recognitionFrameDisplay: boolean;
+  audioRecognitionFrameDisplay: boolean;
   loadingDisplay: boolean;
   fullTextLoading: boolean;
   saveKeyDown: boolean;
@@ -79,6 +81,7 @@ export type Action =
   | { type: "DETECTION_TEXT"; payload: string }
   | { type: "VIDEO_DETECTION_TEXT"; payload: string }
   | { type: "RECOGNITION_TEXT"; payload: string }
+  | { type: "AUDIO_RECOGNITION_TEXT"; payload: string }
   // RESET
   | { type: "RESET_FRAME_TEXT" }
   | { type: "RESET_CONTINUE_TEXT" }
@@ -103,6 +106,7 @@ export type Action =
   | { type: "DETECTION_FRAME_DISPLAY"; payload: boolean }
   | { type: "VIDEO_DETECTION_FRAME_DISPLAY"; payload: boolean }
   | { type: "RECOGNITION_FRAME_DISPLAY"; payload: boolean }
+  | { type: "AUDIO_RECOGNITION_FRAME_DISPLAY"; payload: boolean }
   // LOADING
   | { type: "LOADING_DISPLAY"; payload: boolean }
   | { type: "FULL_TEXT_LOADING"; payload: boolean }
@@ -133,10 +137,12 @@ export const initialState: State = {
   detectionText: "",
   videoDetectionText: "",
   recognitionText: "",
+  audioRecognitionText: "",
   ocrFrameDisplay: false,
   detectionFrameDisplay: false,
   videoDetectionFrameDisplay: false,
   recognitionFrameDisplay: false,
+  audioRecognitionFrameDisplay: false,
   loadingDisplay: true,
   fullTextLoading: false,
   saveKeyDown: false,

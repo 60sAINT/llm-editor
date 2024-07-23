@@ -65,6 +65,13 @@ export class ToolBarApi {
     });
     return result.body;
   }
+
+  public async audioRecognition(base64: string) {
+    const result = await fetch.post(`${apikeyPrefix}/audio/recognition`, {
+      base64,
+    });
+    return result.body;
+  }
 }
 
 export const sideMenuApi = new ToolBarApi();

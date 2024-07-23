@@ -47,11 +47,14 @@ import { DetectionButton } from "./CustomFormattingToolBar/DetectionButton";
 import { VideoDetectionButton } from "./CustomFormattingToolBar/VideoDetectionButton";
 import { VideoDetectionFrame } from "./CustomFormattingToolBar/VideoDetectionFrame";
 import { RecognitionButton } from "./CustomFormattingToolBar/RecognitionButton";
+import { AudioRecognitionButton } from "./CustomFormattingToolBar/AudioRecognitionButton";
+import { AudioRecognitionFrame } from "./CustomFormattingToolBar/AudioRecognitionFrame";
 
 let showTextButton = true;
 let showOcrButton = true;
 let showVideoButton = true;
-let shoDetectionButton = true;
+let showDetectionButton = true;
+let showAudioButton = true;
 const customSchema = BlockNoteSchema.create({
   styleSpecs: {
     // Adds all default styles.
@@ -154,7 +157,7 @@ const CustomFormattingToolbar: FunctionComponent<
           </>
         ) : null}
         {showOcrButton ? <OcrButton key={"imageOcrButton"} /> : null}
-        {shoDetectionButton ? (
+        {showDetectionButton ? (
           <DetectionButton key={"detectionButton"} />
         ) : null}
         {showVideoButton ? (
@@ -163,10 +166,14 @@ const CustomFormattingToolbar: FunctionComponent<
             <RecognitionButton key={"recognitionButton"} />
           </>
         ) : null}
+        {showAudioButton ? (
+          <AudioRecognitionButton key={"audioRecognitionButton"} />
+        ) : null}
       </FormattingToolbar>
       <DisplayFrame />
       <OcrFrame />
       <VideoDetectionFrame />
+      <AudioRecognitionFrame />
     </div>
   );
 };
@@ -207,18 +214,27 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
   if (editor?.getTextCursorPosition().block.type == "image") {
     showTextButton = false;
     showOcrButton = true;
-    shoDetectionButton = true;
+    showDetectionButton = true;
     showVideoButton = false;
+    showAudioButton = false;
   } else if (editor?.getTextCursorPosition().block.type == "video") {
     showTextButton = false;
     showOcrButton = false;
-    shoDetectionButton = false;
+    showDetectionButton = false;
     showVideoButton = true;
+    showAudioButton = false;
+  } else if (editor?.getTextCursorPosition().block.type == "audio") {
+    showTextButton = false;
+    showOcrButton = false;
+    showDetectionButton = false;
+    showVideoButton = false;
+    showAudioButton = true;
   } else {
     showTextButton = true;
     showOcrButton = false;
-    shoDetectionButton = false;
+    showDetectionButton = false;
     showVideoButton = false;
+    showAudioButton = false;
   }
 
   useEffect(() => {

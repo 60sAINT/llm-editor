@@ -134,7 +134,7 @@ const NewDoc = () => {
                 </Col>
                 <Col span={12} ref={leftColRef}>
                   <div
-                    className="w-full bg-white shadow-md [&>.bn-container>div:first-child]:px-12"
+                    className="w-full bg-white shadow-md [&>.bn-container>div:first-child]:px-12 [&_audio]:my-3"
                     style={{
                       borderRadius: "0",
                       padding: paddingProperty,

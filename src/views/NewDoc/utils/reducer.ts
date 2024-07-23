@@ -38,6 +38,10 @@ export const reducer = (state: State, action: Action): State => {
       return { ...state, videoDetectionText: action.payload };
     case "RECOGNITION_FRAME_DISPLAY":
       return { ...state, videoDetectionFrameDisplay: action.payload };
+    case "AUDIO_RECOGNITION_TEXT":
+      return { ...state, audioRecognitionText: action.payload };
+    case "AUDIO_RECOGNITION_FRAME_DISPLAY":
+      return { ...state, audioRecognitionFrameDisplay: action.payload };
     case "CARD_TEXT":
       return { ...state, cardText: state.cardText + action.payload }; // 不断更新显示从后端获取的续写文本
     // case "EDIT_CONTINUE_TEXT":
