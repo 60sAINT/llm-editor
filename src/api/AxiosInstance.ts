@@ -5,6 +5,9 @@ export const baseUrl = `${GATEWAY}`;
 
 const axiosInstance = axios.create({
   baseURL: baseUrl,
+  headers: {
+    Authorization: "token 523e30f63c241a80401a68b61afa1f7708b0eb8c",
+  },
 });
 axiosInstance.interceptors.response.use(
   (res) => {

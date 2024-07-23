@@ -72,27 +72,13 @@ const RegisterForm = (props: Props) => {
   };
   return (
     <>
-      {operation == "registerByPhone" ? (
-        <Form.Item
-          name="phone"
-          rules={[...validatePhone()]}
-          className="h-10 mb-7"
-        >
-          <Input
-            addonBefore={prefixSelector}
-            placeholder="手机号"
-            className="[&>span]:h-10 [&_input]:h-10"
-          />
-        </Form.Item>
-      ) : (
-        <Form.Item
-          name="email"
-          rules={[...validateEmail()]}
-          className="h-10 mb-7"
-        >
-          <Input placeholder="邮箱" className="h-10" />
-        </Form.Item>
-      )}
+      <Form.Item
+        name="email"
+        rules={[...validateEmail()]}
+        className="h-10 mb-7"
+      >
+        <Input placeholder="邮箱" className="h-10" />
+      </Form.Item>
 
       <Form.Item
         name="vericode"

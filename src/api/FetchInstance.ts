@@ -7,6 +7,9 @@ const fetchInstance = {
     const response = await fetch(`${baseUrl}${url}`, {
       ...config,
       method: "GET",
+      headers: {
+        Authorization: "token 523e30f63c241a80401a68b61afa1f7708b0eb8c",
+      },
     });
     return handleResponse(response);
   },
@@ -16,6 +19,7 @@ const fetchInstance = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "token 523e30f63c241a80401a68b61afa1f7708b0eb8c",
         ...config.headers,
       },
       body: JSON.stringify(data),

@@ -152,18 +152,27 @@ function LoginForm() {
                   },
                   {
                     label: (
-                      <Dropdown
-                        menu={{ items }}
-                        className="w-full inline-block"
-                        arrow={true}
+                      // <Dropdown
+                      //   menu={{ items }}
+                      //   className="w-full inline-block"
+                      //   arrow={true}
+                      // >
+                      // <a onClick={(e) => e.preventDefault()}>
+                      //   <Space className="h-9">
+                      //     注册
+                      //     <DownOutlined className="text-xs" />
+                      //   </Space>
+                      <div
+                        className="h-9 leading-9"
+                        onClick={() => {
+                          setSegmentedValue("register");
+                          setOperation("register");
+                        }}
                       >
-                        <a onClick={(e) => e.preventDefault()}>
-                          <Space className="h-9">
-                            注册
-                            <DownOutlined className="text-xs" />
-                          </Space>
-                        </a>
-                      </Dropdown>
+                        注册
+                      </div>
+                      // </a>
+                      // </Dropdown>
                     ),
                     value: "register",
                   },
