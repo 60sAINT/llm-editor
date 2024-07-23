@@ -14,23 +14,25 @@ function LoginPanel() {
         <div className="relative h-full w-1/2 float-left text-white bg-gradient-to-br from-primary to-indigo-500 rounded-l-3xl">
           <div className="px-20 h-full">
             <div className="relative top-1/2 -translate-y-1/2">
-              <h3 className="m-0 p-0 text-lg">Welcom to</h3>
+              {/* <h3 className="m-0 p-0 text-lg">Welcome to</h3> */}
               <h1 className="p-0 font-extrabold mt-2.5 text-3xl">
-                <span className="font-extralight">基于</span>xxxxxx
-                <span className="font-extralight">的</span>
+                {/* <span className="font-normal text-xl">Welcome to </span> */}
+                <span className="text-4xl">协心</span>
                 <br />
-                协心编辑器
+                <span className="font-extralight text-2xl">
+                  —— 一款基于大小模型协同的智能编辑器
+                </span>
               </h1>
               <p className="leading-loose font-extralight text-lg">
+                集智能编辑、多媒体信息提取、智能格式排版、数据可视化于一身的高智能度编辑器；
+                <br />
+                具有专业的领域知识加持，协同文心大模型助力你的毕业论文创作过程。
+                {/* <br />
                 这里写对编辑器的介绍
                 <br />
                 这里写对编辑器的介绍
                 <br />
-                这里写对编辑器的介绍
-                <br />
-                这里写对编辑器的介绍
-                <br />
-                这里写对编辑器的介绍
+                这里写对编辑器的介绍 */}
               </p>
             </div>
           </div>
