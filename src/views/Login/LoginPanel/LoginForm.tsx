@@ -222,7 +222,7 @@ function LoginForm() {
                     operation={operation}
                     isAgreed={isAgreed}
                     form={form}
-                    openIs={() => setIsModalVisible(true)}
+                    openModal={() => setIsModalVisible(true)}
                   />
                 )}
               </Form>

@@ -16,10 +16,6 @@ export const validateUsername = () => {
     { required: true, message: "请输入昵称" },
     { min: 3, message: "用户名至少3个字符" },
     { max: 20, message: "用户名不能超过20个字符" },
-    {
-      pattern: /^[a-zA-Z0-9_-]+$/,
-      message: "昵称只能包含字母、数字、下划线和连字符",
-    },
     // ... 其他规则 ...
   ];
 };

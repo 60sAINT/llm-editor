@@ -16,15 +16,18 @@ interface Props {
   operation: string;
   isAgreed: boolean;
   form: FormInstance;
-  openIs: () => void;
+  openModal: () => void;
 }
 const RegisterForm = (props: Props) => {
-  const { operation, isAgreed, form, openIs } = props;
+  const { operation, isAgreed, form, openModal } = props;
   const [countdown, setCountdown] = useState<number>(0);
 
   const { runAsync } = useRequest(async (value) => {
     const res = await loginApi.registerAuth(value);
     if (res) return showMessage("注册成功！");
+  });
+  const { runAsync: runSendVericode } = useRequest(async (value) => {
+    await loginApi.getVericode(value);
   });
 
   // 手机号归属地选择框
@@ -52,16 +55,19 @@ const RegisterForm = (props: Props) => {
   }, [countdown]);
 
   // 点击“发送验证码”后逻辑
-  const sendVericode = () => {
+  const sendVericode = async () => {
     if (countdown === 0) {
       setCountdown(60);
     }
+    const { email } = await form.getFieldsValue();
+    console.log("vericode", email);
+    await runSendVericode(email);
   };
 
   const handleRegister = async (): Promise<void> => {
     try {
       if (!isAgreed) {
-        openIs();
+        openModal();
       } else {
         const values = await form.validateFields();
         await runAsync(values);
