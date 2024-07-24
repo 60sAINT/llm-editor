@@ -21,6 +21,7 @@ import {
   Layout,
   Menu,
   MenuProps,
+  Modal,
 } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
@@ -29,6 +30,13 @@ import Knowledge from "./Knowledge";
 
 const Home: React.FC = () => {
   const [selectKey, setSelectKey] = useState<string>("1");
+  const [isModalOpen, setIsModalOpen] = useState(true);
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const dropdownContent = (
     <div className="bg-white shadow-lg p-3 mt-3 rounded border border-gray-300 text-zinc-600 text-sm">
@@ -167,6 +175,26 @@ const Home: React.FC = () => {
             {contents[selectKey]}
           </Content>
         </Layout>
+        <Modal
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          className="[&_.ant-btn-default]:hidden"
+        >
+          <p className="text-base pt-5">
+            若您在访问过程中遇到问题，请点击以下链接进行访问：
+            <br />
+            <Button
+              type="link"
+              className="px-0 text-base"
+              onClick={() => {
+                window.open("http://43.138.11.21:8080/"), "_blank";
+              }}
+            >
+              http://43.138.11.21:8080/
+            </Button>
+          </p>
+        </Modal>
       </Layout>
     </ConfigProvider>
   );
