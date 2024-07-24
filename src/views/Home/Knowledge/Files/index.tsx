@@ -1,7 +1,7 @@
 import React from "react";
 import { useRequest } from "@/hooks/useRequest";
 import { knowledgeApi } from "../api";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button, Space, Table, Upload, UploadProps } from "antd";
 import { FileBase } from "../interface";
 import downloadZipFile, {
@@ -13,10 +13,12 @@ import { deleteConfirm } from "@/utils/deleteConfirm";
 import { showError, showMessage } from "@/common/utils/message";
 import { useAuth } from "@/provider/authProvider";
 import axios from "axios";
+import { LeftOutlined } from "@ant-design/icons";
 
 const Files = () => {
   const [searchParams] = useSearchParams();
   const db_name = searchParams.get("db_name");
+  const navigate = useNavigate();
 
   const { data, loading, refresh } = useRequest(
     () => knowledgeApi.getFiles(db_name!),
@@ -139,19 +141,30 @@ const Files = () => {
   };
 
   return (
-    <div className="p-20">
-      <Space>
-        <Upload {...uploadProps}>
-          <Button type="primary" className="mb-[22px]">
-            上传文件
+    <>
+      <button
+        className="text-gray-600 hover:text-gray-800 ml-7 mt-7 absolute"
+        onClick={() => {
+          // TODO: 退出前自动保存文档
+          navigate("/", { replace: true });
+        }}
+      >
+        <LeftOutlined className="!font-black !text-2xl" />
+      </button>
+      <div className="p-20">
+        <Space>
+          <Upload {...uploadProps}>
+            <Button type="primary" className="mb-[22px]">
+              上传文件
+            </Button>
+          </Upload>
+          <Button className="mb-[22px]" onClick={exportDb}>
+            导出知识库
           </Button>
-        </Upload>
-        <Button className="mb-[22px]" onClick={exportDb}>
-          导出知识库
-        </Button>
-      </Space>
-      <Table dataSource={data} columns={columns} loading={loading} />
-    </div>
+        </Space>
+        <Table dataSource={data} columns={columns} loading={loading} />
+      </div>
+    </>
   );
 };
 

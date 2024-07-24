@@ -27,10 +27,12 @@ import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
 import Main from "./Content";
 import Knowledge from "./Knowledge";
+import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
   const [selectKey, setSelectKey] = useState<string>("1");
   const [isModalOpen, setIsModalOpen] = useState(true);
+  const navigate = useNavigate();
   const handleOk = () => {
     setIsModalOpen(false);
   };
@@ -43,7 +45,7 @@ const Home: React.FC = () => {
       <div className="grid grid-cols-2 gap-4 mt-1.5 mx-2.5">
         <div
           className="text-center hover:bg-gray-100 py-2.5"
-          onClick={() => window.open("/newDoc", "_blank")}
+          onClick={() => navigate("/newDoc")}
         >
           <div className="mb-4">
             <FileTextTwoTone className="text-3xl" twoToneColor="#ddc5c9" />
@@ -188,7 +190,7 @@ const Home: React.FC = () => {
               type="link"
               className="px-0 text-base"
               onClick={() => {
-                window.open("http://43.138.11.21:8080/"), "_blank";
+                navigate("http://43.138.11.21:8080/");
               }}
             >
               http://43.138.11.21:8080/

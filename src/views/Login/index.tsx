@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import LoginBackground from "./LoginBackground";
 import LoginPanel from "./LoginPanel";
 import { Button, Modal } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
+  const navigate = useNavigate();
   const handleOk = () => {
     setIsModalOpen(false);
   };
@@ -28,7 +30,8 @@ const Login = () => {
             type="link"
             className="px-0 text-base"
             onClick={() => {
-              window.open("http://43.138.11.21:8080/"), "_blank";
+              // window.open("http://43.138.11.21:8080/"), "_blank";
+              navigate("http://43.138.11.21:8080/");
             }}
           >
             http://43.138.11.21:8080/

@@ -8,14 +8,10 @@ import {
   CheckboxProps,
   Modal,
   Segmented,
-  Dropdown,
-  Space,
-  MenuProps,
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../provider/authProvider";
 import { validateUsername } from "../utils";
-import { DownOutlined } from "@ant-design/icons";
 import { loginApi } from "../api";
 import RegisterForm from "./RegisterForm";
 import { useRequest } from "@/hooks/useRequest";
@@ -42,38 +38,6 @@ function LoginForm() {
     },
   };
   const [form] = Form.useForm();
-
-  // 选择邮箱注册or手机号注册的Dropdown
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: (
-        <div
-          className="h-7 leading-7 text-zinc-500"
-          onClick={() => {
-            setSegmentedValue("register");
-            setOperation("registerByPhone");
-          }}
-        >
-          手机号注册
-        </div>
-      ),
-    },
-    {
-      key: "2",
-      label: (
-        <div
-          className="h-7 leading-7 text-zinc-500"
-          onClick={() => {
-            setSegmentedValue("register");
-            setOperation("registerByEmail");
-          }}
-        >
-          邮箱注册
-        </div>
-      ),
-    },
-  ];
 
   const { runAsync: login } = useRequest(async (username, password) => {
     const res = await loginApi.loginAuth(username, password);
@@ -236,14 +200,14 @@ function LoginForm() {
             <Button
               type="link"
               className="p-0 text-xs inline border-none h-full"
-              onClick={() => window.open("/user-agreement", "_blank")}
+              onClick={() => navigate("/user-agreement")}
             >
               《用户协议》
             </Button>
             <Button
               type="link"
               className="p-0 text-xs inline border-none h-full"
-              onClick={() => window.open("/privacy-policy", "_blank")}
+              onClick={() => navigate("/privacy-policy")}
             >
               《隐私政策》
             </Button>
@@ -266,14 +230,14 @@ function LoginForm() {
           <Button
             type="link"
             className="px-0 text-xs"
-            onClick={() => window.open("/user-agreement", "_blank")}
+            onClick={() => navigate("/user-agreement")}
           >
             《用户协议》
           </Button>
           <Button
             type="link"
             className="px-0 text-xs"
-            onClick={() => window.open("/privacy-policy", "_blank")}
+            onClick={() => navigate("/privacy-policy")}
           >
             《隐私政策》
           </Button>

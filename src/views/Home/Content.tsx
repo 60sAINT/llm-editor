@@ -14,6 +14,7 @@ import { useAuth } from "@/provider/authProvider";
 import { ColumnType } from "antd/es/table";
 import { OPERATE, TableData } from "./model";
 import { formatDate } from "@/common/utils";
+import { useNavigate } from "react-router-dom";
 
 // const menuItems: MenuProps["items"] = [
 //   { key: "1", label: "当前标签页打开" },
@@ -29,6 +30,7 @@ import { formatDate } from "@/common/utils";
 
 const Content = () => {
   const { token } = useAuth();
+  const navigate = useNavigate();
   const {
     run: getDocList,
     data: docList,
@@ -87,7 +89,8 @@ const Content = () => {
 
   const handle = (type: OPERATE) => {
     if (type == "create") {
-      window.open("/newDoc", "_blank");
+      // window.open("/newDoc", "_blank");
+      navigate("/newDoc");
     }
   };
 
@@ -104,7 +107,8 @@ const Content = () => {
           <div
             className="text-topbar-text font-normal flex justify-start"
             onClick={() => {
-              window.open(`./newDoc?doc_id=${record.doc_id}`, "_blank");
+              // window.open(`./newDoc?doc_id=${record.doc_id}`, "_blank");
+              navigate(`/newDoc?doc_id=${record.doc_id}`);
             }}
           >
             <Tooltip title={fileName}>

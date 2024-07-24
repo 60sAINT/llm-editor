@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import { useRequest } from "@/hooks/useRequest";
 import { defaultApi } from "../../api";
+import { useNavigate } from "react-router-dom";
 
 interface Paper {
   title: string;
@@ -19,6 +20,7 @@ const Reference: React.FC = () => {
   const [papers, setPapers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [placeholder, setPlaceholder] = useState<string>("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     setPlaceholder(
@@ -80,7 +82,7 @@ const Reference: React.FC = () => {
                     </span>
                     <div
                       className="bg-blue-50 rounded-[3px] pt-0.5 px-1 pb-1 min-w-10 ml-1"
-                      onClick={() => window.open(paper.link, "_blank")}
+                      onClick={() => navigate(paper.link)}
                     >
                       <ExportOutlined className="mr-0.5 text-[10px] text-blue-500" />
                       <a className="text-blue-500 text-[10px]">查看</a>

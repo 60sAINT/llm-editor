@@ -9,11 +9,13 @@ import { useRequest } from "@/hooks/useRequest";
 import { knowledgeApi } from "./api";
 import { deleteConfirm } from "@/utils/deleteConfirm";
 import "./index.css";
+import { useNavigate } from "react-router-dom";
 
 const KnowledgeBaseApp: React.FC = () => {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [filteredData, setFilteredData] = useState<string>("");
+  const navigate = useNavigate();
 
   const { data, loading, refresh } = useRequest(knowledgeApi.getKnowledgeList, {
     manual: false,
@@ -41,7 +43,8 @@ const KnowledgeBaseApp: React.FC = () => {
   };
 
   const toDb = (db_name: string) =>
-    window.open(`./db?db_name=${db_name}`, "_blank");
+    // window.open(`./db?db_name=${db_name}`, "_blank");
+    navigate(`/db?db_name=${db_name}`);
 
   return (
     <>
