@@ -20,9 +20,10 @@ const Files = () => {
   const [searchParams] = useSearchParams();
   const db_name = searchParams.get("db_name");
   const navigate = useNavigate();
+  const { token } = useAuth() as { token: string };
 
   const { data, loading, refresh } = useRequest(
-    () => knowledgeApi.getFiles(db_name!),
+    () => knowledgeApi.getFiles(db_name!, token),
     {
       manual: false,
       ready: !!db_name,
@@ -30,14 +31,14 @@ const Files = () => {
   );
 
   const { runAsync: downloadFile } = useRequest(
-    (file_name) => knowledgeApi.downloadFile(db_name!, file_name),
+    (file_name) => knowledgeApi.downloadFile(db_name!, file_name, token),
     {
       ready: !!db_name,
     }
   );
 
   const { runAsync: downloadKnowledge } = useRequest(
-    () => knowledgeApi.downloadKnowledge(db_name!),
+    () => knowledgeApi.downloadKnowledge(db_name!, token),
     {
       ready: !!db_name,
     }
@@ -45,7 +46,7 @@ const Files = () => {
 
   const { runAsync: delFile } = useRequest(
     async (file_name) => {
-      await knowledgeApi.delFile(db_name!, file_name);
+      await knowledgeApi.delFile(db_name!, file_name, token);
       refresh();
     },
     {
@@ -100,7 +101,6 @@ const Files = () => {
     },
   ];
 
-  const { token } = useAuth();
   const action = `${GATEWAY}/api/v1/knowledge/file/upload?db_name=${db_name}`;
   const handleChange = (info: any) => {
     if (info.file.status === "done") {

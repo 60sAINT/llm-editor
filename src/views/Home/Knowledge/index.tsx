@@ -10,23 +10,31 @@ import { knowledgeApi } from "./api";
 import { deleteConfirm } from "@/utils/deleteConfirm";
 import "./index.css";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/provider/authProvider";
 
 const KnowledgeBaseApp: React.FC = () => {
+  const { token } = useAuth() as { token: string };
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [filteredData, setFilteredData] = useState<string>("");
   const navigate = useNavigate();
 
-  const { data, loading, refresh } = useRequest(knowledgeApi.getKnowledgeList, {
-    manual: false,
-  });
+  const { data, loading, refresh } = useRequest(
+    async () => {
+      const res = await knowledgeApi.getKnowledgeList({ token });
+      return res;
+    },
+    {
+      manual: false,
+    }
+  );
 
   const { runAsync: createDb, loading: createLoading } = useRequest((v) =>
-    knowledgeApi.createKnowledge(v)
+    knowledgeApi.createKnowledge(v, token)
   );
 
   const { runAsync: deleteDb } = useRequest(async (v) => {
-    const res = await knowledgeApi.delKnowledge(v);
+    const res = await knowledgeApi.delKnowledge(v, token);
     if (res) refresh();
   });
 
