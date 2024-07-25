@@ -14,6 +14,7 @@ import { showError, showMessage } from "@/common/utils/message";
 import { useAuth } from "@/provider/authProvider";
 import axios from "axios";
 import { LeftOutlined } from "@ant-design/icons";
+import { GATEWAY } from "@/api/AxiosInstance";
 
 const Files = () => {
   const [searchParams] = useSearchParams();
@@ -100,12 +101,8 @@ const Files = () => {
   ];
 
   const { token } = useAuth();
-  const action = `http://43.138.11.21:12099/api/v1/knowledge/file/upload?db_name=${db_name}`;
+  const action = `${GATEWAY}/api/v1/knowledge/file/upload?db_name=${db_name}`;
   const handleChange = (info: any) => {
-    // if (info.file.status === "uploading") {
-    //   setLoading(true);
-    //   return;
-    // }
     if (info.file.status === "done") {
       const response = info.file.response;
       if (!response) return;
