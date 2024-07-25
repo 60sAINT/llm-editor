@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as echarts from "echarts";
 
-const PieChart: React.FC = () => {
+const Visualization: React.FC = () => {
   const chartRef = useRef(null);
 
   useEffect(() => {
@@ -120,4 +120,4 @@ const PieChart: React.FC = () => {
   );
 };
 
-export default PieChart;
+export default Visualization;

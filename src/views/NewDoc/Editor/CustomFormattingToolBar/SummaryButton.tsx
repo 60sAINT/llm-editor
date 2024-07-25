@@ -70,8 +70,9 @@ export function SummaryButton({ isFull }: { isFull?: boolean }) {
 
 export const getFullText = (state: State) => {
   const document = state.editor.document;
-  const text = _flatMap(document, (item) =>
-    item.content?.map((i: { text: string }) => i.text)
-  ).join("");
+  const text = _flatMap(document, (item) => {
+    if (item.type === "paragraph" || item.type === "heading")
+      return item?.content?.map((i: { text: string }) => i.text) || [];
+  }).join("");
   return text;
 };

@@ -6,7 +6,7 @@ import ActionButton from "./ActionButton";
 import DropdownMenu from "./DropdownMenu";
 import "./index.css";
 import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Col, Row, Tooltip } from "antd";
+import { Avatar, Col, Row } from "antd";
 import { Start } from "./Start";
 import { useNewDocState } from "../utils/provider";
 

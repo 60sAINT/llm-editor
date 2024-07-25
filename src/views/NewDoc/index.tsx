@@ -27,6 +27,7 @@ const NewDoc = () => {
   const [fullTextLoading, setFullTextLoading] = useState<boolean>(
     state.fullTextLoading
   );
+
   useEffect(() => {
     setFullTextLoading(state.fullTextLoading);
   }, [state.fullTextLoading]);
@@ -129,7 +130,7 @@ const NewDoc = () => {
             <div className="h-screen flex flex-col bg-gray-200">
               <TopBar getShowCards={getShowCards} getFullText={setFullText} />
               <Row className="flex-grow justify-center items-start py-4 px-2 overflow-auto">
-                <Col span={fullText || fullTextLoading ? 4 : 6}>
+                <Col span={showCards ? 7 : fullText || fullTextLoading ? 5 : 6}>
                   {showCards && <Efficiency />}
                 </Col>
                 <Col span={12} ref={leftColRef}>
@@ -167,7 +168,7 @@ const NewDoc = () => {
                 </Col>
                 {fullText || fullTextLoading ? (
                   <Col
-                    span={8}
+                    span={showCards ? 5 : 7}
                     className={`max-h-[${leftColHeight}px] min-h-64`}
                   >
                     <CardList
@@ -191,7 +192,7 @@ const NewDoc = () => {
                     />
                   </Col>
                 ) : (
-                  <Col span={6} />
+                  <Col span={showCards ? 5 : 6} />
                 )}
               </Row>
             </div>
