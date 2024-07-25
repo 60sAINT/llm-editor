@@ -18,6 +18,7 @@ import { docApi } from "./api/Doc";
 import { useDocId } from "./hooks/useDocId";
 import { Efficiency } from "./Efficiency";
 import { BlockNoteEditor } from "@blocknote/core";
+import { useAuth } from "@/provider/authProvider";
 
 const NewDoc = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -40,10 +41,11 @@ const NewDoc = () => {
   const [editor, setEditor] = useState<BlockNoteEditor>();
   const [title, setTitle] = useState("");
   const { search } = useLocation();
+  const { token } = useAuth();
   const docId = useDocId(search) as string;
   const { data: doc } = useRequest(
     async () => {
-      const res = await docApi.getDocByDocId(docId);
+      const res = await docApi.getDocByDocId(`Bearer ${token}` || "", docId);
       setTitle(res.data.doc.title);
       return res.data.doc;
     },

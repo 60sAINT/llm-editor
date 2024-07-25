@@ -9,20 +9,31 @@ export type UpdateDocParams = {
   token: string;
 };
 export class DocApi {
-  public async newDoc(title: string, content: string) {
-    const result = await axios.post(`${apikeyPrefix}/doc/new`, {
-      title,
-      content,
-    });
+  public async newDoc(token: string, title: string, content: string) {
+    const result = await axios.post(
+      `${apikeyPrefix}/doc/new`,
+      {
+        title,
+        content,
+      },
+      {
+        headers: { "X-Authorization": token },
+      }
+    );
     return result.data;
   }
   public async updateDoc({ doc_id, title, content, token }: UpdateDocParams) {
-    const result = await axios.post(`${apikeyPrefix}/doc/update`, {
-      doc_id,
-      title,
-      content,
-      headers: { "X-Authorization": token },
-    });
+    const result = await axios.post(
+      `${apikeyPrefix}/doc/update`,
+      {
+        doc_id,
+        title,
+        content,
+      },
+      {
+        headers: { "X-Authorization": token },
+      }
+    );
     return result.data;
   }
   public async getDocList(token: string) {
@@ -31,14 +42,22 @@ export class DocApi {
     });
     return result.data;
   }
-  public async getDocByDocId(docId: string) {
-    const result = await axios.get(`${apikeyPrefix}/doc?doc_id=${docId}`);
+  public async getDocByDocId(token: string, docId: string) {
+    const result = await axios.get(`${apikeyPrefix}/doc?doc_id=${docId}`, {
+      headers: { "X-Authorization": token },
+    });
     return result.data;
   }
-  public async deleteDoc(doc_id: string) {
-    const result = await axios.post(`${apikeyPrefix}/doc/delete`, {
-      doc_id,
-    });
+  public async deleteDoc(token: string, doc_id: string) {
+    const result = await axios.post(
+      `${apikeyPrefix}/doc/delete`,
+      {
+        doc_id,
+      },
+      {
+        headers: { "X-Authorization": token },
+      }
+    );
     return result.data;
   }
 }

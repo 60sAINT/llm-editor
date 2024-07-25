@@ -37,7 +37,7 @@ const Content = () => {
     loading: docListLoading,
   } = useRequest(
     async () => {
-      const res = await docApi.getDocList("Bearer " + token || "");
+      const res = await docApi.getDocList(`Bearer ${token}` || "");
       return res.data.doc_list;
     },
     { manual: false }
@@ -45,7 +45,7 @@ const Content = () => {
 
   const { confirm } = Modal;
   const { runAsync: deleteDoc } = useRequest(async (docId) => {
-    const res = await docApi.deleteDoc(docId);
+    const res = await docApi.deleteDoc(`Bearer ${token}` || "", docId);
     return res.data;
   });
   const showDeleteConfirm = (docId: string) => {
