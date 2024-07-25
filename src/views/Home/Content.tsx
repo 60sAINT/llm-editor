@@ -150,7 +150,6 @@ const Content = () => {
     ],
     []
   );
-  console.log(docList);
 
   return (
     <div className="w-full h-full overflow-auto">

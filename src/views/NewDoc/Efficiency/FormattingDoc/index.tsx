@@ -144,9 +144,6 @@ export const FormattingDoc = () => {
     labelCol: { span: 6 },
     wrapperCol: { span: 17 },
   };
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
-  };
   const { Option } = Select;
   const [customPadding, setCustomPadding] = useState(paddingValues.moderate);
   const [isCustom, setIsCustom] = useState(false);
@@ -184,7 +181,6 @@ export const FormattingDoc = () => {
       <Form
         name="validate_other"
         {...formItemLayout}
-        onFinish={onFinish}
         initialValues={{
           "heading1-fontFamily": "-apple-system",
           "heading1-fontSize": 36,
@@ -551,7 +547,6 @@ export const FormattingDoc = () => {
         className="float-right mr-1.5 mb-3.5 mt-1"
         onClick={async () => {
           const fullTextFormatting = await form.validateFields();
-          console.log(fullTextFormatting);
           dispatch({
             type: "SET_FULLTEXT_FORMATTING",
             payload: fullTextFormatting,

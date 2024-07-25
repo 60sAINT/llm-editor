@@ -60,7 +60,6 @@ const RegisterForm = (props: Props) => {
       setCountdown(60);
     }
     const { email } = await form.getFieldsValue();
-    console.log("vericode", email);
     await runSendVericode(email);
   };
 

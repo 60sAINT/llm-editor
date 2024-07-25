@@ -11,8 +11,6 @@ export const NewComponent: React.FC<{
   onBack: () => void;
   componentName: string;
 }> = ({ onBack, componentName }) => {
-  console.log(componentName);
-
   return (
     <div>
       <Button

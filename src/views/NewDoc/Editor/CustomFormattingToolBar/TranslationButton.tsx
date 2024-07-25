@@ -21,7 +21,6 @@ export function TranslationButton({ isFull }: { isFull?: boolean }) {
   });
   // 翻译逻辑
   const handleTextTranslation = async (): Promise<void> => {
-    console.log("执行了");
     dispatch({ type: "SWITCH_VISIBILITY", payload: DisplayStyle.BLOCK });
     isFull && dispatch({ type: "FULL_TEXT_LOADING", payload: true });
     const selection = isFull

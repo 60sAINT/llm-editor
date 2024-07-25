@@ -53,7 +53,6 @@ const Status = () => {
     // 已有id，不是新文档
     if (docId) {
       try {
-        console.log(docContent);
         await saveDoc({ docId, title, content: docContent });
         showMessage("保存成功！", 0.65);
         setSaveState(IsSavedType.True);

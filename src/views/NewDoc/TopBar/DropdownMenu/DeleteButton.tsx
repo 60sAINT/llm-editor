@@ -1,16 +1,8 @@
 import React from "react";
 
 const DeleteButton = () => {
-  const handleClick = () => {
-    console.log("Clicked on Delete");
-  };
-
   return (
-    <a
-      href="#"
-      className="block h-8 leading-8 !text-dropdown-text text-sm"
-      onClick={handleClick}
-    >
+    <a href="#" className="block h-8 leading-8 !text-dropdown-text text-sm">
       删除文档
     </a>
   );

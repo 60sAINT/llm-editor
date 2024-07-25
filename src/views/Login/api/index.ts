@@ -17,7 +17,6 @@ export class LoginApi {
     phone: string;
     vericode: string;
   }) {
-    console.log(body);
     const result = await axios.post(`${apikeyPrefix}/register`, body);
     return result.data;
   }

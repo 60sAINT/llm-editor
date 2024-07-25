@@ -19,17 +19,6 @@ export function CustomBlockButton(props: SideMenuProps) {
           size={24}
           onClick={async () => {
             if (!currentBlock.content) return;
-            console.log(await editor.blocksToMarkdownLossy());
-            // editor.insertBlocks(
-            //   [
-            //     {
-            //       type: "paragraph",
-            //       content: JSON.stringify(currentBlock, null, 2),
-            //     },
-            //   ],
-            //   currentBlock.id,
-            //   "after"
-            // );
           }}
         />
       }

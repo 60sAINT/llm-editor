@@ -65,7 +65,6 @@ const LineChart: React.FC = () => {
           type: "value",
         },
         series: seriesData.map((series) => {
-          console.log(series.data.split(",").map(Number));
           return {
             name: series.name,
             type: "line",

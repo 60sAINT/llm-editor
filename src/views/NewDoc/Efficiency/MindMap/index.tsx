@@ -3,12 +3,19 @@ import TextArea from "antd/es/input/TextArea";
 import { Button, Select, Tooltip } from "antd";
 import { InfoCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { MindChart } from "./MindChart";
+import { useRequest } from "@/hooks/useRequest";
+import { defaultApi } from "../../api";
 
 const MindMap: React.FC = () => {
   const [query, setQuery] = useState("");
+  const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
   const [placeholder, setPlaceholder] = useState<string>("");
   const [generateContent, setGenerateContent] = useState(false);
+  const { runAsync: getMindMapData } = useRequest(async (query) => {
+    const res = await defaultApi.getMindMapData(query);
+    return res;
+  });
 
   useEffect(() => {
     setPlaceholder("如：暗物质和暗能量对宇宙学理论的挑战");
@@ -16,10 +23,10 @@ const MindMap: React.FC = () => {
 
   const handleGenerateContent = async () => {
     setLoading(true);
-    await setTimeout(() => {
-      setLoading(false);
-      setGenerateContent(true);
-    }, 3000);
+    const data = await getMindMapData(query);
+    setData(JSON.parse(data));
+    setLoading(false);
+    setGenerateContent(true);
   };
 
   return (
@@ -67,7 +74,7 @@ const MindMap: React.FC = () => {
             />
           </div>
         ) : (
-          generateContent && <MindChart />
+          generateContent && <MindChart data={data} />
         )}
       </div>
     </>

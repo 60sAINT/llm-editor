@@ -144,7 +144,6 @@ const DisplayFrame = () => {
         });
       }
     });
-    console.log(blocksToRemove, blocksToReplace, 345345);
 
     editor?.replaceBlocks(blocksToRemove, blocksToReplace);
   }, [
