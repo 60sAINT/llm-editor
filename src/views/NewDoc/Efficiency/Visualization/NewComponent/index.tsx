@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from "react";
-import * as echarts from "echarts";
+import React from "react";
 import { MindChart } from "./MindChart";
 import LineChart from "./LineChart";
 import { Button, Tag, Tooltip } from "antd";
 import { QuestionCircleFilled } from "@ant-design/icons";
+import BarChart from "./Barchart";
 
 export const NewComponent: React.FC<{
   onBack: () => void;
@@ -22,7 +22,7 @@ export const NewComponent: React.FC<{
       </Button>
       <Tag
         icon={
-          <Tooltip title="折线图：适用于显示数据随时间的变化趋势，如股票价格、气温变化等。">
+          <Tooltip title="柱状图：适用于比较不同类别的数据，如年度销售额、人口统计等。">
             <QuestionCircleFilled className="text-base mr-1.5" />
           </Tooltip>
         }
@@ -33,7 +33,7 @@ export const NewComponent: React.FC<{
       </Tag>
 
       {componentName == "LineChart" && <LineChart />}
-      {/* <div ref={chartRef} style={{ width: "100%", height: "500px" }}></div> */}
+      {componentName == "BarChart" && <BarChart />}
       {componentName == "PieChart" && <MindChart />}
     </div>
   );

@@ -1,9 +1,9 @@
 import React, { useState, useRef } from "react";
 import { Button, Input } from "antd";
-import { MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { PlusCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import * as echarts from "echarts";
 
-const LineChart: React.FC = () => {
+const BarChart: React.FC = () => {
   const [title, setTitle] = useState("");
   const [xAxisName, setXAxisName] = useState("");
   const [yAxisName, setYAxisName] = useState("");
@@ -33,46 +33,69 @@ const LineChart: React.FC = () => {
   const handleGenerateChart = () => {
     if (chartRef.current) {
       const chartInstance = echarts.init(chartRef.current);
+      const labelOption = {
+        show: true,
+        position: "insideBottom",
+        distance: 15,
+        align: "left",
+        verticalAlign: "middle",
+        rotate: 90,
+        formatter: "{c}  {name|{a}}",
+        fontSize: 16,
+        rich: {
+          name: {},
+        },
+      };
       const option = {
         title: {
           text: title,
         },
         tooltip: {
           trigger: "axis",
+          axisPointer: {
+            type: "shadow",
+          },
         },
         legend: {
           data: seriesData.map((series) => series.name),
         },
-        grid: {
-          left: "3%",
-          right: "4%",
-          bottom: "3%",
-          containLabel: true,
-        },
         toolbox: {
+          show: true,
+          orient: "vertical",
+          left: "right",
+          top: "center",
           feature: {
-            saveAsImage: {},
+            mark: { show: true },
+            dataView: { show: true, readOnly: false },
+            magicType: { show: true, type: ["line", "bar", "stack"] },
+            restore: { show: true },
+            saveAsImage: { show: true },
           },
         },
-        xAxis: {
-          name: xAxisName,
-          type: "category",
-          boundaryGap: false,
-          data: xAxisData.split(","),
-        },
-        yAxis: {
-          name: yAxisName,
-          type: "value",
-        },
-        series: seriesData.map((series) => {
-          console.log(series.data.split(",").map(Number));
-          return {
-            name: series.name,
-            type: "line",
-            stack: "Total",
-            data: series.data.split(",").map(Number),
-          };
-        }),
+        xAxis: [
+          {
+            name: xAxisName,
+            type: "category",
+            axisTick: { show: false },
+            data: xAxisData.split(","),
+          },
+        ],
+        yAxis: [
+          {
+            name: yAxisName,
+            type: "value",
+          },
+        ],
+        series: seriesData.map((series) => ({
+          name: series.name,
+          type: "bar",
+          barGap: 0,
+          label: labelOption,
+          emphasis: {
+            focus: "series",
+          },
+          data: series.data.split(",").map(Number),
+        })),
       };
       chartInstance.setOption(option);
     }
@@ -169,4 +192,4 @@ const LineChart: React.FC = () => {
   );
 };
 
-export default LineChart;
+export default BarChart;

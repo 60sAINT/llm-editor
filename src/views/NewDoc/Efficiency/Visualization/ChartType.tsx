@@ -1,12 +1,11 @@
 import {
-  AreaChartOutlined,
   BarChartOutlined,
   DotChartOutlined,
   LineChartOutlined,
   PieChartOutlined,
   RadarChartOutlined,
 } from "@ant-design/icons";
-import React, { useState } from "react";
+import React from "react";
 
 const icons = [
   {
