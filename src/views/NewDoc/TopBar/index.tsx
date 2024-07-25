@@ -6,7 +6,7 @@ import ActionButton from "./ActionButton";
 import DropdownMenu from "./DropdownMenu";
 import "./index.css";
 import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Col, Row } from "antd";
+import { Avatar, Col, Row, Tooltip } from "antd";
 import { Start } from "./Start";
 import { useNewDocState } from "../utils/provider";
 
@@ -55,7 +55,11 @@ const TopBar: React.FC<TopBarProps> = ({
           <div className="flex items-center justify-between w-[300px]">
             <ActionButton label="开始" onClick={handleStartClick} />
             <ActionButton label="效率" onClick={handleEfficiencyClick} />
-            <ActionButton label="审阅" onClick={() => {}} />
+            <ActionButton
+              label="审阅"
+              onClick={() => {}}
+              className="hover:cursor-not-allowed"
+            />
           </div>
         </Col>
         <Col span={8}>

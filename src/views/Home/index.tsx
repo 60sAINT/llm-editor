@@ -22,12 +22,14 @@ import {
   Menu,
   MenuProps,
   Modal,
+  Tooltip,
 } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
 import Main from "./Content";
 import Knowledge from "./Knowledge";
 import { useNavigate } from "react-router-dom";
+import { Developing } from "./Developing";
 
 const Home: React.FC = () => {
   const [selectKey, setSelectKey] = useState<string>("1");
@@ -52,27 +54,33 @@ const Home: React.FC = () => {
           </div>
           <span>新建文档</span>
         </div>
-        <div className="text-center hover:bg-gray-100 py-2.5">
-          <div className="mb-4">
-            <RobotFilled className="text-3xl text-[#f1d1d5]" />
+        <Tooltip title="功能开发中">
+          <div className="text-center hover:bg-gray-100 py-2.5 hover:cursor-not-allowed">
+            <div className="mb-4">
+              <RobotFilled className="text-3xl text-[#f1d1d5]" />
+            </div>
+            <span>AI写作</span>
           </div>
-          <span>AI写作</span>
-        </div>
+        </Tooltip>
       </div>
       <Divider className="my-4" />
       <div className="grid grid-cols-2 gap-4 mt-2">
-        <div className="text-center hover:bg-gray-100 py-2.5">
-          <div className="mb-4">
-            <FolderAddTwoTone className="text-3xl" twoToneColor="#f5bdc5" />
+        <Tooltip title="功能开发中">
+          <div className="text-center hover:bg-gray-100 py-2.5 hover:cursor-not-allowed">
+            <div className="mb-4">
+              <FolderAddTwoTone className="text-3xl" twoToneColor="#f5bdc5" />
+            </div>
+            <span>新建文件夹</span>
           </div>
-          <span>新建文件夹</span>
-        </div>
-        <div className="text-center hover:bg-gray-100 py-2.5">
-          <div className="mb-4">
-            <UploadOutlined className="text-3xl text-gray-300" />
+        </Tooltip>
+        <Tooltip title="功能开发中">
+          <div className="text-center hover:bg-gray-100 py-2.5 hover:cursor-not-allowed">
+            <div className="mb-4">
+              <UploadOutlined className="text-3xl text-gray-300" />
+            </div>
+            <span>上传文件</span>
           </div>
-          <span>上传文件</span>
-        </div>
+        </Tooltip>
       </div>
     </div>
   );
@@ -114,7 +122,11 @@ const Home: React.FC = () => {
 
   const contents: Record<string, React.JSX.Element> = {
     "1": <Main />,
+    "2": <Developing />,
+    "3": <Developing />,
+    "4": <Developing />,
     "5": <Knowledge />,
+    "6": <Developing />,
   };
 
   return (
