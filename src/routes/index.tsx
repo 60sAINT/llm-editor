@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
 import { ProtectedRoute } from "./ProtectedRoute";
+import Spinning from "./Spinning";
 
 const Routes = () => {
   const Login = lazy(() => import("../views/Login"));
@@ -19,7 +20,7 @@ const Routes = () => {
     {
       path: "/login",
       element: (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Spinning />}>
           <Login />
         </Suspense>
       ),
@@ -27,7 +28,7 @@ const Routes = () => {
     {
       path: "/user-agreement",
       element: (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Spinning />}>
           <UserAgreement />
         </Suspense>
       ),
@@ -35,7 +36,7 @@ const Routes = () => {
     {
       path: "/privacy-policy",
       element: (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Spinning />}>
           <PrivacyPolicy />
         </Suspense>
       ),
@@ -51,7 +52,7 @@ const Routes = () => {
         {
           path: "/",
           element: (
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Spinning />}>
               <Home />
             </Suspense>
           ),
@@ -59,7 +60,7 @@ const Routes = () => {
         {
           path: "/newDoc",
           element: (
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Spinning />}>
               <NewDoc />
             </Suspense>
           ),
@@ -67,7 +68,7 @@ const Routes = () => {
         {
           path: "/db",
           element: (
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Spinning />}>
               <Files />
             </Suspense>
           ),
@@ -75,7 +76,7 @@ const Routes = () => {
         {
           path: "/logout",
           element: (
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Spinning />}>
               <Logout />
             </Suspense>
           ),
@@ -83,7 +84,7 @@ const Routes = () => {
         {
           path: "/temp",
           element: (
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Spinning />}>
               <Temp />
             </Suspense>
           ),
