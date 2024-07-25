@@ -1,6 +1,8 @@
 import axios from "axios";
+export const GATEWAY = "http://43.138.11.21:12099";
+// export const GATEWAY = "https://88eaxctef0i61cqf.aistudio-hub.baidu.com";
+// export const GATEWAY = "http://113.54.230.2:12097";
 // export const GATEWAY = "http://localhost:8000";
-export const GATEWAY = "http://113.54.230.2:12097";
 export const baseUrl = `${GATEWAY}`;
 
 const axiosInstance = axios.create({
