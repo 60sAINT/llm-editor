@@ -4,8 +4,10 @@ import { CreateKnowledgeParams, FileBase, KnowledgeBase } from "../interface";
 const apikeyPrefix = "/api/v1/knowledge";
 
 export class KnowledgeApi {
-  public async getKnowledgeList(): Promise<KnowledgeBase[]> {
-    const result = await axios.get(`${apikeyPrefix}/db/list`);
+  public async getKnowledgeList(token: string): Promise<KnowledgeBase[]> {
+    const result = await axios.get(`${apikeyPrefix}/db/list`, {
+      headers: { "X-Authorization": token },
+    });
     return result.data.data.db_list;
   }
 

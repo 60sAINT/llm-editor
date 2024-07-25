@@ -31,7 +31,7 @@ const Status = () => {
   }, [saveKeyDown]);
   // 保存新文档
   const { runAsync: saveNewDoc } = useRequest(async (title, content) => {
-    const res = await docApi.newDoc(title, content);
+    const res = await docApi.newDoc(`Bearer ${token}` || "", title, content);
     setSaveState(IsSavedType.True);
     return res;
   });
@@ -42,7 +42,7 @@ const Status = () => {
         doc_id: docId,
         title,
         content,
-        token,
+        token: `Bearer ${token}` || "",
       });
       return res;
     }
