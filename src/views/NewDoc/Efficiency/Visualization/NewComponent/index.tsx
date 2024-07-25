@@ -5,6 +5,7 @@ import { QuestionCircleFilled } from "@ant-design/icons";
 import BarChart from "./Barchart";
 import PieChart from "./PieChart";
 import DotChart from "./DotChart";
+import RadarChart from "./RadarChart";
 
 export const NewComponent: React.FC<{
   onBack: () => void;
@@ -83,6 +84,22 @@ export const NewComponent: React.FC<{
             <span className="font-bold text-lg">{componentName}</span>
           </Tag>
           <DotChart />
+        </>
+      )}
+      {componentName == "RadarChart" && (
+        <>
+          <Tag
+            icon={
+              <Tooltip title="雷达图：适用于比较多个变量在不同维度上的表现，以及展示各个变量之间的相对关系，常用于企业经营状况——收益性、生产性、流动性、安全性和成长性的评价。">
+                <QuestionCircleFilled className="text-base mr-1.5" />
+              </Tooltip>
+            }
+            color="#55acee"
+            className="h-8 px-2 mx-auto w-36 flex justify-start"
+          >
+            <span className="font-bold text-lg">{componentName}</span>
+          </Tag>
+          <RadarChart />
         </>
       )}
     </div>

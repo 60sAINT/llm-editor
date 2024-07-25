@@ -27,6 +27,11 @@ const DotChart: React.FC = () => {
         yAxis: {
           name: yAxisName,
         },
+        toolbox: {
+          feature: {
+            saveAsImage: {},
+          },
+        },
         series: [
           {
             symbolSize: 20,

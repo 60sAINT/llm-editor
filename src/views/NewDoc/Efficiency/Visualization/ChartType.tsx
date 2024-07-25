@@ -48,9 +48,6 @@ const icons = [
       <RadarChartOutlined className="!text-7xl text-blue-500 justify-center !font-medium" />
     ),
   },
-  // { id: 6, name: "散点图", component: "ScatterChart" },
-  // { id: 7, name: "堆栈图", component: "StackChart" },
-  // { id: 8, name: "步骤图", component: "StepChart" },
 ];
 
 const ChartType: React.FC<{ onClick: (component: string) => void }> = ({

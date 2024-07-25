@@ -45,6 +45,11 @@ const PieChart: React.FC = () => {
           left: "left",
           data: seriesData.map((series) => series.name),
         },
+        toolbox: {
+          feature: {
+            saveAsImage: {},
+          },
+        },
         series: [
           {
             name: "Access From",
