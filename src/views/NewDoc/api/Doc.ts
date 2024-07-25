@@ -21,13 +21,13 @@ export class DocApi {
       doc_id,
       title,
       content,
-      headers: { Authorization: token },
+      headers: { "X-Authorization": token },
     });
     return result.data;
   }
   public async getDocList(token: string) {
     const result = await axios.get(`${apikeyPrefix}/doc/list`, {
-      headers: { Authorization: token },
+      headers: { "X-Authorization": token },
     });
     return result.data;
   }

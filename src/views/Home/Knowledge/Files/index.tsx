@@ -127,7 +127,8 @@ const Files = () => {
         .post(`${action}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
+            // Authorization: `Bearer ${token}`,
+            "X-Authorization": `Bearer ${token}`,
           },
         })
         .then(() => {
