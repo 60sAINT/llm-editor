@@ -1,13 +1,8 @@
 import React from "react";
-import {
-  SideMenuProps,
-  useBlockNoteEditor,
-  useComponentsContext,
-} from "@blocknote/react";
+import { SideMenuProps, useComponentsContext } from "@blocknote/react";
 import { BiAtom } from "react-icons/bi";
 
 export function CustomBlockButton(props: SideMenuProps) {
-  const editor = useBlockNoteEditor();
   const Components = useComponentsContext()!;
   const currentBlock = props.block;
 

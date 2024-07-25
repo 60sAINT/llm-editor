@@ -1,16 +1,9 @@
-import { Button, Form, FormInstance, Input, Select } from "antd";
+import { Button, Form, FormInstance, Input } from "antd";
 import React, { useEffect, useState } from "react";
-import {
-  validateEmail,
-  validatePassword,
-  validatePhone,
-  validateUsername,
-} from "../utils";
+import { validateEmail, validatePassword, validateUsername } from "../utils";
 import { useRequest } from "@/hooks/useRequest";
 import { loginApi } from "../api";
 import { showMessage } from "../../../common/utils/message";
-
-const { Option } = Select;
 
 interface Props {
   operation: string;
@@ -19,7 +12,7 @@ interface Props {
   openModal: () => void;
 }
 const RegisterForm = (props: Props) => {
-  const { operation, isAgreed, form, openModal } = props;
+  const { isAgreed, form, openModal } = props;
   const [countdown, setCountdown] = useState<number>(0);
 
   const { runAsync } = useRequest(async (value) => {
@@ -29,21 +22,6 @@ const RegisterForm = (props: Props) => {
   const { runAsync: runSendVericode } = useRequest(async (value) => {
     await loginApi.getVericode(value);
   });
-
-  // 手机号归属地选择框
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select
-        popupMatchSelectWidth={false}
-        className="w-20 [&_.ant-select-selection-item]:text-base"
-      >
-        <Option value="86" className="w-44">
-          +86
-        </Option>
-        <Option value="non-chinese-mainland">非中国大陆手机号</Option>
-      </Select>
-    </Form.Item>
-  );
 
   useEffect(() => {
     const timer = setTimeout(() => {
