@@ -4,6 +4,7 @@ import { Button, Tag, Tooltip } from "antd";
 import { QuestionCircleFilled } from "@ant-design/icons";
 import BarChart from "./Barchart";
 import PieChart from "./PieChart";
+import DotChart from "./DotChart";
 
 export const NewComponent: React.FC<{
   onBack: () => void;
@@ -20,18 +21,6 @@ export const NewComponent: React.FC<{
       >
         返回
       </Button>
-      {/* <Tag
-        icon={
-          <Tooltip title="柱状图：适用于比较不同类别的数据，如年度销售额、人口统计等。">
-            <QuestionCircleFilled className="text-base mr-1.5" />
-          </Tooltip>
-        }
-        color="#55acee"
-        className="h-8 px-4 mx-auto w-36 flex justify-start"
-      >
-        <span className="font-bold text-lg">{componentName}</span>
-      </Tag> */}
-
       {componentName == "LineChart" && (
         <>
           <Tag
@@ -68,7 +57,7 @@ export const NewComponent: React.FC<{
         <>
           <Tag
             icon={
-              <Tooltip title="饼状图：适用于显示各部分占整体的比例，常用于市场份额、预算分配等场景。">
+              <Tooltip title="饼图：适用于显示各部分占整体的比例，常用于市场份额、预算分配等场景。">
                 <QuestionCircleFilled className="text-base mr-1.5" />
               </Tooltip>
             }
@@ -78,6 +67,22 @@ export const NewComponent: React.FC<{
             <span className="font-bold text-lg">{componentName}</span>
           </Tag>
           <PieChart />
+        </>
+      )}
+      {componentName == "DotChart" && (
+        <>
+          <Tag
+            icon={
+              <Tooltip title="散点图：适用于显示两个变量之间的关系，如身高与体重、广告费用与销售额等。">
+                <QuestionCircleFilled className="text-base mr-1.5" />
+              </Tooltip>
+            }
+            color="#55acee"
+            className="h-8 px-4 mx-auto w-36 flex justify-start"
+          >
+            <span className="font-bold text-lg">{componentName}</span>
+          </Tag>
+          <DotChart />
         </>
       )}
     </div>

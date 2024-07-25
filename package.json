@@ -24,6 +24,7 @@
     "core-js": "^3.37.1",
     "customize-cra": "^1.0.0",
     "echarts": "^5.5.1",
+    "echarts-stat": "^1.2.0",
     "file-saver": "^2.0.5",
     "lodash": "^4.17.21",
     "react": "^18.3.1",
