@@ -59,7 +59,7 @@ export const Efficiency: React.FC = () => {
           children: <Visualization />,
         },
       ]}
-      className="[&_.ant-collapse-content-box]:!px-1.5 [&_.ant-collapse-content-box]:!py-0 max-h-[1036px]"
+      className="[&_.ant-collapse-content-box]:!px-1.5 [&_.ant-collapse-content-box]:!py-0"
     />,
   ];
   return <CardList dataSource={effectDataSource} />;

@@ -1,113 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import TextArea from "antd/es/input/TextArea";
 import { Button, Select, Tooltip } from "antd";
 import { InfoCircleOutlined, LoadingOutlined } from "@ant-design/icons";
-import * as echarts from "echarts";
+import { MindChart } from "./MindChart";
 
 const MindMap: React.FC = () => {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [placeholder, setPlaceholder] = useState<string>("");
-  const chartRef = useRef(null);
   const [generateContent, setGenerateContent] = useState(false);
-
-  useEffect(() => {
-    const chartInstance = echarts.init(chartRef.current);
-
-    const option = {
-      tooltip: {
-        trigger: "item",
-        triggerOn: "mousemove",
-        backgroundColor: "#dfdfdf",
-        textStyle: {
-          color: "black",
-        },
-      },
-      series: [
-        {
-          type: "tree",
-          symbolSize: 75,
-          symbol: "roundRect",
-          edgeShape: "polyline",
-          edgeForkPosition: "50%",
-          initialTreeDepth: 2,
-          orient: "vertical",
-          itemStyle: {
-            color: "black",
-            borderColor: "black",
-          },
-          expandAndCollapse: true,
-          animationDuration: 550,
-          animationDurationUpdate: 750,
-          lineStyle: {
-            color: "#7b7b7b",
-            width: 3,
-          },
-          label: {
-            show: true,
-            position: "inside",
-            textStyle: {
-              fontSize: 15,
-              color: "#fff",
-            },
-          },
-          leaves: {
-            label: {
-              position: "inside",
-              color: "#fff",
-            },
-            itemStyle: {
-              color: "#dfdfdf",
-              borderColor: "#dfdfdf",
-            },
-          },
-          data: [
-            {
-              name: "根节点",
-              url: "",
-              itemStyle: {
-                color: "#a53626",
-                borderColor: "#a53626",
-              },
-              children: [
-                {
-                  name: "子节点1",
-                  children: [
-                    {
-                      name: "叶子节点1",
-                    },
-                    {
-                      name: "叶子节点2",
-                    },
-                    {
-                      name: "叶子节点3",
-                    },
-                  ],
-                },
-                {
-                  name: "子节点2",
-                  children: [
-                    {
-                      name: "叶子节点4",
-                    },
-                    {
-                      name: "叶子节点5",
-                    },
-                    {
-                      name: "叶子节点6",
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-    if (generateContent) {
-      chartInstance.setOption(option);
-    }
-  }, [generateContent]);
 
   useEffect(() => {
     setPlaceholder("如：暗物质和暗能量对宇宙学理论的挑战");
@@ -151,7 +52,7 @@ const MindMap: React.FC = () => {
         />
       </div>
       <Button
-        className="w-full h-10 rounded mt-1.5"
+        className="w-full h-10 rounded mt-1.5 mb-4"
         type="primary"
         onClick={handleGenerateContent}
       >
@@ -166,7 +67,7 @@ const MindMap: React.FC = () => {
             />
           </div>
         ) : (
-          <div ref={chartRef} style={{ width: "100%", height: "500px" }} />
+          generateContent && <MindChart />
         )}
       </div>
     </>
