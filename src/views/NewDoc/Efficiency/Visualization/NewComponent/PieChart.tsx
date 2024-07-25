@@ -3,16 +3,14 @@ import { Button, Input } from "antd";
 import { PlusCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import * as echarts from "echarts";
 
-const BarChart: React.FC = () => {
+const PieChart: React.FC = () => {
   const [title, setTitle] = useState("");
-  const [xAxisName, setXAxisName] = useState("");
-  const [yAxisName, setYAxisName] = useState("");
-  const [xAxisData, setXAxisData] = useState("");
-  const [seriesData, setSeriesData] = useState([{ name: "", data: "" }]);
+  const [subTitle, setSubTitle] = useState("");
+  const [seriesData, setSeriesData] = useState([{ name: "", value: "" }]);
   const chartRef = useRef<HTMLDivElement>(null);
 
   const handleAddSeries = () => {
-    setSeriesData([...seriesData, { name: "", data: "" }]);
+    setSeriesData([...seriesData, { name: "", value: "" }]);
   };
 
   const handleRemoveSeries = (index: number) => {
@@ -33,69 +31,38 @@ const BarChart: React.FC = () => {
   const handleGenerateChart = () => {
     if (chartRef.current) {
       const chartInstance = echarts.init(chartRef.current);
-      const labelOption = {
-        show: true,
-        position: "insideBottom",
-        distance: 15,
-        align: "left",
-        verticalAlign: "middle",
-        rotate: 90,
-        formatter: "{c}  {name|{a}}",
-        fontSize: 16,
-        rich: {
-          name: {},
-        },
-      };
       const option = {
         title: {
           text: title,
+          subtext: subTitle,
+          left: "center",
         },
         tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "shadow",
-          },
+          trigger: "item",
         },
         legend: {
+          orient: "vertical",
+          left: "left",
           data: seriesData.map((series) => series.name),
         },
-        toolbox: {
-          show: true,
-          orient: "vertical",
-          left: "right",
-          top: "center",
-          feature: {
-            mark: { show: true },
-            dataView: { show: true, readOnly: false },
-            magicType: { show: true, type: ["line", "bar", "stack"] },
-            restore: { show: true },
-            saveAsImage: { show: true },
-          },
-        },
-        xAxis: [
+        series: [
           {
-            name: xAxisName,
-            type: "category",
-            axisTick: { show: false },
-            data: xAxisData.split(","),
+            name: "Access From",
+            type: "pie",
+            radius: "50%",
+            data: seriesData.map((series) => ({
+              value: Number(series.value),
+              name: series.name,
+            })),
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: "rgba(0, 0, 0, 0.5)",
+              },
+            },
           },
         ],
-        yAxis: [
-          {
-            name: yAxisName,
-            type: "value",
-          },
-        ],
-        series: seriesData.map((series) => ({
-          name: series.name,
-          type: "bar",
-          barGap: 0,
-          label: labelOption,
-          emphasis: {
-            focus: "series",
-          },
-          data: series.data.split(",").map(Number),
-        })),
       };
       chartInstance.setOption(option);
     }
@@ -116,35 +83,13 @@ const BarChart: React.FC = () => {
       </div>
       <div>
         <div className="leading-10 text-slate-700 mt-4 font-semibold">
-          X轴名称
+          图表副标题
         </div>
         <Input
           className="w-full p-2 border border-gray-300 rounded"
-          value={xAxisName}
-          onChange={(e) => setXAxisName(e.target.value)}
-          placeholder="请输入X轴名称"
-        />
-      </div>
-      <div>
-        <div className="leading-10 text-slate-700 mt-4 font-semibold">
-          Y轴名称
-        </div>
-        <Input
-          className="w-full p-2 border border-gray-300 rounded"
-          value={yAxisName}
-          onChange={(e) => setYAxisName(e.target.value)}
-          placeholder="请输入Y轴名称"
-        />
-      </div>
-      <div>
-        <div className="leading-10 text-slate-700 mt-4 font-semibold">
-          X轴数据 (用英文逗号分隔)
-        </div>
-        <Input
-          className="w-full p-2 border border-gray-300 rounded"
-          value={xAxisData}
-          onChange={(e) => setXAxisData(e.target.value)}
-          placeholder="请输入X轴数据"
+          value={subTitle}
+          onChange={(e) => setSubTitle(e.target.value)}
+          placeholder="请输入图表副标题"
         />
       </div>
       <div className="mb-4">
@@ -157,15 +102,16 @@ const BarChart: React.FC = () => {
               onChange={(e) =>
                 handleSeriesChange(index, "name", e.target.value)
               }
-              placeholder="柱名称"
+              placeholder="扇形名称"
             />
             <Input
               className="w-3/4 p-2 border border-gray-300 rounded mr-2"
-              value={series.data}
+              value={series.value}
               onChange={(e) =>
-                handleSeriesChange(index, "data", e.target.value)
+                handleSeriesChange(index, "value", e.target.value)
               }
-              placeholder="Y轴数据(英文逗号分隔)"
+              placeholder="扇形占面积百分比"
+              suffix="%"
             />
             <Button onClick={() => handleRemoveSeries(index)} size="small">
               <MinusCircleOutlined />
@@ -192,4 +138,4 @@ const BarChart: React.FC = () => {
   );
 };
 
-export default BarChart;
+export default PieChart;

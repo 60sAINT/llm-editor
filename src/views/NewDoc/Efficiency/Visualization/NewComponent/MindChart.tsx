@@ -1099,6 +1099,8 @@ export const MindChart = () => {
       return () => {
         myChart.dispose();
       };
+    } else {
+      return;
     }
   }, []);
   return <div ref={chartRef} style={{ width: "100%", height: "500px" }}></div>;
