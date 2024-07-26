@@ -25,7 +25,7 @@ const DownloadButton = () => {
       const url = window.URL.createObjectURL(new Blob([res]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `${title}.docx`); // or the name you prefer
+      link.setAttribute("download", `${title || "无标题"}.docx`); // or the name you prefer
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
