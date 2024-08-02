@@ -82,10 +82,18 @@ const Reference: React.FC = () => {
                     </span>
                     <div
                       className="bg-blue-50 rounded-[3px] pt-0.5 px-1 pb-1 min-w-10 ml-1"
-                      onClick={() => navigate(paper.link)}
+                      // onClick={() => navigate(paper.link)}
                     >
                       <ExportOutlined className="mr-0.5 text-[10px] text-blue-500" />
-                      <a className="text-blue-500 text-[10px]">查看</a>
+                      {/* <a className="text-blue-500 text-[10px]">查看</a> */}
+                      <a
+                        href={paper.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 text-[10px]"
+                      >
+                        查看
+                      </a>
                     </div>
                   </div>
                 </div>
