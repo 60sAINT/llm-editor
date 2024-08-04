@@ -19,6 +19,7 @@ import { useDocId } from "./hooks/useDocId";
 import { Efficiency } from "./Efficiency";
 import { BlockNoteEditor } from "@blocknote/core";
 import { useAuth } from "@/provider/authProvider";
+import TOC from "./TOC";
 
 const NewDoc = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -134,6 +135,7 @@ const NewDoc = () => {
               <Row className="flex-grow justify-center items-start py-4 px-2 overflow-auto">
                 <Col span={showCards ? 7 : fullText || fullTextLoading ? 5 : 6}>
                   {showCards && <Efficiency />}
+                  <TOC />
                 </Col>
                 <Col span={12} ref={leftColRef}>
                   <div
