@@ -11,7 +11,7 @@ import {
 } from "./utils/docContext";
 import { docReducer } from "./utils/docReducer";
 import CardList from "@/common/components/CardList";
-import { Button, Col, Row, Skeleton } from "antd";
+import { Button, Col, Row, Skeleton, Tooltip } from "antd";
 import { useLocation } from "react-router-dom";
 import { useRequest } from "@/hooks/useRequest";
 import { docApi } from "./api/Doc";
@@ -19,6 +19,8 @@ import { useDocId } from "./hooks/useDocId";
 import { Efficiency } from "./Efficiency";
 import { BlockNoteEditor } from "@blocknote/core";
 import { useAuth } from "@/provider/authProvider";
+import Outline from "./Outline";
+import { MenuOutlined } from "@ant-design/icons";
 
 const NewDoc = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -28,6 +30,10 @@ const NewDoc = () => {
   const [fullTextLoading, setFullTextLoading] = useState<boolean>(
     state.fullTextLoading
   );
+  const [isOutlineVisible, setIsOutlineVisible] = useState(false);
+  const toggleOutlineVisibility = () => {
+    setIsOutlineVisible(!isOutlineVisible);
+  };
 
   useEffect(() => {
     setFullTextLoading(state.fullTextLoading);
@@ -129,15 +135,46 @@ const NewDoc = () => {
       <DocDispatchContext.Provider value={docDispatch}>
         <StateContext.Provider value={state}>
           <DispatchContext.Provider value={dispatch}>
-            <div className="h-screen flex flex-col bg-gray-200">
+            <div className="h-full flex flex-col bg-zinc-50">
               <TopBar getShowCards={getShowCards} getFullText={setFullText} />
-              <Row className="flex-grow justify-center items-start py-4 px-2 overflow-auto">
-                <Col span={showCards ? 7 : fullText || fullTextLoading ? 5 : 6}>
-                  {showCards && <Efficiency />}
-                </Col>
-                <Col span={12} ref={leftColRef}>
+              <Row className="flex-grow justify-center items-start py-4 px-2">
+                {(fullText || fullTextLoading) && !isOutlineVisible ? (
+                  <Col
+                    span={showCards ? 5 : 7}
+                    className={`max-h-[${leftColHeight}px] min-h-64`}
+                  >
+                    <CardList
+                      dataSource={[fullText]}
+                      classname="!pr-2 [&>div]:min-h-64 [&>div]:!mb-0 [&>div]:!px-5 [&>div]:!pt-5 [&>div]:!pb-14"
+                      maxHeight={`${leftColHeight}px`}
+                      fullBtn={
+                        isDone ? (
+                          <Button
+                            size="small"
+                            type="primary"
+                            className="h-7 w-20 rounded-sm"
+                            onClick={replaceHandle}
+                          >
+                            替换全文
+                          </Button>
+                        ) : (
+                          <></>
+                        )
+                      }
+                    />
+                  </Col>
+                ) : (
+                  <Col span={showCards ? 5 : 6}>
+                    <Outline
+                      editor={editor}
+                      isVisible={isOutlineVisible}
+                      toggleVisibility={toggleOutlineVisibility}
+                    />
+                  </Col>
+                )}
+                <Col span={12} ref={leftColRef} className="z-0">
                   <div
-                    className="w-full bg-white shadow-md [&>.bn-container>div:first-child]:px-12 [&_audio]:my-3"
+                    className="w-full bg-white shadow-md [&>.bn-container>div:first-child]:px-12 [&_audio]:my-3 [&_.highlight]:bg-yellow-100"
                     style={{
                       borderRadius: "0",
                       padding: paddingProperty,
@@ -168,36 +205,21 @@ const NewDoc = () => {
                     )}
                   </div>
                 </Col>
-                {fullText || fullTextLoading ? (
-                  <Col
-                    span={showCards ? 5 : 7}
-                    className={`max-h-[${leftColHeight}px] min-h-64`}
-                  >
-                    <CardList
-                      dataSource={[fullText]}
-                      classname="pl-2 !pr-0 [&>div]:min-h-64 [&>div]:!mb-0 [&>div]:!px-5 [&>div]:!pt-5 [&>div]:!pb-14"
-                      maxHeight={`${leftColHeight}px`}
-                      fullBtn={
-                        isDone ? (
-                          <Button
-                            size="small"
-                            type="primary"
-                            className="h-7 w-20 rounded-sm"
-                            onClick={replaceHandle}
-                          >
-                            替换全文
-                          </Button>
-                        ) : (
-                          <></>
-                        )
-                      }
-                    />
-                  </Col>
-                ) : (
-                  <Col span={showCards ? 5 : 6} />
-                )}
+                <Col span={showCards ? 7 : fullText || fullTextLoading ? 5 : 6}>
+                  {showCards && <Efficiency />}
+                </Col>
               </Row>
             </div>
+            {!isOutlineVisible && (
+              <Tooltip title="打开目录" placement="right">
+                <div
+                  className="h-8 w-8 bg-white shadow-menu-switcher rounded-r-2xl absolute left-0 top-52 flex justify-center items-center"
+                  onClick={toggleOutlineVisibility}
+                >
+                  <MenuOutlined className="text-xs" />
+                </div>
+              </Tooltip>
+            )}
           </DispatchContext.Provider>
         </StateContext.Provider>
       </DocDispatchContext.Provider>

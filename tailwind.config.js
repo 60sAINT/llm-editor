@@ -10,6 +10,9 @@ module.exports = {
         'topbar-text': "#4b4b4b",
         "topbar-insert-dropdown-text": "#333333"
       },
+      boxShadow: {
+        'menu-switcher': '0 1px 4px rgba(0,0,0,.04),0 4px 10px rgba(0,0,0,.08)',
+      }
     },
   },
   plugins: [],

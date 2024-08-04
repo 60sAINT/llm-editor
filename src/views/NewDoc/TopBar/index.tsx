@@ -42,7 +42,11 @@ const TopBar: React.FC<TopBarProps> = ({
   }, [cardText]);
 
   return (
-    <div className={`${!animate && "shadow-md border-b border-gray-300"}`}>
+    <div
+      className={`${
+        !animate && "shadow-md border-b border-gray-300 sticky top-0 z-10"
+      }`}
+    >
       <Row className="w-full flex items-center justify-between bg-white py-4 h-14 z-10">
         <Col span={8}>
           <div className="flex items-center">

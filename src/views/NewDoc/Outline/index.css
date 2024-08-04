@@ -1,0 +1,23 @@
+/* 初始状态下隐藏图标 */
+.icon-button {
+  visibility: hidden;
+}
+
+/* 当鼠标悬停在整个行时显示图标 */
+.heading-row:hover .icon-button {
+  visibility: visible;
+}
+
+/* 鼠标悬停时的样式 */
+.heading-row .heading-link {
+  color: #666666;
+}
+
+.heading-row:hover .heading-link {
+  color: #e4a9b2;
+}
+
+/* 选中时的样式 */
+.heading-link.text-blue-700 {
+  color: #d67b88;
+}
