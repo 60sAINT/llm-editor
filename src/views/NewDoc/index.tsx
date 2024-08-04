@@ -145,11 +145,10 @@ const NewDoc = () => {
                 getFullText={setFullText}
                 getIfStartUnfold={getIfStartUnfold}
               />
-              {/* <div className="relative"> */}
               <Row className="flex-grow justify-center items-start py-4 px-2">
                 {(fullText || fullTextLoading) && !isOutlineVisible ? (
                   <Col
-                    span={showCards ? 5 : 7}
+                    span={showCards ? 5 : 6}
                     className={`max-h-[${leftColHeight}px] min-h-64`}
                   >
                     <CardList
@@ -215,12 +214,11 @@ const NewDoc = () => {
                     )}
                   </div>
                 </Col>
-                <Col span={showCards ? 7 : fullText || fullTextLoading ? 5 : 6}>
+                <Col span={showCards ? 7 : 6}>
                   {showCards && <Efficiency />}
                 </Col>
               </Row>
             </div>
-            {/* </div> */}
             {!isOutlineVisible && (
               <Tooltip title="打开目录" placement="right">
                 <div
