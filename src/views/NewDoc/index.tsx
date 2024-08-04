@@ -34,6 +34,7 @@ const NewDoc = () => {
   const toggleOutlineVisibility = () => {
     setIsOutlineVisible(!isOutlineVisible);
   };
+  const [ifStartUnfold, setIfStartUnfold] = useState<boolean>(false);
 
   useEffect(() => {
     setFullTextLoading(state.fullTextLoading);
@@ -129,6 +130,9 @@ const NewDoc = () => {
     const content = JSON.parse(analysis(fullText));
     editor?.replaceBlocks(editor?.document, content);
   };
+  const getIfStartUnfold = (ifStartUnfold: boolean) => {
+    setIfStartUnfold(ifStartUnfold);
+  };
 
   return (
     <DocStateContext.Provider value={docState}>
@@ -136,7 +140,12 @@ const NewDoc = () => {
         <StateContext.Provider value={state}>
           <DispatchContext.Provider value={dispatch}>
             <div className="h-full flex flex-col bg-zinc-50">
-              <TopBar getShowCards={getShowCards} getFullText={setFullText} />
+              <TopBar
+                getShowCards={getShowCards}
+                getFullText={setFullText}
+                getIfStartUnfold={getIfStartUnfold}
+              />
+              {/* <div className="relative"> */}
               <Row className="flex-grow justify-center items-start py-4 px-2">
                 {(fullText || fullTextLoading) && !isOutlineVisible ? (
                   <Col
@@ -169,6 +178,7 @@ const NewDoc = () => {
                       editor={editor}
                       isVisible={isOutlineVisible}
                       toggleVisibility={toggleOutlineVisibility}
+                      ifStartUnfold={ifStartUnfold}
                     />
                   </Col>
                 )}
@@ -210,10 +220,11 @@ const NewDoc = () => {
                 </Col>
               </Row>
             </div>
+            {/* </div> */}
             {!isOutlineVisible && (
               <Tooltip title="打开目录" placement="right">
                 <div
-                  className="h-8 w-8 bg-white shadow-menu-switcher rounded-r-2xl absolute left-0 top-52 flex justify-center items-center"
+                  className="h-8 w-8 bg-white shadow-menu-switcher rounded-r-2xl fixed left-0 top-52 flex justify-center items-center"
                   onClick={toggleOutlineVisibility}
                 >
                   <MenuOutlined className="text-xs" />

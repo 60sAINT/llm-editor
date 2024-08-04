@@ -13,10 +13,12 @@ import { useNewDocState } from "../utils/provider";
 interface TopBarProps {
   getShowCards: (showCards: boolean) => void;
   getFullText: (text: string) => void;
+  getIfStartUnfold: (ifStartUnfold: boolean) => void;
 }
 const TopBar: React.FC<TopBarProps> = ({
   getShowCards: sendShowCardsToTopBar,
   getFullText,
+  getIfStartUnfold: sendIfStartUnfold,
 }) => {
   const [animate, setAnimate] = useState(false);
   const [animateReverse, setAnimateReverse] = useState(false);
@@ -27,6 +29,7 @@ const TopBar: React.FC<TopBarProps> = ({
   const handleStartClick = () => {
     setAnimateReverse(false);
     setAnimate(true);
+    sendIfStartUnfold(true);
   };
 
   // 点击“效率”后，把最新的是否展示Cards传给父组件NewDoc
@@ -43,11 +46,11 @@ const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <div
-      className={`${
-        !animate && "shadow-md border-b border-gray-300 sticky top-0 z-10"
+      className={`sticky top-0 z-10 ${
+        !animate && "shadow-md border-b border-gray-300"
       }`}
     >
-      <Row className="w-full flex items-center justify-between bg-white py-4 h-14 z-10">
+      <Row className="w-full flex items-center justify-between bg-white py-4 h-14 z-100 sticky top-0">
         <Col span={8}>
           <div className="flex items-center">
             <ExitButton />
@@ -83,16 +86,6 @@ const TopBar: React.FC<TopBarProps> = ({
         animateReverse={animateReverse}
         animate={animate}
       />
-      {/* <div
-        className={`shadow-md border-b border-gray-300 h-9 w-full ${
-          animateReverse ? "animateReverse" : ""
-        }  ${animate ? "animate" : "hidden"}`}
-      >
-        <UpOutlined
-          className="float-right inline-block leading-8 !font-black text-base mr-5"
-          onClick={handleFold}
-        />
-      </div> */}
     </div>
   );
 };

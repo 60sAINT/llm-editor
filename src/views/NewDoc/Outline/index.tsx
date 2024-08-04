@@ -22,12 +22,14 @@ interface OutlineProps {
   editor: BlockNoteEditor | undefined;
   isVisible: boolean;
   toggleVisibility: () => void;
+  ifStartUnfold: boolean;
 }
 
 const Outline: React.FC<OutlineProps> = ({
   editor,
   isVisible,
   toggleVisibility,
+  ifStartUnfold,
 }) => {
   const [headings, setHeadings] = useState<Heading[]>([]);
   const { title } = useDocState();
@@ -141,7 +143,11 @@ const Outline: React.FC<OutlineProps> = ({
     <div className="h-full max-w-64 overflow-auto bg-transparent float-right w-full">
       {isVisible && (
         <div className="bg-transparent pr-2.5">
-          <div className="flex justify-between mb-3.5">
+          <div
+            className={`flex justify-between mb-3.5 fixed top-[${
+              ifStartUnfold ? 129 : 73
+            }px] max-w-64 min-w-60`}
+          >
             <h2 className="text-sm font-semibold leading-7 text-neutral-800">
               {title || "无标题"}
             </h2>
@@ -150,7 +156,13 @@ const Outline: React.FC<OutlineProps> = ({
               className="text-neutral-400 text-xs"
             />
           </div>
-          <div>{renderHeadings(headings)}</div>
+          <div
+            className={`mt-10 fixed top-[${
+              ifStartUnfold ? 129 : 73
+            }px] max-w-60 min-w-56`}
+          >
+            {renderHeadings(headings)}
+          </div>
         </div>
       )}
     </div>

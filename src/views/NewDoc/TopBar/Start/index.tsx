@@ -369,7 +369,7 @@ export const Start: React.FC<StartProps> = ({
 
   return (
     <div
-      className={`shadow-md border-b border-gray-300 h-9 w-full ${
+      className={`sticky top-14 shadow-md border-b border-gray-300 h-9 w-full ${
         animateReverse ? "animateReverse" : ""
       } ${animate ? "animate" : "hidden"} flex justify-center`}
     >
