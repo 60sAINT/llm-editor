@@ -8,7 +8,7 @@ const HistoryButton = () => {
   return (
     <a
       href="#"
-      className="block h-8 leading-8 !text-dropdown-text text-sm"
+      className="block h-8 leading-8 !text-dropdown-text text-xs cursor-not-allowed"
       onClick={handleClick}
     >
       页面历史

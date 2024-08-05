@@ -38,7 +38,7 @@ const DownloadButton = () => {
   return (
     <>
       <div
-        className="block h-8 leading-8 !text-dropdown-text text-sm"
+        className="block h-8 leading-8 !text-dropdown-text text-xs"
         onClick={handleClick}
       >
         下载文档

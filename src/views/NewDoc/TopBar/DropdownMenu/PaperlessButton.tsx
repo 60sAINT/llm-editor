@@ -8,7 +8,7 @@ const PaperlessButton = () => {
   return (
     <a
       href="#"
-      className="w-40 h-8 leading-8 block !text-dropdown-text text-sm"
+      className="w-40 h-8 leading-8 block !text-dropdown-text text-xs cursor-not-allowed"
       onClick={handleClick}
     >
       无纸化
