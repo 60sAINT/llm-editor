@@ -1,5 +1,9 @@
 import React, { lazy, Suspense } from "react";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
 import { ProtectedRoute } from "./ProtectedRoute";
 import Spinning from "./Spinning";
@@ -51,6 +55,50 @@ const Routes = () => {
       children: [
         {
           path: "/",
+          element: <Navigate to="/recent" />,
+        },
+        {
+          path: "/recent",
+          element: (
+            <Suspense fallback={<Spinning />}>
+              <Home />
+            </Suspense>
+          ),
+        },
+        {
+          path: "/share",
+          element: (
+            <Suspense fallback={<Spinning />}>
+              <Home />
+            </Suspense>
+          ),
+        },
+        {
+          path: "/directory",
+          element: (
+            <Suspense fallback={<Spinning />}>
+              <Home />
+            </Suspense>
+          ),
+        },
+        {
+          path: "/upgrade",
+          element: (
+            <Suspense fallback={<Spinning />}>
+              <Home />
+            </Suspense>
+          ),
+        },
+        {
+          path: "/knowledge",
+          element: (
+            <Suspense fallback={<Spinning />}>
+              <Home />
+            </Suspense>
+          ),
+        },
+        {
+          path: "/laboratory",
           element: (
             <Suspense fallback={<Spinning />}>
               <Home />

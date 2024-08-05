@@ -28,13 +28,18 @@ import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
 import Main from "./Content";
 import Knowledge from "./Knowledge";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Developing } from "./Developing";
+import Directory from "./Directory";
 
 const Home: React.FC = () => {
-  const [selectKey, setSelectKey] = useState<string>("1");
   const [isModalOpen, setIsModalOpen] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [selectKey, setSelectKey] = useState<string>(
+    location.pathname.substring(1)
+  );
+
   const handleOk = () => {
     setIsModalOpen(false);
   };
@@ -86,17 +91,17 @@ const Home: React.FC = () => {
   );
   const menuItems: MenuProps["items"] = [
     {
-      key: "1",
+      key: "recent",
       icon: <ClockCircleOutlined />,
       label: "最近文件",
     },
     {
-      key: "2",
+      key: "share",
       icon: <ShareAltOutlined />,
       label: "共享给我",
     },
     {
-      key: "3",
+      key: "directory",
       icon: <FolderOutlined />,
       label: "我的文档",
     },
@@ -104,29 +109,29 @@ const Home: React.FC = () => {
       type: "divider",
     },
     {
-      key: "4",
+      key: "upgrade",
       icon: <UpCircleOutlined />,
       label: "应用升级",
     },
     {
-      key: "5",
+      key: "knowledge",
       icon: <AppstoreOutlined />,
       label: "知识库",
     },
     {
-      key: "6",
+      key: "laboratory",
       icon: <ExperimentOutlined />,
       label: "实验室",
     },
   ];
 
   const contents: Record<string, React.JSX.Element> = {
-    "1": <Main />,
-    "2": <Developing />,
-    "3": <Developing />,
-    "4": <Developing />,
-    "5": <Knowledge />,
-    "6": <Developing />,
+    recent: <Main />,
+    share: <Developing />,
+    directory: <Directory />,
+    upgrade: <Developing />,
+    knowledge: <Knowledge />,
+    laboratory: <Developing />,
   };
 
   return (
@@ -176,7 +181,10 @@ const Home: React.FC = () => {
               style={{ height: "100%", borderRight: 0 }}
               className="mt-6"
               items={menuItems}
-              onClick={(e) => setSelectKey(e.key)}
+              onClick={(e) => {
+                setSelectKey(e.key);
+                navigate(`/${e.key}`);
+              }}
             />
           </Sider>
           <Content
@@ -186,7 +194,7 @@ const Home: React.FC = () => {
               minHeight: 280,
             }}
           >
-            {contents[selectKey]}
+            {contents[location.pathname.substring(1)]}
           </Content>
         </Layout>
         <Modal
