@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { BlockNoteEditor } from "@blocknote/core";
 import {
   CaretDownOutlined,
@@ -31,19 +31,10 @@ const Outline: React.FC<OutlineProps> = ({
   toggleVisibility,
   ifStartUnfold,
 }) => {
-  const [headings, setHeadings] = useState<Heading[]>([]);
   const { title } = useDocState();
   const [selectedHeadingId, setSelectedHeadingId] = useState<string | null>(
     null
   );
-
-  useEffect(() => {
-    if (editor) {
-      const content = editor.document;
-      const extractedHeadings = extractHeadings(content);
-      setHeadings(extractedHeadings);
-    }
-  }, [editor?.document]);
 
   const extractHeadings = (content: any[]): Heading[] => {
     const headingStack: Heading[] = [];
@@ -161,7 +152,7 @@ const Outline: React.FC<OutlineProps> = ({
               ifStartUnfold ? 129 : 73
             }px] max-w-60 min-w-56`}
           >
-            {renderHeadings(headings)}
+            {renderHeadings(extractHeadings(editor!.document))}
           </div>
         </div>
       )}
