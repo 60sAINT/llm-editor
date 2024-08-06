@@ -1,7 +1,7 @@
 import { CheckOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import { Equity } from "./Equity";
-import { Button, Divider, Modal, QRCode } from "antd";
+import { Divider, Modal } from "antd";
 import { Clause } from "./Clause";
 import collectionCode from "@/assets/collectionCode.png";
 
