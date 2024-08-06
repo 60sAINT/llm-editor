@@ -1,5 +1,6 @@
-import { axios } from "@/api/AxiosInstance";
+import { axios as axiosInstance } from "@/api/AxiosInstance";
 import { fetch } from "@/api/FetchInstance";
+import axios from "axios";
 
 const apikeyPrefix = "/api/v1";
 
@@ -10,10 +11,25 @@ export class DefaultApi {
   }
 
   public async getMindMapData(input_text: string) {
-    const result = await axios.post(`${apikeyPrefix}/view/mindmap`, {
+    const result = await axiosInstance.post(`${apikeyPrefix}/view/mindmap`, {
       input_text,
     });
     return result.data;
+  }
+
+  public async getUrl() {
+    const result = await axiosInstance.get(`${apikeyPrefix}/upload/get_url`);
+    console.log(result.data);
+    return result.data;
+  }
+
+  public async putObject(file: File, presignedUrl: string) {
+    const instance = axios.create();
+    await instance.put(presignedUrl, file, {
+      headers: {
+        "Content-Type": file.type,
+      },
+    });
   }
 }
 

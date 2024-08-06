@@ -49,6 +49,8 @@ import { VideoDetectionFrame } from "./CustomFormattingToolBar/VideoDetectionFra
 import { RecognitionButton } from "./CustomFormattingToolBar/RecognitionButton";
 import { AudioRecognitionButton } from "./CustomFormattingToolBar/AudioRecognitionButton";
 import { AudioRecognitionFrame } from "./CustomFormattingToolBar/AudioRecognitionFrame";
+import { useRequest } from "@/hooks/useRequest";
+import { defaultApi } from "../api";
 
 let showTextButton = true;
 let showOcrButton = true;
@@ -190,19 +192,32 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
   const initialContent = docData?.content
     ? docData?.content
     : [{ type: "paragraph", content: "Welcom to llm editor!" }];
+  const { runAsync: putObject } = useRequest(
+    async (file: File, presignedUrl: string) => {
+      await defaultApi.putObject(file, presignedUrl);
+    }
+  );
   const editor = useCreateBlockNote({
     schema: customSchema,
     initialContent,
     uploadFile: async (file: File) => {
-      const base64String = await new Promise<string>((resolve) => {
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-        fileReader.onload = () => {
-          resolve(fileReader.result?.toString()!);
-        };
-      });
-      return base64String;
+      const data = await defaultApi.getUrl();
+      const { upload_url: uploadUrl, public_url: publicUrl } = data.data;
+      console.log(uploadUrl);
+      console.log(publicUrl);
+      await putObject(file, uploadUrl);
+      return publicUrl;
     },
+    // uploadFile: async (file: File) => {
+    //   const base64String = await new Promise<string>((resolve) => {
+    //     const fileReader = new FileReader();
+    //     fileReader.readAsDataURL(file);
+    //     fileReader.onload = () => {
+    //       resolve(fileReader.result?.toString()!);
+    //     };
+    //   });
+    //   return base64String;
+    // },
   });
 
   const handleMouseUp = () => {
