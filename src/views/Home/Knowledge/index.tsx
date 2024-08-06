@@ -55,7 +55,7 @@ const KnowledgeBaseApp: React.FC = () => {
     navigate(`/db?db_name=${db_name}`);
 
   return (
-    <>
+    <div className="py-6 px-10">
       <div className="flex w-full justify-between">
         <div className="w-1/3 text-base">全部知识库</div>
         <div className="w-2/3 flex justify-end items-center mb-4">
@@ -133,7 +133,7 @@ const KnowledgeBaseApp: React.FC = () => {
                     </Form.Item> */}
         </Form>
       </Modal>
-    </>
+    </div>
   );
 };
 

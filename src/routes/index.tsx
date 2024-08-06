@@ -82,7 +82,7 @@ const Routes = () => {
           ),
         },
         {
-          path: "/upgrade",
+          path: "/conmmunity",
           element: (
             <Suspense fallback={<Spinning />}>
               <Home />

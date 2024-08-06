@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   AppstoreOutlined,
   ClockCircleOutlined,
+  CommentOutlined,
   ExperimentOutlined,
   FileTextTwoTone,
   FolderAddTwoTone,
@@ -22,18 +23,22 @@ import {
   Menu,
   MenuProps,
   Modal,
+  Space,
   Tooltip,
 } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
-import Main from "./Content";
 import Knowledge from "./Knowledge";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Developing } from "./Developing";
 import Directory from "./Directory";
+import Recent from "./Recent";
+import Community from "./Community";
+import { Upgrade } from "./Upgrade";
 
 const Home: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
+  const [modalUpgradeOpen, setModalUpgradeOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const [selectKey, setSelectKey] = useState<string>(
@@ -109,9 +114,9 @@ const Home: React.FC = () => {
       type: "divider",
     },
     {
-      key: "upgrade",
-      icon: <UpCircleOutlined />,
-      label: "应用升级",
+      key: "conmmunity",
+      icon: <CommentOutlined />,
+      label: "社区",
     },
     {
       key: "knowledge",
@@ -126,10 +131,10 @@ const Home: React.FC = () => {
   ];
 
   const contents: Record<string, React.JSX.Element> = {
-    recent: <Main />,
+    recent: <Recent />,
     share: <Developing />,
     directory: <Directory />,
-    upgrade: <Developing />,
+    conmmunity: <Community />,
     knowledge: <Knowledge />,
     laboratory: <Developing />,
   };
@@ -156,12 +161,25 @@ const Home: React.FC = () => {
           <div className="h-full leading-[56px] float-left text-primary text-2xl font-bold tracking-wide">
             协心 编辑器
           </div>
-          <div className="float-right leading-[56px]">
+          <Space
+            className="float-right leading-[56px] [&>div]:flex [&>div]:align-middle h-[56px]"
+            size={25}
+          >
+            <div
+              onClick={() => setModalUpgradeOpen(true)}
+              className="px-2.5 py-1 text-sm hover:bg-neutral-200 rounded-sm font-bold cursor-pointer"
+            >
+              <UpCircleOutlined className="mr-1.5 font-bold" />
+              应用升级
+            </div>
             <Avatar icon={<UserOutlined />} size="small" />
-          </div>
+          </Space>
         </Header>
         <Layout className="bg-white">
-          <Sider width={200} className="mx-4 my-6 !bg-white">
+          <Sider
+            width={232}
+            className="px-4 py-6 !bg-white border-r border-home-border"
+          >
             <Dropdown
               trigger={["click"]}
               dropdownRender={() => dropdownContent}
@@ -178,8 +196,8 @@ const Home: React.FC = () => {
               mode="inline"
               defaultSelectedKeys={[selectKey]}
               defaultOpenKeys={["sub1"]}
-              style={{ height: "100%", borderRight: 0 }}
-              className="mt-6"
+              style={{ borderRight: 0 }}
+              className="mt-6 [&_.ant-menu-item-divider]:my-2"
               items={menuItems}
               onClick={(e) => {
                 setSelectKey(e.key);
@@ -189,7 +207,6 @@ const Home: React.FC = () => {
           </Sider>
           <Content
             style={{
-              padding: 24,
               margin: 0,
               minHeight: 280,
             }}
@@ -197,7 +214,7 @@ const Home: React.FC = () => {
             {contents[location.pathname.substring(1)]}
           </Content>
         </Layout>
-        <Modal
+        {/* <Modal
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}
@@ -216,6 +233,15 @@ const Home: React.FC = () => {
               http://43.138.11.21:8080/
             </Button>
           </p>
+        </Modal> */}
+        <Modal
+          centered
+          open={modalUpgradeOpen}
+          onOk={() => setModalUpgradeOpen(false)}
+          onCancel={() => setModalUpgradeOpen(false)}
+          className="[&_.ant-modal-footer]:hidden [&_.ant-modal-content]:h-[550px] [&_.ant-modal-content]:p-0 [&_.ant-modal-body]:h-full !w-auto"
+        >
+          <Upgrade />
         </Modal>
       </Layout>
     </ConfigProvider>

@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Button, Flex, Space, Table, Tooltip, Modal } from "antd";
+import { Button, Flex, Space, Table, Tooltip, Modal, Divider } from "antd";
 import {
   DeleteOutlined,
   FileAddOutlined,
@@ -9,26 +9,14 @@ import {
   ExclamationCircleFilled,
 } from "@ant-design/icons";
 import { useRequest } from "@/hooks/useRequest";
-import { docApi } from "../NewDoc/api/Doc";
 import { useAuth } from "@/provider/authProvider";
 import { ColumnType } from "antd/es/table";
-import { OPERATE, TableData } from "./model";
 import { formatDate } from "@/common/utils";
 import { useNavigate } from "react-router-dom";
+import { docApi } from "@/views/NewDoc/api/Doc";
+import { OPERATE, TableData } from "../model";
 
-// const menuItems: MenuProps["items"] = [
-//   { key: "1", label: "当前标签页打开" },
-//   { key: "2", label: "新建标签页打开" },
-//   { key: "3", label: "协作" },
-//   { key: "4", label: "分享链接" },
-//   { key: "5", label: "重命名" },
-//   { key: "6", label: "移动到" },
-//   { key: "7", label: "创建副本" },
-//   { key: "8", label: "下载Word文档" },
-//   { key: "9", label: "删除", danger: true },
-// ];
-
-const Content = () => {
+const Community = () => {
   const { token } = useAuth();
   const navigate = useNavigate();
   const {
@@ -152,59 +140,16 @@ const Content = () => {
   );
 
   return (
-    <div className="w-full h-full overflow-auto">
-      <h3 className="mb-5 font-bold text-neutral-700 text-base">快速访问</h3>
-      <Space className="w-full [&>.ant-space-item]:max-w-72 [&>.ant-space-item]:w-1/3">
-        {operates.map((item) => {
-          if (item.key == OPERATE.CREATE) {
-            return (
-              <Space
-                key={item.key}
-                className="border w-full h-[76px] p-4 items-start hover:bg-gray-100 [&>.ant-space-item]:h-full"
-                onClick={() => handle(item.key)}
-              >
-                {item.icon}
-                <div>
-                  <h5 className="font-semibold">{item.title}</h5>
-                  <p className="text-xs text-description mt-[3px]">
-                    {item.desc}
-                  </p>
-                </div>
-              </Space>
-            );
-          } else {
-            return (
-              <Tooltip title="功能开发中">
-                <Space
-                  key={item.key}
-                  className="border w-full h-[76px] p-4 items-start hover:bg-gray-100 [&>.ant-space-item]:h-full hover:cursor-not-allowed"
-                  onClick={() => handle(item.key)}
-                >
-                  {item.icon}
-                  <div>
-                    <h5 className="font-semibold">{item.title}</h5>
-                    <p className="text-xs text-description mt-[3px]">
-                      {item.desc}
-                    </p>
-                  </div>
-                </Space>
-              </Tooltip>
-            );
-          }
-        })}
-      </Space>
-      <h3 className="mt-6 mb-5 font-bold text-neutral-700 text-base">
-        最近文件
-      </h3>
-      <Table
-        rowKey={"doc_id"}
-        dataSource={docList}
-        columns={columns}
-        loading={docListLoading}
-        className="[&_.ant-spin-dot-spin]:text-primary [&_.ant-table-column-sorter-down.active]:text-primary [&_.ant-table-column-sorter-up.active]:text-primary [&_.ant-pagination-item-active]:border-primary [&_.ant-pagination-item-active:hover]:border-primary [&_.ant-pagination-item-active>a]:text-primary [&_.ant-pagination-item-active>a:hover]:text-primary"
-      />
+    <div className="w-full h-full overflow-auto relative">
+      <h3 className="mb-5 font-bold text-base pt-6 px-10">选择方案</h3>
+      <Divider className="w-full" />
+      <div className="px-10">
+        <div className="my-2.5 text-[18px] leading-[26px] cursor-pointer">
+          协心提供
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Content;
+export default Community;

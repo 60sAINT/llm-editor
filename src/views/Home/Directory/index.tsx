@@ -41,7 +41,7 @@ const Directory = () => {
   };
 
   return (
-    <div className="w-full h-full overflow-auto">
+    <div className="w-full h-full overflow-auto py-6 px-10">
       <h3 className="mb-5 font-bold text-neutral-700 text-base">快速访问</h3>
       <Space className="w-full [&>.ant-space-item]:max-w-72 [&>.ant-space-item]:w-1/3">
         {operates.map((item) => {
