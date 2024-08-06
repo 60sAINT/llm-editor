@@ -114,11 +114,6 @@ const Home: React.FC = () => {
       type: "divider",
     },
     {
-      key: "conmmunity",
-      icon: <CommentOutlined />,
-      label: "社区",
-    },
-    {
       key: "knowledge",
       icon: <AppstoreOutlined />,
       label: "知识库",
@@ -127,6 +122,11 @@ const Home: React.FC = () => {
       key: "laboratory",
       icon: <ExperimentOutlined />,
       label: "实验室",
+    },
+    {
+      key: "conmmunity",
+      icon: <CommentOutlined />,
+      label: "社区",
     },
   ];
 

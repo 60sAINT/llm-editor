@@ -37,7 +37,7 @@ export class DocApi {
     return result.data;
   }
   public async getDocList(token: string) {
-    const result = await axios.get(`${apikeyPrefix}/doc/list`, {
+    const result = await axios.get(`${apikeyPrefix}/doc/recent`, {
       headers: { "X-Authorization": token },
     });
     return result.data;
