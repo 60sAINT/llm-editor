@@ -13,25 +13,25 @@ export const Equity = () => {
           <div>故事设定</div>
           <div>
             创作模板
-            <span className="text-slate-400">
+            <span className="text-zinc-400">
               （世情、悬疑、言情类热门模版）
             </span>
           </div>
           <div>
             续写剧情
-            <span className="text-slate-400">
+            <span className="text-zinc-400">
               （续写故事情节，控制故事走向发展）
             </span>
           </div>
           <div>
             细化描写
-            <span className="text-slate-400">
+            <span className="text-zinc-400">
               （对话、心理、外貌、动作描写扩展）
             </span>
           </div>
           <div>
             风格润色
-            <span className="text-slate-400">
+            <span className="text-zinc-400">
               （甜文、爽文、虐文、沙雕等风格）
             </span>
           </div>
@@ -46,11 +46,11 @@ export const Equity = () => {
           <div>内容一键生成</div>
           <div>
             润色
-            <span className="text-slate-400">（根据目标受众，调整语气）</span>
+            <span className="text-zinc-400">（根据目标受众，调整语气）</span>
           </div>
           <div>
             扩写
-            <span className="text-slate-400">
+            <span className="text-zinc-400">
               （基础扩写、创意发散扩写，自由控制长度）
             </span>
           </div>

@@ -11,6 +11,9 @@ import {
 } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import update from "immutability-helper";
+import { useRequest } from "@/hooks/useRequest";
+import { useAuth } from "@/provider/authProvider";
+import { directoryApi } from "../api";
 
 interface DataType {
   key: string;
@@ -56,10 +59,24 @@ const initialData: DataType[] = [
 const type = "DraggableBodyRow";
 
 const FolderTable: React.FC = () => {
+  const { token } = useAuth();
   const [data, setData] = useState<DataType[]>(initialData);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
+
+  const {
+    run: getFolderList,
+    data: folderList,
+    loading: folderListLoading,
+  } = useRequest(
+    async () => {
+      const res = await directoryApi.getDirectoryTree(`Bearer ${token}` || "");
+      return res.data;
+    },
+    { manual: false }
+  );
+  console.log(folderList);
 
   const handleAddFolder = () => {
     setData([
@@ -227,7 +244,7 @@ const FolderTable: React.FC = () => {
       )}
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={folderList}
         rowSelection={rowSelection}
         components={{
           body: {
@@ -239,6 +256,7 @@ const FolderTable: React.FC = () => {
             "data-row-key": record.key,
           } as React.HTMLAttributes<HTMLTableRowElement>)
         }
+        loading={folderListLoading}
       />
       <Modal
         title="新建文件夹"

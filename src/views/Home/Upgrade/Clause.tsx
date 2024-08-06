@@ -2,7 +2,7 @@ import React from "react";
 
 export const Clause = () => {
   return (
-    <div className="bg-[#fdf8f9] rounded-[10px] h-full w-[1080px]">
+    <div className="rounded-[10px] h-full w-[1080px]">
       <div className="h-14 pl-10 pr-6 flex items-center justify-between border-b border-zinc-200">
         <p className="text-sm text-neutral-950">协心编辑器服务条款</p>
       </div>
