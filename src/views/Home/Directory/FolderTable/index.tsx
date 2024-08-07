@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Table, Button, Input, Modal, Space, Tooltip, Flex } from "antd";
 import { ColumnsType } from "antd/es/table";
 import {
@@ -7,6 +7,7 @@ import {
   FolderFilled,
   FileTextOutlined,
   ExclamationCircleFilled,
+  EditOutlined,
 } from "@ant-design/icons";
 import {
   DndProvider,
@@ -41,6 +42,8 @@ const FolderTable: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
+  const [newName, setNewName] = useState("");
+  const newNameRef = useRef(newName);
   const navigate = useNavigate();
 
   const {
@@ -93,6 +96,22 @@ const FolderTable: React.FC = () => {
     });
   const { runAsync: deleteDoc } = useRequest(async (doc_list) => {
     const res = await docApi.deleteDoc(`Bearer ${token}` || "", doc_list);
+    return res.data;
+  });
+  const { runAsync: renameDoc } = useRequest(async (doc_id, new_doc_name) => {
+    const res = await docApi.renameDoc({
+      token: `Bearer ${token}` || "",
+      doc_id,
+      new_doc_name,
+    });
+    return res.data;
+  });
+  const { runAsync: renameDir } = useRequest(async (dir_id, new_dir_name) => {
+    const res = await directoryApi.renameDir({
+      token: `Bearer ${token}` || "",
+      dir_id,
+      new_dir_name,
+    });
     return res.data;
   });
 
@@ -168,6 +187,40 @@ const FolderTable: React.FC = () => {
     });
   };
 
+  useEffect(() => {
+    newNameRef.current = newName;
+  }, [newName]);
+  const showRenameConfirm = (
+    id: React.Key,
+    type: string,
+    initialName: string
+  ) => {
+    console.log(id, type, initialName);
+    setNewName(initialName);
+    confirm({
+      title: "重命名文件",
+      icon: null,
+      content: (
+        <Input
+          placeholder="请输入文件夹名称"
+          defaultValue={initialName}
+          onChange={(e) => setNewName(e.target.value)}
+          className="my-5 h-8"
+        />
+      ),
+      okText: "确定",
+      cancelText: "取消",
+      onOk() {
+        if (type == "file") {
+          renameDoc(id, newNameRef.current).then(() => getFolderList());
+        } else {
+          renameDir(id, newNameRef.current).then(() => getFolderList());
+        }
+      },
+      onCancel() {},
+    });
+  };
+
   const findItemByKey = (key: string, items: DataType[]): DataType | null => {
     for (const item of items) {
       if (item.key === key) return item;
@@ -232,7 +285,7 @@ const FolderTable: React.FC = () => {
       key: "action",
       width: "30%",
       render: (_, record) => (
-        <Flex>
+        <Flex gap={2}>
           <Button
             type="link"
             className="text-primary hover:!text-[#e2a3ac] gap-1 pl-0 justify-start"
@@ -242,6 +295,16 @@ const FolderTable: React.FC = () => {
           >
             <DeleteOutlined />
             删除
+          </Button>
+          <Button
+            type="link"
+            className="text-primary hover:!text-[#e2a3ac] gap-1 pl-0 justify-start"
+            onClick={() => {
+              showRenameConfirm(record.key, record.type, record.name);
+            }}
+          >
+            <EditOutlined />
+            重命名
           </Button>
         </Flex>
       ),

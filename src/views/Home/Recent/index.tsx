@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { Button, Flex, Space, Table, Tooltip, Modal } from "antd";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Button, Flex, Space, Table, Tooltip, Modal, Input } from "antd";
 import {
   DeleteOutlined,
   FileAddOutlined,
@@ -7,6 +7,7 @@ import {
   ImportOutlined,
   OpenAIOutlined,
   ExclamationCircleFilled,
+  EditOutlined,
 } from "@ant-design/icons";
 import { useRequest } from "@/hooks/useRequest";
 import { useAuth } from "@/provider/authProvider";
@@ -19,6 +20,9 @@ import { OPERATE, TableData } from "../model";
 const Recent = () => {
   const { token } = useAuth();
   const navigate = useNavigate();
+  const [newName, setNewName] = useState("");
+  const newNameRef = useRef(newName);
+
   const {
     run: getDocList,
     data: docList,
@@ -30,6 +34,38 @@ const Recent = () => {
     },
     { manual: false }
   );
+  const { runAsync: renameDoc } = useRequest(async (doc_id, new_doc_name) => {
+    const res = await docApi.renameDoc({
+      token: `Bearer ${token}` || "",
+      doc_id,
+      new_doc_name,
+    });
+    return res.data;
+  });
+  useEffect(() => {
+    newNameRef.current = newName;
+  }, [newName]);
+  const showRenameConfirm = (id: React.Key, title: string) => {
+    setNewName(title);
+    confirm({
+      title: "重命名文件",
+      icon: null,
+      content: (
+        <Input
+          placeholder="请输入文件夹名称"
+          defaultValue={title}
+          onChange={(e) => setNewName(e.target.value)}
+          className="my-5 h-8"
+        />
+      ),
+      okText: "确定",
+      cancelText: "取消",
+      onOk() {
+        renameDoc(id, newNameRef.current).then(() => getDocList());
+      },
+      onCancel() {},
+    });
+  };
 
   const { confirm } = Modal;
   const { runAsync: deleteDoc } = useRequest(async (doc_list) => {
@@ -118,7 +154,7 @@ const Recent = () => {
         dataIndex: "operation",
         width: "30%",
         render: (_, record) => (
-          <Flex>
+          <Flex gap={2}>
             <Button
               type="link"
               className="text-primary hover:!text-[#e2a3ac] gap-1 pl-0 justify-start"
@@ -128,6 +164,16 @@ const Recent = () => {
             >
               <DeleteOutlined />
               删除
+            </Button>
+            <Button
+              type="link"
+              className="text-primary hover:!text-[#e2a3ac] gap-1 pl-0 justify-start"
+              onClick={() => {
+                showRenameConfirm(record.doc_id, record.title);
+              }}
+            >
+              <EditOutlined />
+              重命名
             </Button>
           </Flex>
         ),

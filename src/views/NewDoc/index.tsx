@@ -85,12 +85,10 @@ const NewDoc = () => {
   };
   const { fullFormatting } = state;
   const [fullFormat, setFullFormat] = useState(initialFormat);
-  // const [segPadding, setSegPadding] = useState(3);
   const [paddingProperty, setPaddingProperty] = useState("20px");
   useEffect(() => {
     if (JSON.stringify(fullFormatting) !== JSON.stringify(initialFormat)) {
       setFullFormat(state.fullFormatting);
-      // setSegPadding(state.fullFormatting.segSpacing);
       if (state.fullFormatting.padding == "moderate") {
         setPaddingProperty("20px");
       } else if (state.fullFormatting.padding == "narrow") {

@@ -20,6 +20,11 @@ export type DeleteDirectoryParams = {
   dir_list: Array<string>;
   token: string;
 };
+export type RenameDirParams = {
+  token: string;
+  dir_id: string;
+  new_dir_name: string;
+};
 
 export class DirectoryApi {
   public async getDirectoryTree(token: string) {
@@ -60,6 +65,14 @@ export class DirectoryApi {
     const result = await axios.post(
       `${apikeyPrefix}/dir/delete`,
       { dir_list },
+      { headers: { "X-Authorization": token } }
+    );
+    return result.data;
+  }
+  public async renameDir({ token, dir_id, new_dir_name }: RenameDirParams) {
+    const result = await axios.post(
+      `${apikeyPrefix}/dir/rename`,
+      { dir_id, new_dir_name },
       { headers: { "X-Authorization": token } }
     );
     return result.data;
