@@ -1,7 +1,13 @@
-import React, { useState } from "react";
-import { Table, Button, Input, Modal, Space, Tooltip, message } from "antd";
+import React, { useState, useEffect } from "react";
+import { Table, Button, Input, Modal, Space, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { PlusOutlined, DeleteOutlined, MoreOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  DeleteOutlined,
+  MoreOutlined,
+  FolderFilled,
+  FileTextOutlined,
+} from "@ant-design/icons";
 import {
   DndProvider,
   useDrag,
@@ -10,10 +16,10 @@ import {
   DropTargetMonitor,
 } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import update from "immutability-helper";
 import { useRequest } from "@/hooks/useRequest";
 import { useAuth } from "@/provider/authProvider";
 import { directoryApi } from "../api";
+import { showMessage } from "@/common/utils/message";
 
 interface DataType {
   key: string;
@@ -24,43 +30,11 @@ interface DataType {
   lastSavedAt?: string;
 }
 
-const initialData: DataType[] = [
-  {
-    key: "3b6823d5-3f98-4c84-b8f1-6b077ec06bc0",
-    name: "root",
-    type: "folder",
-    parent: null,
-    children: [
-      {
-        key: "6431c47c-0aae-4d41-8623-301ef959b05a",
-        name: "test",
-        type: "folder",
-        parent: "3b6823d5-3f98-4c84-b8f1-6b077ec06bc0",
-        children: [],
-      },
-      {
-        key: "4beebd6f-d30e-473f-a4c3-afe9451b493e",
-        name: "root_doc",
-        type: "file",
-        parent: "3b6823d5-3f98-4c84-b8f1-6b077ec06bc0",
-        lastSavedAt: "2024-08-05T15:21:34.756866",
-      },
-    ],
-  },
-  {
-    key: "c250412d-821d-4512-aaa1-57d55e1b5585",
-    name: "root_doc",
-    type: "file",
-    parent: null,
-    lastSavedAt: "2024-08-05T15:20:42.693132",
-  },
-];
-
 const type = "DraggableBodyRow";
 
 const FolderTable: React.FC = () => {
   const { token } = useAuth();
-  const [data, setData] = useState<DataType[]>(initialData);
+  const [data, setData] = useState<DataType[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
@@ -76,19 +50,62 @@ const FolderTable: React.FC = () => {
     },
     { manual: false }
   );
-  console.log(folderList);
+  const { runAsync: newDirectory, loading: newDirectoryLoading } = useRequest(
+    async (dir_name) => {
+      const res = await directoryApi.newDirectory({
+        token: `Bearer ${token}` || "",
+        dir_name,
+      });
+      return res.data;
+    }
+  );
+  const { runAsync: moveDirectory, loading: moveDirectoryLoading } = useRequest(
+    async (dir_id, to_dir_id) => {
+      const res = await directoryApi.moveDirectory({
+        token: `Bearer ${token}` || "",
+        dir_id,
+        to_dir_id,
+      });
+      if (res) return showMessage("移动成功");
+    }
+  );
+
+  useEffect(() => {
+    if (folderList) {
+      const formatData = (
+        list: any[],
+        parent: string | null = null
+      ): DataType[] => {
+        return list.map((item) => {
+          if (item.dir_id) {
+            return {
+              key: item.dir_id,
+              name: item.dir_name,
+              type: "folder",
+              parent: parent,
+              children: item.children
+                ? formatData(item.children, item.dir_id)
+                : [],
+            };
+          } else {
+            return {
+              key: item.doc_id,
+              name: item.title,
+              type: "file",
+              parent: parent,
+              lastSavedAt: item.last_saved_at,
+            };
+          }
+        });
+      };
+
+      setData(formatData(folderList));
+    }
+  }, [folderList]);
 
   const handleAddFolder = () => {
-    setData([
-      ...data,
-      {
-        key: (data.length + 1).toString(),
-        name: newFolderName,
-        type: "folder",
-        parent: null,
-        children: [],
-      },
-    ]);
+    newDirectory(newFolderName);
+    getFolderList();
     setNewFolderName("");
     setIsModalVisible(false);
   };
@@ -126,25 +143,9 @@ const FolderTable: React.FC = () => {
   const moveRow = (dragKey: string, hoverKey: string) => {
     const dragItem = findItemByKey(dragKey, data);
     const hoverItem = findItemByKey(hoverKey, data);
-
     if (dragItem && hoverItem && hoverItem.type === "folder") {
-      const removeItem = (items: DataType[], key: string): DataType[] => {
-        return items
-          .filter((item) => item.key !== key)
-          .map((item) => ({
-            ...item,
-            children: item.children ? removeItem(item.children, key) : [],
-          }));
-      };
-
-      const newData = removeItem(data, dragKey);
-      console.log(newData);
-
-      hoverItem.children = hoverItem.children || [];
-      hoverItem.children.push(dragItem);
-
-      setData(newData);
-      message.success("移动成功");
+      moveDirectory(dragItem.key, hoverItem.key);
+      getFolderList();
     }
   };
 
@@ -153,6 +154,16 @@ const FolderTable: React.FC = () => {
       title: "文件名",
       dataIndex: "name",
       key: "name",
+      render: (text, record) => (
+        <div className="text-topbar-text text-sm flex items-center gap-2">
+          {record.type === "file" ? (
+            <FileTextOutlined className="text-[22px] text-topbar-text" />
+          ) : (
+            <FolderFilled className="text-[22px] text-topbar-text" />
+          )}
+          <span>{text}</span>
+        </div>
+      ),
     },
     {
       title: "操作",
@@ -206,7 +217,6 @@ const FolderTable: React.FC = () => {
         ref={ref}
         className={`${className}${isOver ? " drop-over" : ""}`}
         style={{
-          cursor: "move",
           ...style,
           backgroundColor: isOver ? "#e6f7ff" : "",
         }}
@@ -244,7 +254,7 @@ const FolderTable: React.FC = () => {
       )}
       <Table
         columns={columns}
-        dataSource={folderList}
+        dataSource={data}
         rowSelection={rowSelection}
         components={{
           body: {
@@ -256,18 +266,25 @@ const FolderTable: React.FC = () => {
             "data-row-key": record.key,
           } as React.HTMLAttributes<HTMLTableRowElement>)
         }
-        loading={folderListLoading}
+        loading={
+          folderListLoading || newDirectoryLoading || moveDirectoryLoading
+        }
       />
       <Modal
-        title="新建文件夹"
+        title={
+          <span className="text-sm font-bold text-stone-800">新建文件夹</span>
+        }
         open={isModalVisible}
         onOk={handleAddFolder}
         onCancel={() => setIsModalVisible(false)}
+        centered
+        className="[&_.ant-modal-content]:p-7 [&_.ant-modal-content]:rounded [&_.ant-modal-content]:w-[480px] [&_.ant-modal-close]:top-6 [&_.ant-modal-close]:right-6 [&_.ant-modal-footer>button]:w-20"
       >
         <Input
           placeholder="请输入文件夹名称"
           value={newFolderName}
           onChange={(e) => setNewFolderName(e.target.value)}
+          className="mt-6 mb-5 h-8"
         />
       </Modal>
     </DndProvider>
