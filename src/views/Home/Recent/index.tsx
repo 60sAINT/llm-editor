@@ -32,8 +32,8 @@ const Recent = () => {
   );
 
   const { confirm } = Modal;
-  const { runAsync: deleteDoc } = useRequest(async (docId) => {
-    const res = await docApi.deleteDoc(`Bearer ${token}` || "", docId);
+  const { runAsync: deleteDoc } = useRequest(async (doc_list) => {
+    const res = await docApi.deleteDoc(`Bearer ${token}` || "", doc_list);
     return res.data;
   });
   const showDeleteConfirm = (docId: string) => {
@@ -45,8 +45,7 @@ const Recent = () => {
       okType: "danger",
       cancelText: "取消",
       onOk() {
-        deleteDoc(docId);
-        getDocList();
+        deleteDoc([docId]).then(() => getDocList());
       },
       onCancel() {},
     });
@@ -77,7 +76,6 @@ const Recent = () => {
 
   const handle = (type: OPERATE) => {
     if (type == "create") {
-      // window.open("/newDoc", "_blank");
       navigate("/newDoc");
     }
   };
@@ -87,15 +85,14 @@ const Recent = () => {
       {
         title: "文件名",
         dataIndex: "title",
-        width: "40%",
+        width: "35%",
         ellipsis: {
           showTitle: false,
         },
         render: (fileName: string, record: { doc_id: any }) => (
           <div
-            className="text-topbar-text font-normal flex justify-start"
+            className="text-topbar-text font-normal flex justify-start cursor-pointer"
             onClick={() => {
-              // window.open(`./newDoc?doc_id=${record.doc_id}`, "_blank");
               navigate(`/newDoc?doc_id=${record.doc_id}`);
             }}
           >
@@ -107,9 +104,9 @@ const Recent = () => {
         ),
       },
       {
-        title: "最后打开时间",
+        title: "最后保存时间",
         dataIndex: "last_saved_at",
-        width: "40%",
+        width: "35%",
         render: (timeString: string) => formatDate(timeString),
         sorter: (a: TableData, b: TableData) =>
           new Date(b.last_saved_at).getTime() -
@@ -119,7 +116,7 @@ const Recent = () => {
       {
         title: "操作",
         dataIndex: "operation",
-        width: "20%",
+        width: "30%",
         render: (_, record) => (
           <Flex>
             <Button

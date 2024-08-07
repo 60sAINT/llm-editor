@@ -48,11 +48,11 @@ export class DocApi {
     });
     return result.data;
   }
-  public async deleteDoc(token: string, doc_id: string) {
+  public async deleteDoc(token: string, doc_list: string[]) {
     const result = await axios.post(
       `${apikeyPrefix}/doc/delete`,
       {
-        doc_id,
+        doc_list,
       },
       {
         headers: { "X-Authorization": token },

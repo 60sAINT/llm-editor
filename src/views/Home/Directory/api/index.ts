@@ -11,6 +11,15 @@ export type MoveDirectoryParams = {
   to_dir_id: string;
   token: string;
 };
+export type MoveDocumentParams = {
+  doc_id: string;
+  to_dir_id: string;
+  token: string;
+};
+export type DeleteDirectoryParams = {
+  dir_list: Array<string>;
+  token: string;
+};
 
 export class DirectoryApi {
   public async getDirectoryTree(token: string) {
@@ -35,6 +44,22 @@ export class DirectoryApi {
     const result = await axios.post(
       `${apikeyPrefix}/dir/move`,
       { dir_id, to_dir_id },
+      { headers: { "X-Authorization": token } }
+    );
+    return result.data;
+  }
+  public async moveDocument({ token, doc_id, to_dir_id }: MoveDocumentParams) {
+    const result = await axios.post(
+      `${apikeyPrefix}/doc/move`,
+      { doc_id, to_dir_id },
+      { headers: { "X-Authorization": token } }
+    );
+    return result.data;
+  }
+  public async deleteDirectory({ token, dir_list }: DeleteDirectoryParams) {
+    const result = await axios.post(
+      `${apikeyPrefix}/dir/delete`,
+      { dir_list },
       { headers: { "X-Authorization": token } }
     );
     return result.data;

@@ -9,7 +9,7 @@ const ExitButton = () => {
       className="text-gray-600 hover:text-gray-800 ml-3.5"
       onClick={() => {
         // TODO: 退出前自动保存文档
-        navigate("/", { replace: true });
+        navigate(-1);
       }}
     >
       <LeftOutlined className="!font-black !text-2xl" />

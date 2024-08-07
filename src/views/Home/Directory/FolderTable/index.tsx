@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Input, Modal, Space, Tooltip } from "antd";
+import { Table, Button, Input, Modal, Space, Tooltip, Flex } from "antd";
 import { ColumnsType } from "antd/es/table";
 import {
   PlusOutlined,
   DeleteOutlined,
-  MoreOutlined,
   FolderFilled,
   FileTextOutlined,
+  ExclamationCircleFilled,
 } from "@ant-design/icons";
 import {
   DndProvider,
@@ -20,6 +20,9 @@ import { useRequest } from "@/hooks/useRequest";
 import { useAuth } from "@/provider/authProvider";
 import { directoryApi } from "../api";
 import { showMessage } from "@/common/utils/message";
+import { formatDate } from "@/common/utils";
+import { docApi } from "@/views/NewDoc/api/Doc";
+import { useNavigate } from "react-router-dom";
 
 interface DataType {
   key: string;
@@ -27,7 +30,7 @@ interface DataType {
   type: "folder" | "file";
   parent: string | null;
   children?: DataType[];
-  lastSavedAt?: string;
+  last_saved_at?: string;
 }
 
 const type = "DraggableBodyRow";
@@ -38,6 +41,7 @@ const FolderTable: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
+  const navigate = useNavigate();
 
   const {
     run: getFolderList,
@@ -69,6 +73,28 @@ const FolderTable: React.FC = () => {
       if (res) return showMessage("移动成功");
     }
   );
+  const { runAsync: moveDocument, loading: moveDocumentLoading } = useRequest(
+    async (doc_id, to_dir_id) => {
+      const res = await directoryApi.moveDocument({
+        token: `Bearer ${token}` || "",
+        doc_id,
+        to_dir_id,
+      });
+      if (res) return showMessage("移动成功");
+    }
+  );
+  const { runAsync: deleteDirectory, loading: deleteDirectoryLoading } =
+    useRequest(async (dir_list) => {
+      const res = await directoryApi.deleteDirectory({
+        token: `Bearer ${token}` || "",
+        dir_list,
+      });
+      if (res) return showMessage("删除成功");
+    });
+  const { runAsync: deleteDoc } = useRequest(async (doc_list) => {
+    const res = await docApi.deleteDoc(`Bearer ${token}` || "", doc_list);
+    return res.data;
+  });
 
   useEffect(() => {
     if (folderList) {
@@ -86,6 +112,7 @@ const FolderTable: React.FC = () => {
               children: item.children
                 ? formatData(item.children, item.dir_id)
                 : [],
+              last_saved_at: item.last_saved_at,
             };
           } else {
             return {
@@ -93,7 +120,7 @@ const FolderTable: React.FC = () => {
               name: item.title,
               type: "file",
               parent: parent,
-              lastSavedAt: item.last_saved_at,
+              last_saved_at: item.last_saved_at,
             };
           }
         });
@@ -104,29 +131,41 @@ const FolderTable: React.FC = () => {
   }, [folderList]);
 
   const handleAddFolder = () => {
-    newDirectory(newFolderName);
-    getFolderList();
+    newDirectory(newFolderName).then(() => getFolderList());
     setNewFolderName("");
     setIsModalVisible(false);
   };
 
-  const handleDelete = (keys: React.Key[]) => {
-    const deleteRecursively = (
-      data: DataType[],
-      keys: React.Key[]
-    ): DataType[] => {
-      return data.filter((item) => {
-        if (keys.includes(item.key)) {
-          return false;
-        }
-        if (item.children) {
-          item.children = deleteRecursively(item.children, keys);
-        }
-        return true;
-      });
-    };
-    setData(deleteRecursively(data, keys));
-    setSelectedRowKeys([]);
+  const { confirm } = Modal;
+  const showDeleteConfirm = (ids: React.Key[]) => {
+    confirm({
+      title: "确认删除",
+      icon: <ExclamationCircleFilled />,
+      content:
+        "确认删除文件？删除后，所有协作者均无法访问， 30天内可从回收站恢复。",
+      okText: "删除",
+      okType: "danger",
+      cancelText: "取消",
+      onOk() {
+        const filesToDelete = data.filter(
+          (item) => item.type == "file" && ids.includes(item.key)
+        );
+        const directoriesToDelete = data.filter(
+          (item) => item.type == "folder" && ids.includes(item.key)
+        );
+        const fileIds: string[] = [];
+        const directoryIds: string[] = [];
+        filesToDelete.map((fileToDelete) => fileIds.push(fileToDelete.key));
+        directoriesToDelete.map((directoryToDelete) =>
+          directoryIds.push(directoryToDelete.key)
+        );
+        deleteDoc(fileIds)
+          .then(() => deleteDirectory(directoryIds))
+          .then(() => getFolderList());
+        setSelectedRowKeys([]);
+      },
+      onCancel() {},
+    });
   };
 
   const findItemByKey = (key: string, items: DataType[]): DataType | null => {
@@ -144,43 +183,67 @@ const FolderTable: React.FC = () => {
     const dragItem = findItemByKey(dragKey, data);
     const hoverItem = findItemByKey(hoverKey, data);
     if (dragItem && hoverItem && hoverItem.type === "folder") {
-      moveDirectory(dragItem.key, hoverItem.key);
-      getFolderList();
+      if (dragItem.type === "folder") {
+        moveDirectory(dragItem.key, hoverItem.key).then(() => getFolderList());
+      } else {
+        moveDocument(dragItem.key, hoverItem.key).then(() => getFolderList());
+      }
     }
   };
 
   const columns: ColumnsType<DataType> = [
     {
-      title: "文件名",
+      title: <span className="pl-4">文件名</span>,
       dataIndex: "name",
       key: "name",
+      width: "35%",
       render: (text, record) => (
-        <div className="text-topbar-text text-sm flex items-center gap-2">
+        <div
+          className="text-topbar-text text-sm flex items-center gap-2"
+          onClick={() => {
+            record.type === "file" && navigate(`/newDoc?doc_id=${record.key}`);
+          }}
+        >
           {record.type === "file" ? (
             <FileTextOutlined className="text-[22px] text-topbar-text" />
           ) : (
             <FolderFilled className="text-[22px] text-topbar-text" />
           )}
-          <span>{text}</span>
+          <Tooltip title={text}>
+            <span>{text}</span>
+          </Tooltip>
         </div>
       ),
     },
     {
+      title: "最后保存时间",
+      dataIndex: "last_saved_at",
+      width: "35%",
+      render: (timeString: string) => {
+        return formatDate(timeString);
+      },
+      sorter: (a: DataType, b: DataType) =>
+        new Date(b.last_saved_at!).getTime() -
+        new Date(a.last_saved_at!).getTime(),
+      defaultSortOrder: "ascend",
+    },
+    {
       title: "操作",
       key: "action",
+      width: "30%",
       render: (_, record) => (
-        <Space size="middle">
-          <Tooltip title="删除">
-            <Button
-              shape="circle"
-              icon={<DeleteOutlined />}
-              onClick={() => handleDelete([record.key])}
-            />
-          </Tooltip>
-          <Tooltip title="更多">
-            <Button shape="circle" icon={<MoreOutlined />} />
-          </Tooltip>
-        </Space>
+        <Flex>
+          <Button
+            type="link"
+            className="text-primary hover:!text-[#e2a3ac] gap-1 pl-0 justify-start"
+            onClick={() => {
+              showDeleteConfirm([record.key]);
+            }}
+          >
+            <DeleteOutlined />
+            删除
+          </Button>
+        </Flex>
       ),
     },
   ];
@@ -234,24 +297,31 @@ const FolderTable: React.FC = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <Button
-        type="primary"
-        icon={<PlusOutlined />}
-        onClick={() => setIsModalVisible(true)}
-        style={{ marginBottom: 16 }}
-      >
-        新建文件夹
-      </Button>
-      {selectedRowKeys.length > 0 && (
+      <div className="flex">
         <Button
           type="primary"
-          icon={<DeleteOutlined />}
-          onClick={() => handleDelete(selectedRowKeys)}
-          style={{ marginBottom: 16, marginLeft: 16 }}
+          icon={<PlusOutlined />}
+          onClick={() => setIsModalVisible(true)}
+          style={{ marginBottom: 16 }}
         >
-          删除
+          新建文件夹
         </Button>
-      )}
+        {selectedRowKeys.length > 0 && (
+          <Space className="flex items-start gap-5">
+            <Button
+              type="primary"
+              icon={<DeleteOutlined />}
+              onClick={() => showDeleteConfirm(selectedRowKeys)}
+              style={{ marginBottom: 16, marginLeft: 16 }}
+            >
+              删除
+            </Button>
+            <div className="px-2.5 text-sm hover:bg-home-border rounded-sm font-bold cursor-pointer h-8 leading-8 text-zinc-300">
+              已选中{selectedRowKeys.length}个项目
+            </div>
+          </Space>
+        )}
+      </div>
       <Table
         columns={columns}
         dataSource={data}
@@ -267,8 +337,13 @@ const FolderTable: React.FC = () => {
           } as React.HTMLAttributes<HTMLTableRowElement>)
         }
         loading={
-          folderListLoading || newDirectoryLoading || moveDirectoryLoading
+          folderListLoading ||
+          newDirectoryLoading ||
+          moveDirectoryLoading ||
+          moveDocumentLoading ||
+          deleteDirectoryLoading
         }
+        className="[&_.ant-table-selection-column]:!pl-3.5 [&_.ant-table-cell-with-append]:!pl-[9px]"
       />
       <Modal
         title={
