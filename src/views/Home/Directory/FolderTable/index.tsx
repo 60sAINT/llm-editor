@@ -216,7 +216,7 @@ const FolderTable: React.FC = () => {
       ),
     },
     {
-      title: "最后保存时间",
+      title: "最后打开时间",
       dataIndex: "last_saved_at",
       width: "35%",
       render: (timeString: string) => {
@@ -250,7 +250,7 @@ const FolderTable: React.FC = () => {
 
   const DraggableBodyRow = ({ index, className, style, ...restProps }: any) => {
     const ref = React.useRef<HTMLTableRowElement>(null);
-    const [{ isOver, dropClassName }, drop] = useDrop({
+    const [{ isOver }, drop] = useDrop({
       accept: type,
       collect: (monitor: DropTargetMonitor) => {
         const { key: dragKey } = (monitor.getItem() || {}) as any;

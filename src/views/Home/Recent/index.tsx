@@ -104,7 +104,7 @@ const Recent = () => {
         ),
       },
       {
-        title: "最后保存时间",
+        title: "最后打开时间",
         dataIndex: "last_saved_at",
         width: "35%",
         render: (timeString: string) => formatDate(timeString),
