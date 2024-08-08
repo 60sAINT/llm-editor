@@ -1,4 +1,6 @@
-import React, { useEffect } from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import "@blocknote/core/fonts/inter.css";
 import {
   FormattingToolbarController,
@@ -27,6 +29,9 @@ import {
   TextAlignButton,
   UnnestBlockButton,
 } from "@blocknote/react";
+import * as Y from "yjs";
+import { LiveblocksYjsProvider } from "@liveblocks/yjs";
+import { useRoom } from "@liveblocks/react/suspense";
 
 // import { CustomFormattingToolbar } from "./CustomFormattingToolBar";
 import { useDispatch, useNewDocState } from "../utils/provider";
@@ -186,6 +191,53 @@ interface EditorProps {
   getEditor?: (editor: BlockNoteEditor) => void;
 }
 const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
+  const room = useRoom();
+  const [doc, setDoc] = useState<Y.Doc>();
+  const [provider, setProvider] = useState<any>();
+
+  // Set up Liveblocks Yjs provider
+  useEffect(() => {
+    const yDoc = new Y.Doc();
+    const yProvider = new LiveblocksYjsProvider(room, yDoc);
+    setDoc(yDoc);
+    setProvider(yProvider);
+
+    return () => {
+      yDoc?.destroy();
+      yProvider?.destroy();
+    };
+  }, [room]);
+
+  if (!doc || !provider) {
+    return null;
+  }
+  // Renders the editor instance.
+  return (
+    <BlockNote
+      doc={doc}
+      provider={provider}
+      docData={docData}
+      getEditor={getEditor}
+      fullFormat={fullFormat}
+    />
+  );
+};
+export default Editor;
+
+type BlockNoteProps = {
+  doc: Y.Doc;
+  provider: any;
+  docData: any;
+  getEditor: any;
+  fullFormat: any;
+};
+function BlockNote({
+  doc,
+  provider,
+  docData,
+  getEditor,
+  fullFormat,
+}: BlockNoteProps) {
   const dispatch = useDispatch();
   const docDispatch = useDocDispatch();
   const { formatKeyDown } = useNewDocState();
@@ -207,6 +259,18 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
       console.log(publicUrl);
       await putObject(file, uploadUrl);
       return publicUrl;
+    },
+    collaboration: {
+      provider,
+
+      // Where to store BlockNote data in the Y.Doc:
+      fragment: doc.getXmlFragment("document-store"),
+
+      // Information for this user:
+      user: {
+        name: "My Username",
+        color: "#ff0000",
+      },
     },
     // uploadFile: async (file: File) => {
     //   const base64String = await new Promise<string>((resolve) => {
@@ -351,7 +415,6 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
     dispatch({ type: "FORMAT_KEY_DOWN" });
   }, [fullFormat]);
 
-  // Renders the editor instance.
   return (
     <BlockNoteView
       editor={editor}
@@ -380,6 +443,4 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
       />
     </BlockNoteView>
   );
-};
-
-export default Editor;
+}
