@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {
+import Icon, {
   AppstoreOutlined,
   ClockCircleOutlined,
   CommentOutlined,
@@ -35,6 +35,8 @@ import Directory from "./Directory";
 import Recent from "./Recent";
 import Community from "./Community";
 import { Upgrade } from "./Upgrade";
+import { AIReadPaperIcon } from "@/common/icons/AIReadPaperIcon";
+import { AIReadPaper } from "./AIReadPaper";
 
 const Home: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
@@ -128,6 +130,14 @@ const Home: React.FC = () => {
       icon: <CommentOutlined />,
       label: "社区",
     },
+    {
+      type: "divider",
+    },
+    {
+      key: "aiReadPaper",
+      icon: <Icon component={AIReadPaperIcon} className="text-sm" />,
+      label: "AI读论文",
+    },
   ];
 
   const contents: Record<string, React.JSX.Element> = {
@@ -137,6 +147,7 @@ const Home: React.FC = () => {
     conmmunity: <Community />,
     knowledge: <Knowledge />,
     laboratory: <Developing />,
+    aiReadPaper: <AIReadPaper />,
   };
 
   return (

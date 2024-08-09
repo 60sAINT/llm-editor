@@ -8,6 +8,7 @@ import {
   FileTextOutlined,
   ExclamationCircleFilled,
   EditOutlined,
+  FileAddOutlined,
 } from "@ant-design/icons";
 import {
   DndProvider,
@@ -44,6 +45,8 @@ const FolderTable: React.FC = () => {
   const [newFolderName, setNewFolderName] = useState("");
   const [newName, setNewName] = useState("");
   const newNameRef = useRef(newName);
+  const [newDocName, setNewDocName] = useState("");
+  const newDocNameRef = useRef(newDocName);
   const navigate = useNavigate();
 
   const {
@@ -63,6 +66,17 @@ const FolderTable: React.FC = () => {
         token: `Bearer ${token}` || "",
         dir_name,
       });
+      return res.data;
+    }
+  );
+  const { runAsync: newDoc, loading: newDocLoading } = useRequest(
+    async (dir_id, title) => {
+      const res = await docApi.newDoc(
+        `Bearer ${token}` || "",
+        title,
+        "",
+        dir_id
+      );
       return res.data;
     }
   );
@@ -221,6 +235,29 @@ const FolderTable: React.FC = () => {
     });
   };
 
+  useEffect(() => {
+    newDocNameRef.current = newDocName;
+  }, [newDocName]);
+  const showNewDocConfirm = (id: React.Key) => {
+    confirm({
+      title: "新建文档",
+      icon: null,
+      content: (
+        <Input
+          placeholder="请输入文档名称"
+          onChange={(e) => setNewDocName(e.target.value)}
+          className="my-5 h-8"
+        />
+      ),
+      okText: "确定",
+      cancelText: "取消",
+      onOk() {
+        newDoc(id, newDocNameRef.current).then(() => getFolderList());
+      },
+      onCancel() {},
+    });
+  };
+
   const findItemByKey = (key: string, items: DataType[]): DataType | null => {
     for (const item of items) {
       if (item.key === key) return item;
@@ -235,6 +272,9 @@ const FolderTable: React.FC = () => {
   const moveRow = (dragKey: string, hoverKey: string) => {
     const dragItem = findItemByKey(dragKey, data);
     const hoverItem = findItemByKey(hoverKey, data);
+    if (dragKey === hoverKey) {
+      return;
+    }
     if (dragItem && hoverItem && hoverItem.type === "folder") {
       if (dragItem.type === "folder") {
         moveDirectory(dragItem.key, hoverItem.key).then(() => getFolderList());
@@ -306,6 +346,18 @@ const FolderTable: React.FC = () => {
             <EditOutlined />
             重命名
           </Button>
+          {record.type === "folder" ? (
+            <Button
+              type="link"
+              className="text-primary hover:!text-[#e2a3ac] gap-1 pl-0 justify-start"
+              onClick={() => {
+                showNewDocConfirm(record.key);
+              }}
+            >
+              <FileAddOutlined />
+              新建文档
+            </Button>
+          ) : null}
         </Flex>
       ),
     },
@@ -365,9 +417,17 @@ const FolderTable: React.FC = () => {
           type="primary"
           icon={<PlusOutlined />}
           onClick={() => setIsModalVisible(true)}
-          style={{ marginBottom: 16 }}
+          className="mb-4 mr-4"
         >
           新建文件夹
+        </Button>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          // onClick={() => setIsModalVisible(true)}
+          style={{ marginBottom: 16 }}
+        >
+          新建文档
         </Button>
         {selectedRowKeys.length > 0 && (
           <Space className="flex items-start gap-5">
@@ -404,7 +464,8 @@ const FolderTable: React.FC = () => {
           newDirectoryLoading ||
           moveDirectoryLoading ||
           moveDocumentLoading ||
-          deleteDirectoryLoading
+          deleteDirectoryLoading ||
+          newDocLoading
         }
         className="[&_.ant-table-selection-column]:!pl-3.5 [&_.ant-table-cell-with-append]:!pl-[9px]"
       />

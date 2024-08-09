@@ -17,6 +17,9 @@ module.exports = {
       fontFamily: {
         'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
       },
+      height: {
+        'pdf-viewer': 'calc(100vh - 53px)',
+      },
     },
   },
   plugins: [],
