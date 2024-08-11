@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import wenxin from "@/assets/wenxin.png";
 import wenxinLogo from "@/assets/wenxinLogo.png";
 import { AIReadPaperIcon } from "@/common/icons/AIReadPaperIcon";
@@ -7,31 +7,80 @@ import { Modal, Table, Tabs } from "antd";
 import { ReadModalContent } from "./ReadModalContent";
 import { formatDate } from "@/common/utils";
 import { ReadingHistory } from "./interface";
+import { useRequest } from "@/hooks/useRequest";
+import { paperApi } from "./api";
+import { useAuth } from "@/provider/authProvider";
+import { RecommendPapers } from "./RecommendPapers";
 
 export const AIReadPaper = () => {
   const [modalReadOpen, setModalReadOpen] = useState(false);
-  const data: readonly ReadingHistory[] | undefined = [];
-  const loading = false;
+  const { token } = useAuth();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+  useEffect(() => {
+    const updateHeight = () => {
+      if (containerRef.current) {
+        const width = containerRef.current.offsetWidth;
+        setHeight(width / 3); // 设置高度为宽度的3倍
+      }
+    };
+    // 初始设置高度
+    updateHeight();
+    // 窗口大小变化时更新高度
+    window.addEventListener("resize", updateHeight);
+    // 清理事件监听器
+    return () => {
+      window.removeEventListener("resize", updateHeight);
+    };
+  }, []);
+
+  // const data: readonly ReadingHistory[] | undefined = [];
+  const {
+    run: getRecentPaperList,
+    data: paperList,
+    loading: paperListLoading,
+  } = useRequest(
+    async () => {
+      const res = await paperApi.getRecentPaperList(`Bearer ${token}` || "");
+      return res.data;
+    },
+    { manual: false }
+  );
   const columns = [
     {
       title: "文章标题",
-      dataIndex: "name",
+      dataIndex: "title",
     },
     {
       title: "上次阅读时间",
-      dataIndex: "time",
+      dataIndex: "last_read_at",
       render: (timeString: string) => formatDate(timeString),
       sorter: (a: ReadingHistory, b: ReadingHistory) =>
         new Date(b.time).getTime() - new Date(a.time).getTime(),
       defaultSortOrder: "ascend" as any,
     },
   ];
+
   return (
     <>
-      <div className="h-[317.71px]">
-        <img src={wenxin} className="abolute" />
-        <div className="flex">
-          <div className="-translate-y-48 translate-x-16 flex w-80 flex-col">
+      <div
+        ref={containerRef}
+        className="relative w-full px-16"
+        style={{
+          backgroundImage: `url(${wenxin})`,
+          backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
+          // paddingBottom: "31.25%", // 根据图片的实际纵横比调整
+          height: `${height}px`,
+        }}
+      >
+        <div className="w-full h-full flex justify-between">
+          <div
+            className="flex w-80 items-center"
+            style={{
+              height: `${height}px`,
+            }}
+          >
             <div
               className="flex cursor-pointer text-white"
               onClick={() => {
@@ -53,7 +102,10 @@ export const AIReadPaper = () => {
             </div>
           </div>
           <div
-            className="absolute -translate-y-48 right-11 flex flex-col items-center cursor-pointer"
+            className="flex flex-col items-center cursor-pointer justify-center"
+            style={{
+              height: `${height}px`,
+            }}
             onClick={() => {
               const externalUrl = "https://yiyan.baidu.com/welcome";
               window.open(externalUrl, "_blank");
@@ -66,15 +118,15 @@ export const AIReadPaper = () => {
           </div>
         </div>
       </div>
-      <div className="flex mt-7 gap-8">
-        <div className="px-10 py-7 rounded-sm w-7/12">
+      <div className="flex">
+        <div className="px-10 py-4 rounded-sm w-7/12">
           <div className="mb-3.5 font-medium text-stone-900 text-base">
             最近阅读
           </div>
           <Table
-            dataSource={data}
+            dataSource={paperList}
             columns={columns}
-            loading={loading}
+            loading={paperListLoading}
             className="mb-1"
           />
         </div>
@@ -86,7 +138,7 @@ export const AIReadPaper = () => {
               return {
                 key: id,
                 label: <span className="text-base">为你推荐</span>,
-                children: `Tab ${id}`,
+                children: <RecommendPapers />,
                 icon: <Icon className="text-base" />,
               };
             })}
