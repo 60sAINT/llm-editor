@@ -1,0 +1,15 @@
+@keyframes highlightFade {
+  0% {
+    background-color: #f3d7db; /* 浅黄 */
+  }
+  50% {
+    background-color: #e6b0b8; /* 深黄 */
+  }
+  100% {
+    background-color: #f3d7db; /* 浅黄 */
+  }
+}
+
+.highlight-animation {
+  animation: highlightFade 1s ease-in-out infinite;
+}

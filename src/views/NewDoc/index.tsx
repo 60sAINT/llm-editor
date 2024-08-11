@@ -21,8 +21,13 @@ import { BlockNoteEditor } from "@blocknote/core";
 import { useAuth } from "@/provider/authProvider";
 import Outline from "./Outline";
 import { MenuOutlined } from "@ant-design/icons";
+import classNames from "classnames";
 
-const NewDoc = () => {
+interface NewDocProps {
+  className?: string;
+  editorOnly?: boolean;
+}
+const NewDoc: React.FC<NewDocProps> = ({ className, editorOnly }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [docState, docDispatch] = useReducer(docReducer, initialDocState);
   const [showCards, setShowCards] = useState<boolean>(false);
@@ -137,7 +142,12 @@ const NewDoc = () => {
       <DocDispatchContext.Provider value={docDispatch}>
         <StateContext.Provider value={state}>
           <DispatchContext.Provider value={dispatch}>
-            <div className="h-full flex flex-col bg-zinc-50">
+            <div
+              className={classNames(
+                className,
+                "h-full flex flex-col bg-zinc-50"
+              )}
+            >
               <TopBar
                 getShowCards={getShowCards}
                 getFullText={setFullText}
@@ -146,7 +156,7 @@ const NewDoc = () => {
               <Row className="flex-grow justify-center items-start py-4 px-2">
                 {(fullText || fullTextLoading) && !isOutlineVisible ? (
                   <Col
-                    span={showCards ? 5 : 6}
+                    span={editorOnly ? 0 : showCards ? 5 : 6}
                     className={`max-h-[${leftColHeight}px] min-h-64`}
                   >
                     <CardList
@@ -170,7 +180,7 @@ const NewDoc = () => {
                     />
                   </Col>
                 ) : (
-                  <Col span={showCards ? 5 : 6}>
+                  <Col span={editorOnly ? 0 : showCards ? 5 : 6}>
                     <Outline
                       editor={editor}
                       isVisible={isOutlineVisible}
@@ -179,7 +189,11 @@ const NewDoc = () => {
                     />
                   </Col>
                 )}
-                <Col span={12} ref={leftColRef} className="z-0">
+                <Col
+                  span={editorOnly ? 24 : 12}
+                  ref={leftColRef}
+                  className="z-0"
+                >
                   <div
                     className="w-full bg-white shadow-md [&>.bn-container>div:first-child]:px-12 [&_audio]:my-3 [&_.highlight]:bg-yellow-100"
                     style={{
@@ -212,7 +226,7 @@ const NewDoc = () => {
                     )}
                   </div>
                 </Col>
-                <Col span={showCards ? 7 : 6}>
+                <Col span={editorOnly ? 0 : showCards ? 7 : 6}>
                   {showCards && <Efficiency />}
                 </Col>
               </Row>

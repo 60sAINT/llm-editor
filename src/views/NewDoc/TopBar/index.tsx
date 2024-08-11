@@ -51,14 +51,14 @@ const TopBar: React.FC<TopBarProps> = ({
       }`}
     >
       <Row className="w-full flex items-center justify-between bg-white py-4 h-14 z-100 sticky top-0">
-        <Col span={8}>
-          <div className="flex items-center">
+        <Col span={9}>
+          <div className="flex items-center w0full justify-start">
             <ExitButton />
             <TopBarTitle />
             <Status />
           </div>
         </Col>
-        <Col span={8} className="flex justify-center">
+        <Col span={6} className="flex justify-center">
           <div className="flex items-center justify-between w-[300px]">
             <ActionButton label="开始" onClick={handleStartClick} />
             <ActionButton label="效率" onClick={handleEfficiencyClick} />
@@ -69,7 +69,7 @@ const TopBar: React.FC<TopBarProps> = ({
             />
           </div>
         </Col>
-        <Col span={8}>
+        <Col span={9}>
           <div className="flex items-center mr-1 justify-end">
             <Avatar
               icon={<UserOutlined />}

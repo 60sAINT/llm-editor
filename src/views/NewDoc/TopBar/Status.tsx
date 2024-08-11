@@ -54,7 +54,7 @@ const Status = () => {
     if (docId) {
       try {
         await saveDoc({ docId, title, content: docContent });
-        showMessage("保存成功！", 0.65);
+        showMessage("保存成功！", 0.65, 200);
         setSaveState(IsSavedType.True);
         docDispatch({ type: "SAVE_DOC_STATUS", payload: IsSavedType.True });
       } catch (err) {
@@ -63,10 +63,15 @@ const Status = () => {
     }
     // 保存新文档，暂无id
     else {
-      await saveNewDoc(title, docContent);
-      // setSaveState(IsSavedType.True);
-      showMessage("保存成功！", 0.65);
-      docDispatch({ type: "SAVE_DOC_STATUS", payload: IsSavedType.True });
+      try {
+        const { data } = await saveNewDoc(title, docContent);
+        showMessage("保存成功！", 0.65, 200);
+        setSaveState(IsSavedType.True);
+        docDispatch({ type: "SAVE_DOC_ID", payload: data.doc_id });
+        docDispatch({ type: "SAVE_DOC_STATUS", payload: IsSavedType.True });
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
   return (

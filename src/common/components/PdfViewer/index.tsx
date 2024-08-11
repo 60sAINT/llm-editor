@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   DocumentLoadEvent,
@@ -23,6 +23,8 @@ import "@react-pdf-viewer/bookmark/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import "@react-pdf-viewer/toolbar/lib/styles/index.css";
 import "@react-pdf-viewer/full-screen/lib/styles/index.css";
+import "@react-pdf-viewer/page-navigation/lib/styles/index.css";
+import "./index.css";
 import { getFilePlugin } from "@react-pdf-viewer/get-file";
 import {
   HighlightArea,
@@ -31,11 +33,17 @@ import {
   RenderHighlightContentProps,
   RenderHighlightTargetProps,
   RenderHighlightsProps,
+  Trigger,
+  HighlightPlugin,
 } from "@react-pdf-viewer/highlight";
+import { pageNavigationPlugin } from "@react-pdf-viewer/page-navigation";
+import { RightToolBar } from "./RightToolbar";
+import customZoomPlugin from "./plugins/customZoomPlugin";
+import { renderchartHighlights } from "./plugins/renderchartHighlights";
 
 // 目录
 const VIEWER_CONTAINER_STYLE =
-  "flex-1 [&>div>div>div>div>div:last-child>div:first-child]:hidden [&>div>div>div>div]:flex [&>div>div>div>div>div]:pt-0";
+  "flex-1 [&>div>div>div>div>div:last-child>div:first-child]:hidden [&>div>div>div>div]:flex [&>div>div>div>div>div]:pt-0 [&>div>div>div>div>div:first-child]:w-[29.1%]";
 
 // 高亮
 interface Note {
@@ -89,11 +97,12 @@ const PdfViewer = () => {
       return `a-copy-of-${fileName}`;
     },
   });
-  // 高亮
+  // 笔记高亮
   const [message, setMessage] = React.useState("");
   const [notes, setNotes] = React.useState<Note[]>([]);
   const notesContainerRef = React.useRef<HTMLDivElement | null>(null);
   let noteId = notes.length;
+  console.log(notes);
   const noteEles: Map<number, HTMLElement> = new Map();
   const [currentDoc, setCurrentDoc] = React.useState<PdfJs.PdfDocument | null>(
     null
@@ -104,6 +113,9 @@ const PdfViewer = () => {
       // User opens new document
       setNotes([]);
     }
+    //
+    const { activateTab } = defaultLayoutPluginInstance;
+    activateTab(3);
   };
   const renderHighlightTarget = (props: RenderHighlightTargetProps) => (
     <div
@@ -268,19 +280,39 @@ const PdfViewer = () => {
     </div>
   );
 
+  // 图表提取的高亮
+  const defaultchartHighlightPluginInstance = highlightPlugin({
+    renderHighlights: renderchartHighlights,
+    trigger: Trigger.None,
+  });
+  const [chartHighlightPluginInstance, setChartHighlightPluginInstance] =
+    useState(defaultchartHighlightPluginInstance);
+  const getChartHighlightPluginInstance = (
+    chartHighlightPluginInstance: React.SetStateAction<HighlightPlugin>
+  ) => setChartHighlightPluginInstance(chartHighlightPluginInstance);
+
+  // 页面导航
+  const pageNavigationPluginInstance = pageNavigationPlugin();
+  const { jumpToPage } = pageNavigationPluginInstance;
+
+  // 缩放
+  const customZoomPluginInstance = customZoomPlugin();
+  const { zoomTo } = customZoomPluginInstance;
+  zoomTo(1);
+
   return (
-    <div className="border border-black/30 flex flex-col h-screen">
-      <div className="p-2.5 bg-home-border [&>div>div>div>div]:h-8 [&>div>div:first-child>div:last-child>div>div]:h-8 [&>div>div:first-child>div:first-child>div>div>first-child]:h-8 [&>div>div:first-child>div:nth-child(2)>div>div]:h-8 [&>div>div:last-child>div>div>div]:h-8 [&>div>div:last-child>div:last-child>div>div]:h-auto">
-        {/* 顶部工具栏 */}
-        <Toolbar />
-      </div>
-      <div className="flex h-pdf-viewer">
-        <div className="flex-1">
-          <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+      <div className="border border-black/30 flex flex-col h-screen">
+        <div className="p-2.5 bg-home-border [&>div>div>div>div]:h-8 [&>div>div:first-child>div:last-child>div>div]:h-8 [&>div>div:first-child>div:first-child>div>div>first-child]:h-8 [&>div>div:first-child>div:nth-child(2)>div>div]:h-8 [&>div>div:last-child>div>div>div]:h-8 [&>div>div:last-child>div:last-child>div>div]:h-auto">
+          {/* 顶部工具栏 */}
+          <Toolbar />
+        </div>
+        <div className="flex h-pdf-viewer">
+          <div className="flex-1">
             <div className="flex flex-1 overflow-hidden h-full">
               <div className={VIEWER_CONTAINER_STYLE}>
                 <Viewer
-                  fileUrl="http://43.138.11.21:9000/public/An_Improved_Non-Interactive_Zero-Knowledge_Range_Proof_for_Decentralized_Applications.pdf"
+                  fileUrl="http://43.138.11.21:9000/public/MiniCache.pdf"
                   plugins={[
                     attachmentPluginInstance,
                     bookmarkPluginInstance,
@@ -289,20 +321,28 @@ const PdfViewer = () => {
                     fullScreenPluginInstance,
                     getFilePluginInstance,
                     highlightPluginInstance,
+                    pageNavigationPluginInstance,
+                    chartHighlightPluginInstance,
+                    customZoomPluginInstance,
                   ]}
                   onDocumentLoad={handleDocumentLoad}
                 />
               </div>
             </div>
-          </Worker>
-        </div>
-        {/* 右侧工具栏 */}
-        <div className="w-[35%] p-2.5 border-l border-slate-300">
-          <Attachments />
-          {/* todo: 点击按钮添加附件 */}
+          </div>
+          {/* 右侧工具栏 */}
+          <div className="w-[30%] border-l border-slate-300 overflow-auto">
+            {/* <Attachments /> */}
+            {/* todo: 点击按钮添加附件 */}
+            {/* <Button onClick={() => jumpToPage(5)}>jumpToPage5</Button> */}
+            <RightToolBar
+              jumpToPage={jumpToPage}
+              setChartHighlightPluginInstance={getChartHighlightPluginInstance}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </Worker>
   );
 };
 

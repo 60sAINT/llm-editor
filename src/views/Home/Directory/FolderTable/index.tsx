@@ -74,7 +74,7 @@ const FolderTable: React.FC = () => {
       const res = await docApi.newDoc(
         `Bearer ${token}` || "",
         title,
-        "",
+        "[{}]",
         dir_id
       );
       return res.data;
@@ -180,18 +180,25 @@ const FolderTable: React.FC = () => {
       okType: "danger",
       cancelText: "取消",
       onOk() {
-        const filesToDelete = data.filter(
-          (item) => item.type == "file" && ids.includes(item.key)
-        );
-        const directoriesToDelete = data.filter(
-          (item) => item.type == "folder" && ids.includes(item.key)
-        );
-        const fileIds: string[] = [];
-        const directoryIds: string[] = [];
-        filesToDelete.map((fileToDelete) => fileIds.push(fileToDelete.key));
-        directoriesToDelete.map((directoryToDelete) =>
-          directoryIds.push(directoryToDelete.key)
-        );
+        const fileIds: any[] = [];
+        const directoryIds: any[] = [];
+        // 递归函数，用于遍历所有层次的文件和文件夹
+        const traverse = (data: any[]) => {
+          data.forEach((item) => {
+            if (item.type === "file" && ids.includes(item.key)) {
+              fileIds.push(item.key);
+            } else if (item.type === "folder" && ids.includes(item.key)) {
+              directoryIds.push(item.key);
+            }
+            // 如果有子节点，继续递归
+            if (item.children && item.children.length > 0) {
+              traverse(item.children);
+            }
+          });
+        };
+        // 开始遍历
+        traverse(data);
+        // 删除文件和文件夹
         deleteDoc(fileIds)
           .then(() => deleteDirectory(directoryIds))
           .then(() => getFolderList());
@@ -238,7 +245,7 @@ const FolderTable: React.FC = () => {
   useEffect(() => {
     newDocNameRef.current = newDocName;
   }, [newDocName]);
-  const showNewDocConfirm = (id: React.Key) => {
+  const showNewDocConfirm = (id?: React.Key) => {
     confirm({
       title: "新建文档",
       icon: null,
@@ -424,7 +431,9 @@ const FolderTable: React.FC = () => {
         <Button
           type="primary"
           icon={<PlusOutlined />}
-          // onClick={() => setIsModalVisible(true)}
+          onClick={() => {
+            showNewDocConfirm();
+          }}
           style={{ marginBottom: 16 }}
         >
           新建文档

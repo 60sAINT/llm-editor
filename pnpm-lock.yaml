@@ -47,6 +47,9 @@ importers:
       '@react-pdf-viewer/locale-switcher':
         specifier: ^3.12.0
         version: 3.12.0(pdfjs-dist@3.4.120)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@react-pdf-viewer/page-navigation':
+        specifier: ^3.12.0
+        version: 3.12.0(pdfjs-dist@3.4.120)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@react-pdf-viewer/theme':
         specifier: ^3.12.0
         version: 3.12.0(pdfjs-dist@3.4.120)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
