@@ -206,7 +206,12 @@ const NewDoc: React.FC<NewDocProps> = ({ className, editorOnly }) => {
                     {!docId ? (
                       <>
                         <DocTitle />
-                        <Editor fullFormat={fullFormat} />
+                        <Editor
+                          fullFormat={fullFormat}
+                          getEditor={(e) => {
+                            setEditor(e);
+                          }}
+                        />
                       </>
                     ) : docData ? (
                       <>
@@ -214,7 +219,9 @@ const NewDoc: React.FC<NewDocProps> = ({ className, editorOnly }) => {
                         <Editor
                           docData={docData}
                           fullFormat={fullFormat}
-                          getEditor={(e) => setEditor(e)}
+                          getEditor={(e) => {
+                            setEditor(e);
+                          }}
                         />
                       </>
                     ) : (

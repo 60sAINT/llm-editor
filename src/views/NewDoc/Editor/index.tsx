@@ -183,7 +183,7 @@ const CustomFormattingToolbar: FunctionComponent<
 interface EditorProps {
   docData?: any;
   fullFormat?: any;
-  getEditor?: (editor: BlockNoteEditor) => void;
+  getEditor: (editor: BlockNoteEditor) => void;
 }
 const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
   const dispatch = useDispatch();
@@ -259,7 +259,9 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
       type: "SAVE_DOC_CONTENT",
       payload: JSON.stringify(editor?.document),
     });
-    getEditor?.(editor);
+    if (getEditor) {
+      getEditor(editor);
+    }
   }, [editor]);
   useEffect(() => {
     if (formatKeyDown) {
