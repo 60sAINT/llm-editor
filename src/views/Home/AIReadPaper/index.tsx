@@ -4,7 +4,6 @@ import wenxinLogo from "@/assets/wenxinLogo.png";
 import { AIReadPaperIcon } from "@/common/icons/AIReadPaperIcon";
 import Icon, { HistoryOutlined, StarFilled } from "@ant-design/icons";
 import { Modal, Table, Tabs, Tooltip } from "antd";
-import { ReadModalContent } from "./ReadModalContent";
 import { formatDate } from "@/common/utils";
 import { useRequest } from "@/hooks/useRequest";
 import { paperApi } from "./api";
@@ -12,6 +11,7 @@ import { useAuth } from "@/provider/authProvider";
 import { RecommendPapers } from "./RecommendPapers";
 import { Link } from "react-router-dom";
 import { RecentPaperType } from "./interface";
+import { ReadModalContent } from "./ReadModalContent";
 
 export const AIReadPaper = () => {
   const [modalReadOpen, setModalReadOpen] = useState(false);
@@ -35,7 +35,11 @@ export const AIReadPaper = () => {
     };
   }, []);
 
-  const { data: paperList, loading: recentPaperListLoading } = useRequest(
+  const {
+    run: getRecentPaperList,
+    data: paperList,
+    loading: recentPaperListLoading,
+  } = useRequest(
     async () => {
       const res = await paperApi.getRecentPaperList(`Bearer ${token}` || "");
       return res;
@@ -170,7 +174,7 @@ export const AIReadPaper = () => {
         onCancel={() => setModalReadOpen(false)}
         className="[&_.ant-modal-footer]:hidden [&_.ant-modal-content]:w-[696px] [&_.ant-modal-content]:h-[360px] [&_.ant-modal-body]:h-[270px]"
       >
-        <ReadModalContent />
+        <ReadModalContent getRecentPaperList={getRecentPaperList} />
       </Modal>
     </>
   );

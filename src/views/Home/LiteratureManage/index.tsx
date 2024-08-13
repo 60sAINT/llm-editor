@@ -11,6 +11,8 @@ import {
   Table,
   Tag,
   Tooltip,
+  Upload,
+  UploadProps,
 } from "antd";
 import React, { useState } from "react";
 import { literatureApi } from "./api";
@@ -26,6 +28,7 @@ import { Link } from "react-router-dom";
 import { SearchProps } from "antd/es/input";
 import { formatDate } from "@/common/utils";
 import { ColumnsType } from "antd/es/table";
+import { axios, GATEWAY } from "@/api/AxiosInstance";
 
 export interface LiteratureType {
   paper_id: string;
@@ -92,6 +95,29 @@ const LiteratureManage = () => {
     },
   };
   const [isMutipleChoice, setIsMutipleChoice] = useState<boolean>(false);
+
+  const action = `${GATEWAY}/api/v1/paper/upload`;
+  const props: UploadProps = {
+    accept: ".pdf",
+    name: "file",
+    action,
+    multiple: true,
+    customRequest: async (opt) => {
+      const formData = new FormData();
+      formData.append("file", opt.file);
+      axios
+        .post(`${action}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "X-Authorization": `Bearer ${token}`,
+          },
+        })
+        .then(() => {
+          getLiteratureList();
+        });
+    },
+  };
+
   const columns: ColumnsType<LiteratureType> = [
     {
       title: "文献名称",
@@ -210,9 +236,9 @@ const LiteratureManage = () => {
         </Skeleton>
       </div>
       <div className="w-[77.2%]">
-        <div className="bg-neutral-50 py-2 px-4 mb-3">
+        <div className="bg-neutral-50 pb-2 pt-5 px-4 mb-3">
           <div className="text-primary">全部文献</div>
-          <div className="flex my-2.5">
+          <div className="flex mt-2.5 mb-7">
             <Form form={form} className="w-full">
               <Form.Item name="searchInput" className="mb-0">
                 <Input.Search
@@ -228,9 +254,14 @@ const LiteratureManage = () => {
             <Button onClick={() => setIsMutipleChoice(!isMutipleChoice)}>
               {isMutipleChoice ? "结束多选" : "多选"}
             </Button>
-            <Button type="primary" className="ml-4">
-              添加
-            </Button>
+            <Upload
+              {...props}
+              className="[&_.ant-upload-list]:absolute [&_.ant-upload-list]:right-0"
+            >
+              <Button type="primary" className="ml-4">
+                添加
+              </Button>
+            </Upload>
           </div>
         </div>
         {selectedRowKeys.length > 0 && (

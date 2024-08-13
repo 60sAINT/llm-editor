@@ -1,23 +1,33 @@
 import { useRequest } from "@/hooks/useRequest";
-import React from "react";
+import React, { useEffect } from "react";
 import { paperApi } from "../api";
 import { useAuth } from "@/provider/authProvider";
 import { RecentPaperType } from "../interface";
 import { Skeleton } from "antd";
 import { Link } from "react-router-dom";
 
-export const RecentReading = () => {
+export interface RecentReadingProps {
+  recentPaperList: any;
+}
+export const RecentReading: React.FC<RecentReadingProps> = ({
+  recentPaperList,
+}) => {
   const { token } = useAuth();
-  const { data: paperList, loading: recentPaperListLoading } = useRequest(
+  const {
+    run: getPaperList,
+    data: paperList,
+    loading: recentPaperListLoading,
+  } = useRequest(
     async () => {
       const res = await paperApi.getRecentPaperList(`Bearer ${token}` || "");
       return res;
     },
     { manual: false }
   );
+  useEffect(() => getPaperList(), [recentPaperList]);
   return (
     <div className="p-4">
-      <Skeleton loading={recentPaperListLoading} paragraph={{ rows: 5 }}>
+      <Skeleton loading={recentPaperListLoading} paragraph={{ rows: 5 }} active>
         <ul className="[&>li:first-child]:!mt-0">
           {paperList ? (
             paperList.map((paper: RecentPaperType) => (

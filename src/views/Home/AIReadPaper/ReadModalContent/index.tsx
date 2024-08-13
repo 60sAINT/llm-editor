@@ -19,7 +19,14 @@ type File = {
   paper_id?: string;
 };
 
-export const ReadModalContent = () => {
+export interface getRecentPaperListProps {
+  getRecentPaperList: () => any;
+}
+
+export const ReadModalContent: React.FC<getRecentPaperListProps> = ({
+  getRecentPaperList,
+}) => {
+  const [recentPaperList, setRecentPaperList] = useState([{ title: "" }]);
   const [fileList, setFileList] = useState<Array<File>>([]);
   const [lastFileUploading, setLastFileUploading] = useState<boolean>(false);
   const { token } = useAuth();
@@ -49,6 +56,10 @@ export const ReadModalContent = () => {
           fileList[0].paper_id = data.data.data.paper_id;
           setFileList(fileList);
           setLastFileUploading(false);
+        })
+        .then(() => {
+          getRecentPaperList();
+          setRecentPaperList(getRecentPaperList());
         });
     },
     beforeUpload: (file) => {
@@ -192,8 +203,8 @@ export const ReadModalContent = () => {
           <div className="font-semibold text-neutral-800 mb-3 mt-3.5">
             最近阅读
           </div>
-          <div className="border border-gray-200 h-56 rounded-lg">
-            <RecentReading />
+          <div className="border border-gray-200 h-56 rounded-lg overflow-y-auto">
+            <RecentReading recentPaperList={recentPaperList} />
           </div>
         </div>
       </div>
