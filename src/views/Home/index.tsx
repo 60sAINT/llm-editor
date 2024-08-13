@@ -39,20 +39,12 @@ import { AIReadPaperIcon } from "@/common/icons/AIReadPaperIcon";
 import { AIReadPaper } from "./AIReadPaper";
 
 const Home: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(true);
   const [modalUpgradeOpen, setModalUpgradeOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const [selectKey, setSelectKey] = useState<string>(
     location.pathname.substring(1)
   );
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
 
   const dropdownContent = (
     <div className="bg-white shadow-lg p-3 mt-3 rounded border border-gray-300 text-zinc-600 text-sm">
@@ -163,6 +155,10 @@ const Home: React.FC = () => {
             colorPrimary: "#d67b88",
             colorPrimaryHover: "#dc8f9a",
             colorPrimaryActive: "#e65c70",
+          },
+          Input: {
+            colorPrimary: "#d67b88",
+            colorPrimaryHover: "#dc8f9a",
           },
         },
       }}

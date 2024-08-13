@@ -2,15 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import wenxin from "@/assets/wenxin.png";
 import wenxinLogo from "@/assets/wenxinLogo.png";
 import { AIReadPaperIcon } from "@/common/icons/AIReadPaperIcon";
-import Icon, { StarFilled } from "@ant-design/icons";
-import { Modal, Table, Tabs } from "antd";
+import Icon, { HistoryOutlined, StarFilled } from "@ant-design/icons";
+import { Modal, Table, Tabs, Tooltip } from "antd";
 import { ReadModalContent } from "./ReadModalContent";
 import { formatDate } from "@/common/utils";
-import { ReadingHistory } from "./interface";
 import { useRequest } from "@/hooks/useRequest";
 import { paperApi } from "./api";
 import { useAuth } from "@/provider/authProvider";
 import { RecommendPapers } from "./RecommendPapers";
+import { Link } from "react-router-dom";
+import { RecentPaperType } from "./interface";
 
 export const AIReadPaper = () => {
   const [modalReadOpen, setModalReadOpen] = useState(false);
@@ -34,15 +35,10 @@ export const AIReadPaper = () => {
     };
   }, []);
 
-  // const data: readonly ReadingHistory[] | undefined = [];
-  const {
-    run: getRecentPaperList,
-    data: paperList,
-    loading: paperListLoading,
-  } = useRequest(
+  const { data: paperList, loading: recentPaperListLoading } = useRequest(
     async () => {
       const res = await paperApi.getRecentPaperList(`Bearer ${token}` || "");
-      return res.data;
+      return res;
     },
     { manual: false }
   );
@@ -50,14 +46,28 @@ export const AIReadPaper = () => {
     {
       title: "文章标题",
       dataIndex: "title",
+      width: "60%",
+      render: (title: string, record: RecentPaperType) => (
+        <Tooltip title={title}>
+          <Link
+            to={`/pdf?pdfId=${record.paper_id}`}
+            target="_blank"
+            className="text-primary hover:text-[#e2a3ac] max-w-52 overflow-hidden text-ellipsis line-clamp-2 inline-block"
+            style={{ display: "-webkit-box" }}
+          >
+            {title}
+          </Link>
+        </Tooltip>
+      ),
     },
     {
       title: "上次阅读时间",
       dataIndex: "last_read_at",
       render: (timeString: string) => formatDate(timeString),
-      sorter: (a: ReadingHistory, b: ReadingHistory) =>
-        new Date(b.time).getTime() - new Date(a.time).getTime(),
+      sorter: (a: RecentPaperType, b: RecentPaperType) =>
+        new Date(b.last_read_at).getTime() - new Date(a.last_read_at).getTime(),
       defaultSortOrder: "ascend" as any,
+      width: "40%",
     },
   ];
 
@@ -119,18 +129,20 @@ export const AIReadPaper = () => {
         </div>
       </div>
       <div className="flex">
-        <div className="px-10 py-4 rounded-sm w-7/12">
+        <div className="px-4 pb-4 rounded-sm w-5/12">
           <div className="mb-3.5 font-medium text-stone-900 text-base">
-            最近阅读
+            <HistoryOutlined className="mr-2" />
+            历史阅读记录
           </div>
           <Table
             dataSource={paperList}
             columns={columns}
-            loading={paperListLoading}
-            className="mb-1"
+            loading={recentPaperListLoading}
+            className="[&_.ant-table-cell]:!px-3 mb-1"
+            pagination={false}
           />
         </div>
-        <div className="p-4 bg-[#fdfafa] w-5/12 border-gray-200 border">
+        <div className="py-4 px-7 bg-[#fdfafa] w-7/12 border-gray-200 border">
           <Tabs
             defaultActiveKey="2"
             items={[StarFilled].map((Icon, i) => {
@@ -142,7 +154,7 @@ export const AIReadPaper = () => {
                 icon: <Icon className="text-base" />,
               };
             })}
-            className="[&_.ant-tabs-tab-btn]:!text-black [&_.ant-tabs-ink-bar]:bg-black [&_.ant-tabs-ink-bar]:!w-[100px] [&_.ant-tabs-tab-icon]:!me-1.5"
+            className="[&_.ant-tabs-tab-btn]:!text-black [&_.ant-tabs-ink-bar]:bg-black [&_.ant-tabs-ink-bar]:!w-[100px] [&_.ant-tabs-tab-icon]:!me-1.5 [&>.ant-tabs-nav]:mb-5"
           />
         </div>
       </div>
