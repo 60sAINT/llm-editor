@@ -123,6 +123,14 @@ const Routes = () => {
           ),
         },
         {
+          path: "/literatureManage",
+          element: (
+            <Suspense fallback={<Spinning />}>
+              <Home />
+            </Suspense>
+          ),
+        },
+        {
           path: "/newDoc",
           element: (
             <Suspense fallback={<Spinning />}>

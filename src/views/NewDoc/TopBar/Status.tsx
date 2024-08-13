@@ -38,6 +38,7 @@ const Status = () => {
   // 保存现有文档
   const { runAsync: saveDoc } = useRequest(
     async ({ docId, title, content }) => {
+      console.log(content);
       const res = await docApi.updateDoc({
         doc_id: docId,
         title,

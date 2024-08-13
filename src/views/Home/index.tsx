@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Icon, {
   AppstoreOutlined,
+  BookOutlined,
   ClockCircleOutlined,
   CommentOutlined,
   ExperimentOutlined,
@@ -37,6 +38,7 @@ import Community from "./Community";
 import { Upgrade } from "./Upgrade";
 import { AIReadPaperIcon } from "@/common/icons/AIReadPaperIcon";
 import { AIReadPaper } from "./AIReadPaper";
+import LiteratureManage from "./LiteratureManage";
 
 const Home: React.FC = () => {
   const [modalUpgradeOpen, setModalUpgradeOpen] = useState(false);
@@ -130,6 +132,11 @@ const Home: React.FC = () => {
       icon: <Icon component={AIReadPaperIcon} className="text-sm" />,
       label: "AI读论文",
     },
+    {
+      key: "literatureManage",
+      icon: <BookOutlined />,
+      label: "文献管理",
+    },
   ];
 
   const contents: Record<string, React.JSX.Element> = {
@@ -140,6 +147,7 @@ const Home: React.FC = () => {
     knowledge: <Knowledge />,
     laboratory: <Developing />,
     aiReadPaper: <AIReadPaper />,
+    literatureManage: <LiteratureManage />,
   };
 
   return (

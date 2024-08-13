@@ -40,6 +40,10 @@ import { pageNavigationPlugin } from "@react-pdf-viewer/page-navigation";
 import { RightToolBar } from "./RightToolbar";
 import customZoomPlugin from "./plugins/customZoomPlugin";
 import { renderchartHighlights } from "./plugins/renderchartHighlights";
+import { pdfApi } from "./api";
+import { useAuth } from "@/provider/authProvider";
+import { useLocation } from "react-router-dom";
+import { useRequest } from "@/hooks/useRequest";
 
 // 目录
 const VIEWER_CONTAINER_STYLE =
@@ -299,6 +303,21 @@ const PdfViewer = () => {
   const customZoomPluginInstance = customZoomPlugin();
   const { zoomTo } = customZoomPluginInstance;
   zoomTo(1);
+
+  // 根据pdfId获取pdf各种信息
+  const { token } = useAuth();
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
+  const pdfId = params.get("pdfId");
+  const { data: paperInformation, loading: paperInformationLoading } =
+    useRequest(
+      async () => {
+        const res = await pdfApi.getPaperById(`Bearer ${token}` || "", pdfId!);
+        return res;
+      },
+      { manual: false }
+    );
+  console.log(paperInformation);
 
   return (
     <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
