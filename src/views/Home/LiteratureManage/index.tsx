@@ -178,12 +178,13 @@ const LiteratureManage = () => {
   ];
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-full">
       <div className="px-2 bg-stone-100 w-[22.8%] border-r border-slate-200">
         <Skeleton
           loading={literatureListLoading}
           active
           paragraph={{ rows: 8 }}
+          className="py-3"
         >
           <div className="mx-1.5 my-1 h-8 flex items-center text-slate-800 font-semibold">
             <CopyOutlined />

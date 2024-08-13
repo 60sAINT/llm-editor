@@ -131,6 +131,14 @@ const Routes = () => {
           ),
         },
         {
+          path: "/noteManage",
+          element: (
+            <Suspense fallback={<Spinning />}>
+              <Home />
+            </Suspense>
+          ),
+        },
+        {
           path: "/newDoc",
           element: (
             <Suspense fallback={<Spinning />}>

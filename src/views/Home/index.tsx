@@ -4,6 +4,7 @@ import Icon, {
   BookOutlined,
   ClockCircleOutlined,
   CommentOutlined,
+  EditOutlined,
   ExperimentOutlined,
   FileTextTwoTone,
   FolderAddTwoTone,
@@ -39,6 +40,7 @@ import { Upgrade } from "./Upgrade";
 import { AIReadPaperIcon } from "@/common/icons/AIReadPaperIcon";
 import { AIReadPaper } from "./AIReadPaper";
 import LiteratureManage from "./LiteratureManage";
+import NoteManage from "./NoteManage";
 
 const Home: React.FC = () => {
   const [modalUpgradeOpen, setModalUpgradeOpen] = useState(false);
@@ -137,6 +139,11 @@ const Home: React.FC = () => {
       icon: <BookOutlined />,
       label: "文献管理",
     },
+    {
+      key: "noteManage",
+      icon: <EditOutlined />,
+      label: "笔记管理",
+    },
   ];
 
   const contents: Record<string, React.JSX.Element> = {
@@ -148,6 +155,7 @@ const Home: React.FC = () => {
     laboratory: <Developing />,
     aiReadPaper: <AIReadPaper />,
     literatureManage: <LiteratureManage />,
+    noteManage: <NoteManage />,
   };
 
   return (
