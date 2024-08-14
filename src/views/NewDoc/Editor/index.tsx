@@ -208,16 +208,6 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
       await putObject(file, uploadUrl);
       return publicUrl;
     },
-    // uploadFile: async (file: File) => {
-    //   const base64String = await new Promise<string>((resolve) => {
-    //     const fileReader = new FileReader();
-    //     fileReader.readAsDataURL(file);
-    //     fileReader.onload = () => {
-    //       resolve(fileReader.result?.toString()!);
-    //     };
-    //   });
-    //   return base64String;
-    // },
   });
 
   const handleMouseUp = () => {

@@ -26,25 +26,6 @@ const fetchInstance = {
     });
     return handleResponse(response);
   },
-  // put: async (url: string, data: any, config: RequestInit = {}) => {
-  //   const response = await fetch(`${baseUrl}${url}`, {
-  //     ...config,
-  //     method: "PUT",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       ...config.headers,
-  //     },
-  //     body: JSON.stringify(data),
-  //   });
-  //   return handleResponse(response);
-  // },
-  // delete: async (url: string, config: RequestInit = {}) => {
-  //   const response = await fetch(`${baseUrl}${url}`, {
-  //     ...config,
-  //     method: "DELETE",
-  //   });
-  //   return handleResponse(response);
-  // },
 };
 
 const handleResponse = async (response: Response) => {

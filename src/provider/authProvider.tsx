@@ -1,4 +1,4 @@
-import axios from "axios";
+import { axios } from "@/api/AxiosInstance";
 import React from "react";
 import {
   ReactNode,

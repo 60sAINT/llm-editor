@@ -10,7 +10,6 @@ export class PdfApi {
         headers: { "X-Authorization": token },
       }
     );
-    console.log(result);
     return result.data.data;
   }
   public async updateTags(
@@ -34,6 +33,7 @@ export class PdfApi {
   ) {
     const result = await axios.post(
       `${apikeyPrefix}/paper/comment?paper_id=${paper_id}&new_comment=${newComment}`,
+      {},
       {
         headers: { "X-Authorization": token },
       }

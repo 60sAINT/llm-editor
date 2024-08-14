@@ -13,7 +13,12 @@ import { showMessage } from "@/common/utils/message";
 import { useAuth } from "@/provider/authProvider";
 import { useDispatch, useNewDocState } from "../utils/provider";
 
-const Status = () => {
+export interface StatusProps {
+  is_note?: boolean;
+  paper_id?: string;
+}
+
+const Status: React.FC<StatusProps> = ({ is_note, paper_id }) => {
   const { token } = useAuth() as { token: string };
   const { isSaved, docId, title, docContent } = useDocState();
   const { saveKeyDown } = useNewDocState();
@@ -31,7 +36,13 @@ const Status = () => {
   }, [saveKeyDown]);
   // 保存新文档
   const { runAsync: saveNewDoc } = useRequest(async (title, content) => {
-    const res = await docApi.newDoc(`Bearer ${token}` || "", title, content);
+    const res = await docApi.newDoc({
+      token: `Bearer ${token}` || "",
+      title,
+      content,
+      is_note,
+      paper_id,
+    });
     setSaveState(IsSavedType.True);
     return res;
   });

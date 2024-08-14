@@ -1,4 +1,4 @@
-import { Col, Popover, Row } from "antd";
+import { Col, Popover, Row, Tooltip } from "antd";
 import React from "react";
 import { ProfileProps } from "../../interface";
 import AuthorList from "../../components/AuthorList";
@@ -12,14 +12,17 @@ export const Profile: React.FC<ProfileProps> = ({ paperInformation }) => {
       <Popover
         placement="leftTop"
         title={
-          <a
-            className="text-read-paper-blue"
-            onClick={() => {
-              window.open(paperInformation.detail_url, "_blank");
-            }}
-          >
-            {paperInformation.title}
-          </a>
+          <Tooltip title={paperInformation.title}>
+            <a
+              className="text-read-paper-blue max-w-[425px] overflow-hidden text-ellipsis line-clamp-1 inline-block"
+              style={{ display: "-webkit-box" }}
+              onClick={() => {
+                window.open(paperInformation.detail_url, "_blank");
+              }}
+            >
+              {paperInformation.title}
+            </a>
+          </Tooltip>
         }
         content={
           <div className="mb-1">
@@ -38,7 +41,7 @@ export const Profile: React.FC<ProfileProps> = ({ paperInformation }) => {
           </div>
         }
       >
-        <div className="leading-10 h-10 text-neutral-900 hover:bg-neutral-100 cursor-pointer rounded-sm px-2">
+        <div className="leading-6 min-h-10 h-auto text-neutral-900 hover:bg-neutral-100 cursor-pointer rounded-sm px-2">
           {paperInformation.title}
         </div>
       </Popover>
@@ -55,7 +58,7 @@ export const Profile: React.FC<ProfileProps> = ({ paperInformation }) => {
           </div>
         }
       >
-        <div className="leading-10 h-10 text-neutral-900 hover:bg-neutral-100 cursor-pointer rounded-sm px-2 overflow-hidden">
+        <div className="leading-10 h-10 text-neutral-900 hover:bg-neutral-100 cursor-pointer rounded-sm px-2 whitespace-nowrap overflow-hidden text-ellipsis">
           {/* {paperInformation.author} */}
           <AuthorList authors={paperInformation.author} disabled={true} />
         </div>

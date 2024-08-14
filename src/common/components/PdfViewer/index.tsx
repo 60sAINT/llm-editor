@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   Button,
   DocumentLoadEvent,
@@ -16,7 +16,6 @@ import { attachmentPlugin } from "@react-pdf-viewer/attachment";
 import { toolbarPlugin } from "@react-pdf-viewer/toolbar";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import { fullScreenPlugin } from "@react-pdf-viewer/full-screen";
-// Import the styles
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/attachment/lib/styles/index.css";
 import "@react-pdf-viewer/bookmark/lib/styles/index.css";
@@ -49,12 +48,11 @@ import { useLocation } from "react-router-dom";
 import { useRequest } from "@/hooks/useRequest";
 import { showMessage } from "@/common/utils/message";
 import { Skeleton } from "antd";
+import { PaperInformationType } from "./interface";
 
-// 目录
 const VIEWER_CONTAINER_STYLE =
   "flex-1 [&>div>div>div>div>div:last-child>div:first-child]:hidden [&>div>div>div>div]:flex [&>div>div>div>div>div]:pt-0 [&>div>div>div>div>div:first-child]:w-[29.1%]";
 
-// 高亮
 interface Note {
   id: number;
   content: string;
@@ -63,26 +61,30 @@ interface Note {
 }
 
 const PdfViewer = () => {
+  const { token } = useAuth();
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
+  const pdfId = params.get("pdfId");
+
   const {
     run: getPaperInformation,
     data: paperInformation,
     loading: paperInformationLoading,
   } = useRequest(
     async () => {
-      const res = await pdfApi.getPaperById(`Bearer ${token}` || "", pdfId!);
+      const res = (await pdfApi.getPaperById(
+        `Bearer ${token}` || "",
+        pdfId!
+      )) as PaperInformationType;
       return res;
     },
     { manual: false }
   );
-  console.log(paperInformation);
 
-  // 附件
   const attachmentPluginInstance = attachmentPlugin();
   const { Attachments } = attachmentPluginInstance;
-  // 顶部工具栏
   const toolbarPluginInstance = toolbarPlugin();
   const { Toolbar } = toolbarPluginInstance;
-  // 目录
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
     sidebarTabs: (defaultTabs) =>
       defaultTabs.concat({
@@ -109,36 +111,33 @@ const PdfViewer = () => {
   });
   const bookmarkPluginInstance =
     defaultLayoutPluginInstance.bookmarkPluginInstance;
-  // 全屏
   const fullScreenPluginInstance = fullScreenPlugin();
-  // 下载
   const getFilePluginInstance = getFilePlugin({
     fileNameGenerator: (file: OpenFile) => {
-      // `file.name` is the URL of opened file
       const fileName = file.name.substring(file.name.lastIndexOf("/") + 1);
       return `a-copy-of-${fileName}`;
     },
   });
-  // 笔记高亮
-  const [message, setMessage] = React.useState("");
-  const [notes, setNotes] = React.useState<Note[]>([]);
-  const notesContainerRef = React.useRef<HTMLDivElement | null>(null);
-  let noteId = notes.length;
-  console.log(notes);
+
+  const [message, setMessage] = useState("");
+  const [notes, setNotes] = useState<Note[]>([]);
+  const notesContainerRef = useRef<HTMLDivElement | null>(null);
+  const noteId = useRef(notes.length);
   const noteEles: Map<number, HTMLElement> = new Map();
-  const [currentDoc, setCurrentDoc] = React.useState<PdfJs.PdfDocument | null>(
-    null
+  const [currentDoc, setCurrentDoc] = useState<PdfJs.PdfDocument | null>(null);
+
+  const handleDocumentLoad = useCallback(
+    (e: DocumentLoadEvent) => {
+      setCurrentDoc(e.doc);
+      if (currentDoc && currentDoc !== e.doc) {
+        setNotes([]);
+      }
+      const { activateTab } = defaultLayoutPluginInstance;
+      activateTab(3);
+    },
+    [currentDoc]
   );
-  const handleDocumentLoad = (e: DocumentLoadEvent) => {
-    setCurrentDoc(e.doc);
-    if (currentDoc && currentDoc !== e.doc) {
-      // User opens new document
-      setNotes([]);
-    }
-    //
-    const { activateTab } = defaultLayoutPluginInstance;
-    activateTab(3);
-  };
+
   const renderHighlightTarget = (props: RenderHighlightTargetProps) => (
     <div
       style={{
@@ -163,16 +162,17 @@ const PdfViewer = () => {
       />
     </div>
   );
+
   const renderHighlightContent = (props: RenderHighlightContentProps) => {
     const addNote = () => {
       if (message !== "") {
         const note: Note = {
-          id: ++noteId,
+          id: ++noteId.current,
           content: message,
           highlightAreas: props.highlightAreas,
           quote: props.selectedText,
         };
-        setNotes(notes.concat([note]));
+        setNotes((prevNotes) => prevNotes.concat([note]));
         props.cancel();
       }
     };
@@ -213,6 +213,7 @@ const PdfViewer = () => {
       </div>
     );
   };
+
   const { activateTab } = defaultLayoutPluginInstance;
   const jumpToNote = (note: Note) => {
     activateTab(3);
@@ -223,6 +224,7 @@ const PdfViewer = () => {
         .getBoundingClientRect().top;
     }
   };
+
   const renderHighlights = (props: RenderHighlightsProps) => (
     <div>
       {notes.map((note) => (
@@ -247,17 +249,21 @@ const PdfViewer = () => {
       ))}
     </div>
   );
+
   const highlightPluginInstance = highlightPlugin({
     renderHighlightTarget,
     renderHighlightContent,
     renderHighlights,
   });
+
   const { jumpToHighlightArea } = highlightPluginInstance;
-  React.useEffect(() => {
+
+  useEffect(() => {
     return () => {
       noteEles.clear();
     };
   }, []);
+
   const sidebarNotes = (
     <div
       ref={notesContainerRef}
@@ -302,78 +308,73 @@ const PdfViewer = () => {
     </div>
   );
 
-  // 图表提取的高亮
   const defaultchartHighlightPluginInstance = highlightPlugin({
     renderHighlights: renderchartHighlights,
     trigger: Trigger.None,
   });
+
   const [chartHighlightPluginInstance, setChartHighlightPluginInstance] =
     useState(defaultchartHighlightPluginInstance);
+
   const getChartHighlightPluginInstance = (
     chartHighlightPluginInstance: React.SetStateAction<HighlightPlugin>
   ) => setChartHighlightPluginInstance(chartHighlightPluginInstance);
 
-  // 页面导航
   const pageNavigationPluginInstance = pageNavigationPlugin();
   const { jumpToPage } = pageNavigationPluginInstance;
   const { CurrentPageLabel } = pageNavigationPluginInstance;
   const [currentPage, setCurrentPage] = useState<number>(0);
-  // todo: 从后端读到数据后跳转到指定页面，并弹出“已跳转到上次阅读位置消息框”
-  useEffect(() => {
-    if (paperInformation) {
-      if (paperInformation.last_read_page > -1) {
-        jumpToPage(paperInformation.last_read_page);
-        showMessage("已跳转至上次阅读位置");
-      }
-    }
-  }, [paperInformation]);
 
-  // 缩放
+  useEffect(() => {
+    if (paperInformation && paperInformation.last_read_page > -1) {
+      jumpToPage(paperInformation.last_read_page);
+      showMessage("已跳转至上次阅读位置");
+    }
+  }, []);
+
   const customZoomPluginInstance = customZoomPlugin();
   const { zoomTo } = customZoomPluginInstance;
-  zoomTo(1);
-
-  // 根据pdfId获取pdf各种信息
-  const { token } = useAuth();
-  const { search } = useLocation();
-  const params = new URLSearchParams(search);
-  const pdfId = params.get("pdfId");
+  useEffect(() => {
+    zoomTo(1);
+  }, []);
 
   return (
     <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
       <div className="border border-black/30 flex flex-col h-screen">
         <div className="p-2.5 bg-home-border [&>div>div>div>div]:h-8 [&>div>div:first-child>div:last-child>div>div]:h-8 [&>div>div:first-child>div:first-child>div>div>first-child]:h-8 [&>div>div:first-child>div:nth-child(2)>div>div]:h-8 [&>div>div:last-child>div>div>div]:h-8 [&>div>div:last-child>div:last-child>div>div]:h-auto">
-          {/* 顶部工具栏 */}
           <Toolbar />
         </div>
         <div className="flex h-pdf-viewer">
           <div className="flex-1">
             <div className="flex flex-1 overflow-hidden h-full">
               <div className={VIEWER_CONTAINER_STYLE}>
-                <Viewer
-                  fileUrl="http://43.138.11.21:9000/public/MiniCache.pdf"
-                  plugins={[
-                    attachmentPluginInstance,
-                    bookmarkPluginInstance,
-                    toolbarPluginInstance,
-                    defaultLayoutPluginInstance,
-                    fullScreenPluginInstance,
-                    getFilePluginInstance,
-                    highlightPluginInstance,
-                    pageNavigationPluginInstance,
-                    chartHighlightPluginInstance,
-                    customZoomPluginInstance,
-                  ]}
-                  onDocumentLoad={handleDocumentLoad}
-                />
+                <Skeleton
+                  active
+                  loading={paperInformationLoading}
+                  paragraph={{ rows: 13 }}
+                  className="p-10"
+                >
+                  <Viewer
+                    fileUrl={paperInformation?.pdf_url!}
+                    plugins={[
+                      attachmentPluginInstance,
+                      bookmarkPluginInstance,
+                      toolbarPluginInstance,
+                      defaultLayoutPluginInstance,
+                      fullScreenPluginInstance,
+                      getFilePluginInstance,
+                      highlightPluginInstance,
+                      pageNavigationPluginInstance,
+                      chartHighlightPluginInstance,
+                      customZoomPluginInstance,
+                    ]}
+                    onDocumentLoad={handleDocumentLoad}
+                  />
+                </Skeleton>
               </div>
             </div>
           </div>
-          {/* 右侧工具栏 */}
           <div className="w-[30%] border-l border-slate-300 overflow-auto">
-            {/* <Attachments /> */}
-            {/* todo: 点击按钮添加附件 */}
-            {/* <Button onClick={() => jumpToPage(5)}>jumpToPage5</Button> */}
             <Skeleton active loading={paperInformationLoading} className="m-5">
               {paperInformation && (
                 <RightToolBar
@@ -385,9 +386,8 @@ const PdfViewer = () => {
                 />
               )}
             </Skeleton>
-            <CurrentPageLabel>
+            {/* <CurrentPageLabel>
               {(props: RenderCurrentPageLabelProps) => {
-                console.log(props.currentPage);
                 setCurrentPage(props.currentPage);
                 return (
                   <span>{`${props.currentPage + 1} of ${
@@ -395,7 +395,7 @@ const PdfViewer = () => {
                   }`}</span>
                 );
               }}
-            </CurrentPageLabel>
+            </CurrentPageLabel> */}
           </div>
         </div>
       </div>

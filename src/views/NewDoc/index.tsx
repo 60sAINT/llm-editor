@@ -26,8 +26,17 @@ import classNames from "classnames";
 interface NewDocProps {
   className?: string;
   editorOnly?: boolean;
+  is_note?: boolean;
+  note_id?: string;
+  paper_id?: string;
 }
-const NewDoc: React.FC<NewDocProps> = ({ className, editorOnly }) => {
+const NewDoc: React.FC<NewDocProps> = ({
+  className,
+  editorOnly,
+  is_note,
+  note_id,
+  paper_id,
+}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [docState, docDispatch] = useReducer(docReducer, initialDocState);
   const [showCards, setShowCards] = useState<boolean>(false);
@@ -54,7 +63,11 @@ const NewDoc: React.FC<NewDocProps> = ({ className, editorOnly }) => {
   const [title, setTitle] = useState("");
   const { search } = useLocation();
   const { token } = useAuth();
-  const docId = useDocId(search) as string;
+  let docId = useDocId(search) as string;
+  // 如果是pdfViewer右侧边栏的笔记，则把根据pdfId获取到的对应笔记docId传给docId
+  if (note_id) {
+    docId = note_id;
+  }
   const { data: doc } = useRequest(
     async () => {
       const res = await docApi.getDocByDocId(`Bearer ${token}` || "", docId);
@@ -152,6 +165,8 @@ const NewDoc: React.FC<NewDocProps> = ({ className, editorOnly }) => {
                 getShowCards={getShowCards}
                 getFullText={setFullText}
                 getIfStartUnfold={getIfStartUnfold}
+                is_note={is_note}
+                paper_id={paper_id}
               />
               <Row className="flex-grow justify-center items-start py-4 px-2">
                 {(fullText || fullTextLoading) && !isOutlineVisible ? (

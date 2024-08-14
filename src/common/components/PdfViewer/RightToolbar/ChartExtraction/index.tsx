@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import wenxin from "@/assets/wenxin.png";
 import {
   HighlightPlugin,
   highlightPlugin,
   RenderHighlightsProps,
   Trigger,
 } from "@react-pdf-viewer/highlight";
-import { PaperInformationType } from "../../interface";
+import { BoundaryType, PaperInformationType } from "../../interface";
+import { DownloadOutlined } from "@ant-design/icons";
 
 interface ChartExtractionProps {
   jumpToPage: (targetPage: number) => void;
@@ -19,19 +19,12 @@ interface ChartExtractionProps {
 export const ChartExtraction: React.FC<ChartExtractionProps> = ({
   jumpToPage,
   setChartHighlightPluginInstance,
+  paperInformation,
 }) => {
-  const areas = [
-    {
-      left: 17.647058823529413,
-      top: 8.90909090909091,
-      height: 18.545454545454547,
-      width: 64.70588235294117,
-      pageIndex: 5,
-    },
-  ];
-  const renderchartHighlights = (props: RenderHighlightsProps) => {
-    const [highlight, setHighlight] = useState(true);
+  const [areas, setAreas] = useState<BoundaryType[]>([]);
+  const [highlight, setHighlight] = useState(false);
 
+  const renderchartHighlights = (props: RenderHighlightsProps) => {
     useEffect(() => {
       let timer: string | number | NodeJS.Timeout | undefined;
       if (highlight) {
@@ -65,36 +58,54 @@ export const ChartExtraction: React.FC<ChartExtractionProps> = ({
       </div>
     );
   };
+
   const chartHighlightPluginInstance = highlightPlugin({
     renderHighlights: renderchartHighlights,
     trigger: Trigger.None,
   });
-  // 设置上下文值
+
+  useEffect(() => {
+    setChartHighlightPluginInstance(chartHighlightPluginInstance);
+  }, [areas]);
+
+  const handleItemClick = (figure: any) => {
+    jumpToPage(figure.page);
+    figure.boundary.pageIndex = figure.page;
+    setAreas([figure.boundary]);
+    setHighlight(true);
+  };
+
+  const handleDownloadClick = (url: string) => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = url.split("/").pop() || "download";
+    link.click();
+  };
 
   return (
-    <ul>
-      <li
-        className="mb-3 hover:bg-neutral-200 px-5"
-        onClick={() => {
-          jumpToPage(5);
-          setChartHighlightPluginInstance(chartHighlightPluginInstance);
-        }}
-      >
-        <div className="py-1.5">
-          Figure 3: The illustration of the proposed method MiniCache. (a)
-          depicts the cross-layer compression process. We fetch the KV caches,
-          from layers l and l − 1, and merge them into shared states via Eq.
-          (3). Additionally, we compute the ℓ2 norm for the caches to obtain
-          their magnitudes. Furthermore, we select unmergable tokens for
-          retention, then store merged cache, retention tokens, and magnitudes
-          at layer l in C. (b) demonstrates the restoration process for layers l
-          and l − 1, which includes magnitude rescaling in Eq. (2) and retention
-          token recovery.
-        </div>
-        <div className="p-1 bg-neutral-100 rounded">
-          <img src={wenxin} />
-        </div>
-      </li>
-    </ul>
+    <div>
+      <ul>
+        {paperInformation.figures.figures.map((figure, index) => (
+          <li
+            key={index}
+            className="mb-3 hover:bg-neutral-200 px-5"
+            onClick={() => {
+              handleItemClick(figure);
+            }}
+          >
+            <div className="py-1.5">{figure.caption}</div>
+            <div className="p-1 bg-neutral-100 rounded relative group/download">
+              <img src={figure.url} alt={figure.caption} />
+              <div
+                className="invisible group-hover/download:visible w-5 h-5 flex justify-center items-center bg-black/25 rounded-full absolute right-2 bottom-2 cursor-pointer"
+                onClick={() => handleDownloadClick(figure.url)}
+              >
+                <DownloadOutlined className="text-white text-sm" />
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };

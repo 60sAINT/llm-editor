@@ -14,11 +14,15 @@ interface TopBarProps {
   getShowCards: (showCards: boolean) => void;
   getFullText: (text: string) => void;
   getIfStartUnfold: (ifStartUnfold: boolean) => void;
+  is_note?: boolean;
+  paper_id?: string;
 }
 const TopBar: React.FC<TopBarProps> = ({
   getShowCards: sendShowCardsToTopBar,
   getFullText,
   getIfStartUnfold: sendIfStartUnfold,
+  is_note,
+  paper_id,
 }) => {
   const [animate, setAnimate] = useState(false);
   const [animateReverse, setAnimateReverse] = useState(false);
@@ -51,14 +55,14 @@ const TopBar: React.FC<TopBarProps> = ({
       }`}
     >
       <Row className="w-full flex items-center justify-between bg-white py-4 h-14 z-100 sticky top-0">
-        <Col span={9}>
+        <Col span={is_note ? 12 : 9}>
           <div className="flex items-center w0full justify-start">
             <ExitButton />
             <TopBarTitle />
-            <Status />
+            <Status is_note={is_note} paper_id={paper_id} />
           </div>
         </Col>
-        <Col span={6} className="flex justify-center">
+        <Col span={is_note ? 0 : 6} className="flex justify-center">
           <div className="flex items-center justify-between w-[300px]">
             <ActionButton label="开始" onClick={handleStartClick} />
             <ActionButton label="效率" onClick={handleEfficiencyClick} />
@@ -69,7 +73,7 @@ const TopBar: React.FC<TopBarProps> = ({
             />
           </div>
         </Col>
-        <Col span={9}>
+        <Col span={is_note ? 12 : 9}>
           <div className="flex items-center mr-1 justify-end">
             <Avatar
               icon={<UserOutlined />}

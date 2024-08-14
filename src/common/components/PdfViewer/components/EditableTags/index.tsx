@@ -52,7 +52,7 @@ const EditableTags: React.FC<EditableTagsProps> = ({ initialTags }) => {
       onClick={() => setEditing(true)}
       style={{ cursor: "pointer" }}
     >
-      {!editing && tags.length > 0 ? (
+      {!editing && tags?.length > 0 ? (
         tags.map((tag) => (
           <Tag
             key={tag}
@@ -97,7 +97,7 @@ const EditableTags: React.FC<EditableTagsProps> = ({ initialTags }) => {
             ))}
         </Select>
       )}
-      {tags.length === 0 && editing && (
+      {tags && tags.length === 0 && editing && (
         <div style={{ width: "100%", height: "0px" }}></div>
       )}
     </div>

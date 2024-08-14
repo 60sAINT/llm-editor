@@ -13,20 +13,32 @@ export type RenameDocParams = {
   doc_id: string;
   new_doc_name: string;
 };
+export type NewDocParams = {
+  token: string;
+  title: string;
+  content: string;
+  is_note?: boolean;
+  dir_id?: string;
+  paper_id?: string;
+};
 
 export class DocApi {
-  public async newDoc(
-    token: string,
-    title: string,
-    content: string,
-    dir_id?: string
-  ) {
+  public async newDoc({
+    token,
+    title,
+    content,
+    is_note,
+    dir_id,
+    paper_id,
+  }: NewDocParams) {
     const result = await axios.post(
       `${apikeyPrefix}/doc/new`,
       {
         title,
         content,
         dir_id,
+        is_note,
+        paper_id,
       },
       {
         headers: { "X-Authorization": token },

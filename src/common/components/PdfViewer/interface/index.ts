@@ -1,14 +1,23 @@
+export interface BoundaryType {
+  height: number;
+  left: number;
+  top: number;
+  width: number;
+  pageIndex: number;
+}
+
 export interface PaperInformationType {
   doc_id: string;
   tags: [string];
   comment: string;
   records: string;
-  page_count: 0;
-  last_read_page: 0;
+  page_count: number;
+  last_read_page: number;
   created_at: string;
   detail_url: string;
   last_read_at: string;
   paper_id: string;
+  pdf_url: string;
   doi: string;
   title: string;
   author: Array<string>;
@@ -18,22 +27,17 @@ export interface PaperInformationType {
     figures: [
       {
         caption: string;
-        page: 0;
+        page: number;
         url: string;
         type: "Figure";
-        boundary: {
-          left: 0;
-          top: 0;
-          width: 0;
-          height: 0;
-        };
+        boundary: BoundaryType;
       }
     ];
   };
   references: {
     references: [
       {
-        key: 0;
+        key: number;
         title: string;
         author: string;
         published_at: string;
