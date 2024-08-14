@@ -21,6 +21,12 @@ import { BlockNoteEditor } from "@blocknote/core";
 import { useAuth } from "@/provider/authProvider";
 import Outline from "./Outline";
 import { MenuOutlined } from "@ant-design/icons";
+import {
+  LiveblocksProvider,
+  RoomProvider,
+  ClientSideSuspense,
+} from "@liveblocks/react/suspense";
+import { defaultApi } from "./api";
 
 const NewDoc = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -47,6 +53,7 @@ const NewDoc = () => {
   const [docData, setDocData] = useState();
   const [editor, setEditor] = useState<BlockNoteEditor>();
   const [title, setTitle] = useState("");
+  const [isShared, setIsShared] = useState(false);
   const { search } = useLocation();
   const { token } = useAuth();
   const docId = useDocId(search) as string;
@@ -54,6 +61,8 @@ const NewDoc = () => {
     async () => {
       const res = await docApi.getDocByDocId(`Bearer ${token}` || "", docId);
       setTitle(res.data.doc.title);
+      setIsShared(res.data.doc.is_shared);
+      console.log(`isShared: ${res.data.doc.is_shared}`);
       return res.data.doc;
     },
     { manual: false }
@@ -193,6 +202,22 @@ const NewDoc = () => {
                       <>
                         <DocTitle />
                         <Editor fullFormat={fullFormat} />
+                      </>
+                    ) : isShared ? (
+                      <>
+                        <DocTitle />
+                        <LiveblocksProvider
+                          authEndpoint={async () => {
+                            const res = await defaultApi.getColAuthToken();
+                            return {
+                              token: res.token,
+                            };
+                          }}
+                        >
+                          <RoomProvider id={docId}>
+                            <Editor />
+                          </RoomProvider>
+                        </LiveblocksProvider>
                       </>
                     ) : docData ? (
                       <>

@@ -31,6 +31,14 @@ export class DefaultApi {
       },
     });
   }
+
+  public async getColAuthToken() {
+    const result = await axiosInstance.get(
+      `${apikeyPrefix}/collaboration/auth`
+    );
+    console.log(result.data.data);
+    return result.data.data;
+  }
 }
 
 export const defaultApi = new DefaultApi();

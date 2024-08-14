@@ -260,18 +260,18 @@ function BlockNote({
       await putObject(file, uploadUrl);
       return publicUrl;
     },
-    collaboration: {
-      provider,
+    // collaboration: {
+    //   provider,
 
-      // Where to store BlockNote data in the Y.Doc:
-      fragment: doc.getXmlFragment("document-store"),
+    //   // Where to store BlockNote data in the Y.Doc:
+    //   fragment: doc.getXmlFragment("document-store"),
 
-      // Information for this user:
-      user: {
-        name: "My Username",
-        color: "#ff0000",
-      },
-    },
+    //   // Information for this user:
+    //   user: {
+    //     name: "My Username",
+    //     color: "#ff0000",
+    //   },
+    // },
     // uploadFile: async (file: File) => {
     //   const base64String = await new Promise<string>((resolve) => {
     //     const fileReader = new FileReader();
