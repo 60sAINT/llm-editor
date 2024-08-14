@@ -13,6 +13,33 @@ export class PdfApi {
     console.log(result);
     return result.data.data;
   }
+  public async updateTags(
+    token: string,
+    paper_id: string,
+    newTags: Array<string>
+  ) {
+    const result = await axios.post(
+      `${apikeyPrefix}/paper/tags?paper_id=${paper_id}`,
+      newTags,
+      {
+        headers: { "X-Authorization": token },
+      }
+    );
+    return result.data.data;
+  }
+  public async updateComment(
+    token: string,
+    paper_id: string,
+    newComment: string
+  ) {
+    const result = await axios.post(
+      `${apikeyPrefix}/paper/comment?paper_id=${paper_id}&new_comment=${newComment}`,
+      {
+        headers: { "X-Authorization": token },
+      }
+    );
+    return result.data.data;
+  }
 }
 
 export const pdfApi = new PdfApi();

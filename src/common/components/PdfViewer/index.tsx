@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   DocumentLoadEvent,
@@ -36,7 +36,10 @@ import {
   Trigger,
   HighlightPlugin,
 } from "@react-pdf-viewer/highlight";
-import { pageNavigationPlugin } from "@react-pdf-viewer/page-navigation";
+import {
+  pageNavigationPlugin,
+  RenderCurrentPageLabelProps,
+} from "@react-pdf-viewer/page-navigation";
 import { RightToolBar } from "./RightToolbar";
 import customZoomPlugin from "./plugins/customZoomPlugin";
 import { renderchartHighlights } from "./plugins/renderchartHighlights";
@@ -44,6 +47,8 @@ import { pdfApi } from "./api";
 import { useAuth } from "@/provider/authProvider";
 import { useLocation } from "react-router-dom";
 import { useRequest } from "@/hooks/useRequest";
+import { showMessage } from "@/common/utils/message";
+import { Skeleton } from "antd";
 
 // 目录
 const VIEWER_CONTAINER_STYLE =
@@ -58,6 +63,19 @@ interface Note {
 }
 
 const PdfViewer = () => {
+  const {
+    run: getPaperInformation,
+    data: paperInformation,
+    loading: paperInformationLoading,
+  } = useRequest(
+    async () => {
+      const res = await pdfApi.getPaperById(`Bearer ${token}` || "", pdfId!);
+      return res;
+    },
+    { manual: false }
+  );
+  console.log(paperInformation);
+
   // 附件
   const attachmentPluginInstance = attachmentPlugin();
   const { Attachments } = attachmentPluginInstance;
@@ -298,6 +316,17 @@ const PdfViewer = () => {
   // 页面导航
   const pageNavigationPluginInstance = pageNavigationPlugin();
   const { jumpToPage } = pageNavigationPluginInstance;
+  const { CurrentPageLabel } = pageNavigationPluginInstance;
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  // todo: 从后端读到数据后跳转到指定页面，并弹出“已跳转到上次阅读位置消息框”
+  useEffect(() => {
+    if (paperInformation) {
+      if (paperInformation.last_read_page > -1) {
+        jumpToPage(paperInformation.last_read_page);
+        showMessage("已跳转至上次阅读位置");
+      }
+    }
+  }, [paperInformation]);
 
   // 缩放
   const customZoomPluginInstance = customZoomPlugin();
@@ -309,15 +338,6 @@ const PdfViewer = () => {
   const { search } = useLocation();
   const params = new URLSearchParams(search);
   const pdfId = params.get("pdfId");
-  const { data: paperInformation, loading: paperInformationLoading } =
-    useRequest(
-      async () => {
-        const res = await pdfApi.getPaperById(`Bearer ${token}` || "", pdfId!);
-        return res;
-      },
-      { manual: false }
-    );
-  console.log(paperInformation);
 
   return (
     <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
@@ -354,10 +374,28 @@ const PdfViewer = () => {
             {/* <Attachments /> */}
             {/* todo: 点击按钮添加附件 */}
             {/* <Button onClick={() => jumpToPage(5)}>jumpToPage5</Button> */}
-            <RightToolBar
-              jumpToPage={jumpToPage}
-              setChartHighlightPluginInstance={getChartHighlightPluginInstance}
-            />
+            <Skeleton active loading={paperInformationLoading} className="m-5">
+              {paperInformation && (
+                <RightToolBar
+                  jumpToPage={jumpToPage}
+                  setChartHighlightPluginInstance={
+                    getChartHighlightPluginInstance
+                  }
+                  paperInformation={paperInformation}
+                />
+              )}
+            </Skeleton>
+            <CurrentPageLabel>
+              {(props: RenderCurrentPageLabelProps) => {
+                console.log(props.currentPage);
+                setCurrentPage(props.currentPage);
+                return (
+                  <span>{`${props.currentPage + 1} of ${
+                    props.numberOfPages
+                  }`}</span>
+                );
+              }}
+            </CurrentPageLabel>
           </div>
         </div>
       </div>

@@ -9,7 +9,8 @@ module.exports = {
         'dropdown-text': "#606266",
         'topbar-text': "#4b4b4b",
         "topbar-insert-dropdown-text": "#333333",
-        'home-border': "#eee"
+        'home-border': "#eee",
+        'read-paper-blue': "#1f71e0"
       },
       boxShadow: {
         'menu-switcher': '0 1px 4px rgba(0,0,0,.04),0 4px 10px rgba(0,0,0,.08)',

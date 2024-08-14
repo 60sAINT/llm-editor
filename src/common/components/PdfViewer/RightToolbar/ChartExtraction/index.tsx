@@ -6,12 +6,14 @@ import {
   RenderHighlightsProps,
   Trigger,
 } from "@react-pdf-viewer/highlight";
+import { PaperInformationType } from "../../interface";
 
 interface ChartExtractionProps {
   jumpToPage: (targetPage: number) => void;
   setChartHighlightPluginInstance: (
     chartHighlightPluginInstance: HighlightPlugin
   ) => void;
+  paperInformation: PaperInformationType;
 }
 
 export const ChartExtraction: React.FC<ChartExtractionProps> = ({

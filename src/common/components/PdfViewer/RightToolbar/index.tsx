@@ -4,17 +4,20 @@ import React from "react";
 import { ChartExtraction } from "./ChartExtraction";
 import { HighlightPlugin } from "@react-pdf-viewer/highlight";
 import { Profile } from "./Profile";
+import { PaperInformationType } from "../interface";
 
 interface RightToolBarProps {
   jumpToPage: (targetPage: number) => void;
   setChartHighlightPluginInstance: (
     chartHighlightPluginInstance: HighlightPlugin
   ) => void;
+  paperInformation: PaperInformationType;
 }
 
 export const RightToolBar: React.FC<RightToolBarProps> = ({
   jumpToPage,
   setChartHighlightPluginInstance,
+  paperInformation,
 }) => {
   const rightToolbar = [
     {
@@ -24,13 +27,14 @@ export const RightToolBar: React.FC<RightToolBarProps> = ({
         <ChartExtraction
           jumpToPage={jumpToPage}
           setChartHighlightPluginInstance={setChartHighlightPluginInstance}
+          paperInformation={paperInformation}
         />
       ),
     },
     {
       label: "资料",
       key: "profile",
-      children: <Profile />,
+      children: <Profile paperInformation={paperInformation} />,
     },
     {
       label: "笔记",
@@ -46,7 +50,8 @@ export const RightToolBar: React.FC<RightToolBarProps> = ({
   return (
     <Tabs
       className="[&>.ant-tabs-nav]:!mb-0 [&>.ant-tabs-nav]:px-5 [&>.ant-tabs-nav]:pt-2"
-      defaultActiveKey="chartExtraction"
+      // defaultActiveKey="chartExtraction"
+      defaultActiveKey="profile"
       items={rightToolbar.map((item) => {
         return {
           label: item.label,
