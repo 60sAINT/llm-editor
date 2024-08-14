@@ -1,3 +1,5 @@
+import { HighlightArea } from "@react-pdf-viewer/highlight";
+
 export interface BoundaryType {
   height: number;
   left: number;
@@ -10,7 +12,7 @@ export interface PaperInformationType {
   doc_id: string;
   tags: [string];
   comment: string;
-  records: string;
+  records: Array<Note>;
   page_count: number;
   last_read_page: number;
   created_at: string;
@@ -49,4 +51,11 @@ export interface PaperInformationType {
 
 export interface ProfileProps {
   paperInformation: PaperInformationType;
+}
+
+export interface Note {
+  id: number;
+  content: string;
+  highlightAreas: HighlightArea[];
+  quote: string;
 }

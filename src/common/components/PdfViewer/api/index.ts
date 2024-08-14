@@ -1,6 +1,18 @@
 import { axios } from "@/api/AxiosInstance";
+import { Note } from "../interface";
 
 const apikeyPrefix = "/api/v1";
+
+export interface UpdateRecordsParams {
+  token: string;
+  paper_id: string;
+  newRecords: Array<Note>;
+}
+export interface UpdateLastReadPageParams {
+  token: string;
+  paper_id: string;
+  page: number;
+}
 
 export class PdfApi {
   public async getPaperById(token: string, paper_id: string) {
@@ -34,6 +46,20 @@ export class PdfApi {
     const result = await axios.post(
       `${apikeyPrefix}/paper/comment?paper_id=${paper_id}&new_comment=${newComment}`,
       {},
+      {
+        headers: { "X-Authorization": token },
+      }
+    );
+    return result.data.data;
+  }
+  public async updateRecords({
+    token,
+    paper_id,
+    newRecords,
+  }: UpdateRecordsParams) {
+    const result = await axios.post(
+      `${apikeyPrefix}/paper/records?paper_id=${paper_id}`,
+      newRecords,
       {
         headers: { "X-Authorization": token },
       }

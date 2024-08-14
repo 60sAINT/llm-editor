@@ -26,7 +26,6 @@ import "@react-pdf-viewer/page-navigation/lib/styles/index.css";
 import "./index.css";
 import { getFilePlugin } from "@react-pdf-viewer/get-file";
 import {
-  HighlightArea,
   highlightPlugin,
   MessageIcon,
   RenderHighlightContentProps,
@@ -35,10 +34,7 @@ import {
   Trigger,
   HighlightPlugin,
 } from "@react-pdf-viewer/highlight";
-import {
-  pageNavigationPlugin,
-  RenderCurrentPageLabelProps,
-} from "@react-pdf-viewer/page-navigation";
+import { pageNavigationPlugin } from "@react-pdf-viewer/page-navigation";
 import { RightToolBar } from "./RightToolbar";
 import customZoomPlugin from "./plugins/customZoomPlugin";
 import { renderchartHighlights } from "./plugins/renderchartHighlights";
@@ -46,19 +42,11 @@ import { pdfApi } from "./api";
 import { useAuth } from "@/provider/authProvider";
 import { useLocation } from "react-router-dom";
 import { useRequest } from "@/hooks/useRequest";
-import { showMessage } from "@/common/utils/message";
 import { Skeleton } from "antd";
-import { PaperInformationType } from "./interface";
+import { Note, PaperInformationType } from "./interface";
 
 const VIEWER_CONTAINER_STYLE =
   "flex-1 [&>div>div>div>div>div:last-child>div:first-child]:hidden [&>div>div>div>div]:flex [&>div>div>div>div>div]:pt-0 [&>div>div>div>div>div:first-child]:w-[29.1%]";
-
-interface Note {
-  id: number;
-  content: string;
-  highlightAreas: HighlightArea[];
-  quote: string;
-}
 
 const PdfViewer = () => {
   const { token } = useAuth();
@@ -66,23 +54,27 @@ const PdfViewer = () => {
   const params = new URLSearchParams(search);
   const pdfId = params.get("pdfId");
 
-  const {
-    run: getPaperInformation,
-    data: paperInformation,
-    loading: paperInformationLoading,
-  } = useRequest(
-    async () => {
-      const res = (await pdfApi.getPaperById(
-        `Bearer ${token}` || "",
-        pdfId!
-      )) as PaperInformationType;
-      return res;
-    },
-    { manual: false }
-  );
+  const { data: paperInformation, loading: paperInformationLoading } =
+    useRequest(
+      async () => {
+        const res = (await pdfApi.getPaperById(
+          `Bearer ${token}` || "",
+          pdfId!
+        )) as PaperInformationType;
+        return res;
+      },
+      { manual: false }
+    );
+  const { runAsync: updateRecords } = useRequest(async () => {
+    const res = await pdfApi.updateRecords({
+      token: `Bearer ${token}` || "",
+      paper_id: paperInformation?.paper_id!,
+      newRecords: notes,
+    });
+    return res;
+  });
 
   const attachmentPluginInstance = attachmentPlugin();
-  const { Attachments } = attachmentPluginInstance;
   const toolbarPluginInstance = toolbarPlugin();
   const { Toolbar } = toolbarPluginInstance;
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
@@ -121,6 +113,16 @@ const PdfViewer = () => {
 
   const [message, setMessage] = useState("");
   const [notes, setNotes] = useState<Note[]>([]);
+  useEffect(() => {
+    if (paperInformation?.records) {
+      setNotes(paperInformation?.records);
+    }
+  }, [paperInformation?.records]);
+  useEffect(() => {
+    if (paperInformation?.records !== notes) {
+      updateRecords();
+    }
+  }, [notes]);
   const notesContainerRef = useRef<HTMLDivElement | null>(null);
   const noteId = useRef(notes.length);
   const noteEles: Map<number, HTMLElement> = new Map();
@@ -272,7 +274,7 @@ const PdfViewer = () => {
         width: "100%",
       }}
     >
-      {notes.length === 0 && (
+      {notes && notes.length === 0 && (
         <div style={{ textAlign: "center" }}>There is no note</div>
       )}
       {notes.map((note) => {
@@ -322,21 +324,12 @@ const PdfViewer = () => {
 
   const pageNavigationPluginInstance = pageNavigationPlugin();
   const { jumpToPage } = pageNavigationPluginInstance;
-  const { CurrentPageLabel } = pageNavigationPluginInstance;
-  const [currentPage, setCurrentPage] = useState<number>(0);
-
-  useEffect(() => {
-    if (paperInformation && paperInformation.last_read_page > -1) {
-      jumpToPage(paperInformation.last_read_page);
-      showMessage("已跳转至上次阅读位置");
-    }
-  }, []);
 
   const customZoomPluginInstance = customZoomPlugin();
   const { zoomTo } = customZoomPluginInstance;
   useEffect(() => {
     zoomTo(1);
-  }, []);
+  }, [zoomTo]);
 
   return (
     <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
@@ -386,16 +379,6 @@ const PdfViewer = () => {
                 />
               )}
             </Skeleton>
-            {/* <CurrentPageLabel>
-              {(props: RenderCurrentPageLabelProps) => {
-                setCurrentPage(props.currentPage);
-                return (
-                  <span>{`${props.currentPage + 1} of ${
-                    props.numberOfPages
-                  }`}</span>
-                );
-              }}
-            </CurrentPageLabel> */}
           </div>
         </div>
       </div>
