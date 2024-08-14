@@ -11,5 +11,5 @@
 }
 
 .highlight-animation {
-  animation: highlightFade 1s ease-in-out infinite;
+  animation: highlightFade 1s ease-in-out 3;
 }
