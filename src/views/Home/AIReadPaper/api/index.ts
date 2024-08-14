@@ -10,6 +10,9 @@ export interface SearchPapersParams {
   token: string;
   search_input?: string;
 }
+export interface GetAllInterestTagsParams {
+  token: string;
+}
 
 export class PaperApi {
   public async getRecentPaperList(token: string) {
@@ -32,6 +35,12 @@ export class PaperApi {
       `${apikeyPrefix}/paper/search?search_input=${search_input}`,
       { headers: { "X-Authorization": token } }
     );
+    return result.data;
+  }
+  public async getAllInterestTags({ token }: GetAllInterestTagsParams) {
+    const result = await axios.get(`${apikeyPrefix}/paper/interest/all`, {
+      headers: { "X-Authorization": token },
+    });
     return result.data;
   }
 }

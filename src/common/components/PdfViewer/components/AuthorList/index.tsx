@@ -1,10 +1,18 @@
+import classNames from "classnames";
 import React, { useState } from "react";
 
 export interface AuthorListProps {
   authors: Array<string>;
   disabled?: boolean;
+  showAmount?: number;
+  className?: string;
 }
-const AuthorList: React.FC<AuthorListProps> = ({ authors, disabled }) => {
+const AuthorList: React.FC<AuthorListProps> = ({
+  authors,
+  disabled,
+  showAmount = 3,
+  className,
+}) => {
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpanded = () => {
@@ -12,9 +20,9 @@ const AuthorList: React.FC<AuthorListProps> = ({ authors, disabled }) => {
   };
 
   return (
-    <div className="max-w-[425px]">
+    <div className={classNames("max-w-[425px]", className)}>
       {/* <ul> */}
-      {authors.slice(0, 3).map((author, index) => (
+      {authors.slice(0, showAmount).map((author, index) => (
         <span
           key={index}
           className="after:content-['/'] after:px-2 text-xs text-neutral-500"
@@ -22,21 +30,21 @@ const AuthorList: React.FC<AuthorListProps> = ({ authors, disabled }) => {
           {author}
         </span>
       ))}
-      {authors.length > 3 && (
+      {authors.length > showAmount && (
         <span>
           <button
             onClick={toggleExpanded}
             className="text-xs text-read-paper-blue"
             disabled={disabled}
           >
-            {expanded ? "" : "...+" + (authors.length - 3)}
+            {expanded ? "" : "...+" + (authors.length - showAmount)}
           </button>
         </span>
       )}
       {/* </ul> */}
       {expanded && (
         <>
-          {authors.slice(3).map((author, index) => (
+          {authors.slice(showAmount).map((author, index) => (
             <span
               key={index}
               className="after:content-['/'] after:px-2 text-xs text-neutral-500"

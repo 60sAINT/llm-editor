@@ -71,12 +71,12 @@ const FolderTable: React.FC = () => {
   );
   const { runAsync: newDoc, loading: newDocLoading } = useRequest(
     async (dir_id, title) => {
-      const res = await docApi.newDoc(
-        `Bearer ${token}` || "",
+      const res = await docApi.newDoc({
+        token: `Bearer ${token}` || "",
         title,
-        "[{}]",
-        dir_id
-      );
+        content: "[{}]",
+        dir_id,
+      });
       return res.data;
     }
   );

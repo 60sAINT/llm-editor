@@ -7,6 +7,8 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { useRequest } from "@/hooks/useRequest";
+import { paperApi } from "../api";
+import { useAuth } from "@/provider/authProvider";
 // import { searchApi } from './api';
 
 export interface SearchResult {
@@ -15,6 +17,7 @@ export interface SearchResult {
 }
 
 export const InterestTagSelectModal = () => {
+  const { token } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -27,6 +30,19 @@ export const InterestTagSelectModal = () => {
     // const res = await searchApi(query);
     // return res.data;
   });
+  const {
+    run: getAllInterestTags,
+    data: allInterestTags,
+    loading: getAllInterestTagsLoading,
+  } = useRequest(
+    async () => {
+      const res = await paperApi.getAllInterestTags({
+        token: `Bearer ${token}` || "",
+      });
+      return res;
+    },
+    { manual: false }
+  );
 
   const handleSearch = async () => {
     if (searchTerm.trim() === "") {
@@ -179,30 +195,31 @@ export const InterestTagSelectModal = () => {
       </div>
       <div className="mt-4">
         <div className="flex flex-wrap gap-1">
-          {middleTags.map((tag, index) => (
-            <Tag
-              key={index}
-              onClick={() => handleTagClick(tag)}
-              color={
-                selectedTags.some(
+          {middleTags &&
+            middleTags.map((tag, index) => (
+              <Tag
+                key={index}
+                onClick={() => handleTagClick(tag)}
+                color={
+                  selectedTags.some(
+                    (selectedTag) => selectedTag.field === tag.field
+                  )
+                    ? "magenta"
+                    : "default"
+                }
+                style={{ cursor: "pointer" }}
+                className="cursor-pointer h-8 text-stone-900 rounded-[3px] flex items-center text-[15px] border-transparent px-3 bg-slate-50"
+              >
+                {selectedTags.some(
                   (selectedTag) => selectedTag.field === tag.field
-                )
-                  ? "magenta"
-                  : "default"
-              }
-              style={{ cursor: "pointer" }}
-              className="cursor-pointer h-8 text-stone-900 rounded-[3px] flex items-center text-[15px] border-transparent px-3 bg-slate-50"
-            >
-              {selectedTags.some(
-                (selectedTag) => selectedTag.field === tag.field
-              ) ? (
-                <CheckOutlined className="mr-2.5" />
-              ) : (
-                <PlusOutlined className="mr-2.5" />
-              )}
-              {tag.field}
-            </Tag>
-          ))}
+                ) ? (
+                  <CheckOutlined className="mr-2.5" />
+                ) : (
+                  <PlusOutlined className="mr-2.5" />
+                )}
+                {tag.field}
+              </Tag>
+            ))}
         </div>
       </div>
       <div className="mt-8 bg-slate-50 py-2.5 px-4">

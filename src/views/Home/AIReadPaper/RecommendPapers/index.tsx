@@ -35,7 +35,6 @@ export const RecommendPapers = () => {
     },
     { manual: false }
   );
-  console.log(recommendpaperList);
   // return true ? <Skeleton active /> : null;
   return (
     <>

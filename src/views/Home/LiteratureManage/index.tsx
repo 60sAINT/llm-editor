@@ -6,15 +6,18 @@ import {
   Form,
   Input,
   Modal,
+  Popover,
   Skeleton,
   Space,
   Table,
   Tag,
   Tooltip,
   Upload,
+  UploadFile,
   UploadProps,
+  message,
 } from "antd";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { literatureApi } from "./api";
 import { useAuth } from "@/provider/authProvider";
 import {
@@ -22,6 +25,7 @@ import {
   DeleteOutlined,
   ExclamationCircleFilled,
   FilePdfOutlined,
+  FileSearchOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -29,6 +33,8 @@ import { SearchProps } from "antd/es/input";
 import { formatDate } from "@/common/utils";
 import { ColumnsType } from "antd/es/table";
 import { axios, GATEWAY } from "@/api/AxiosInstance";
+import AuthorList from "@/common/components/PdfViewer/components/AuthorList";
+import { RcFile } from "antd/es/upload";
 
 export interface LiteratureType {
   paper_id: string;
@@ -40,23 +46,29 @@ export interface LiteratureType {
   comment: string;
   created_at: string;
   last_read_at: string;
+  key?: string;
+  detail_url: string;
 }
 
+// ... existing code ...
 const LiteratureManage = () => {
   const { token } = useAuth();
 
   const [form] = Form.useForm();
-  const onSearch: SearchProps["onSearch"] = async (value, _e) => {
-    if (value == "") {
-      return;
-    }
-    // const data = await getRecommendPaperList(value);
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredData, setFilteredData] = useState<LiteratureType[]>([]);
+  const [selectedTags] = useState<string[]>([]);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  const onSearch: SearchProps["onSearch"] = (value) => {
+    setSearchValue(value);
   };
 
   const {
     run: getLiteratureList,
     data: literatureList,
     loading: literatureListLoading,
+    mutate: setLiteratureList, // 添加 mutate 方法
   } = useRequest(
     async () => {
       const res = await literatureApi.getLiteratureList(
@@ -66,7 +78,32 @@ const LiteratureManage = () => {
     },
     { manual: false }
   );
-  console.log(literatureList);
+
+  const { runAsync: deleteLiterature } = useRequest(async (paper_ids) => {
+    const res = await literatureApi.deleteLiterature({
+      token: `Bearer ${token}` || "",
+      paper_ids,
+    });
+    return res;
+  });
+
+  useEffect(() => {
+    if (literatureList) {
+      let filtered = literatureList.filter(
+        (item) =>
+          item.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+          item.comment.toLowerCase().includes(searchValue.toLowerCase())
+      );
+
+      if (selectedTags.length > 0) {
+        filtered = filtered.filter((item) =>
+          selectedTags.every((tag) => item.tags.includes(tag))
+        );
+      }
+
+      setFilteredData(filtered);
+    }
+  }, [searchValue, literatureList, selectedTags]);
 
   const { confirm } = Modal;
   const showDeleteConfirm = (ids: React.Key[], title?: string) => {
@@ -75,23 +112,29 @@ const LiteratureManage = () => {
         <span>
           确定要将
           <span className="text-primary">
-            {title ? title : ids.length + "篇文献"}彻底删除吗？
+            {title ? title : ids.length + "篇文献"}
           </span>
+          彻底删除吗？
         </span>
       ),
       icon: <ExclamationCircleFilled />,
       okText: "删除",
       okType: "danger",
       cancelText: "取消",
-      onOk() {},
+      async onOk() {
+        await deleteLiterature(ids);
+        const updatedList = await getLiteratureList();
+        setLiteratureList(updatedList as unknown as LiteratureType[]); // 更新 literatureList 状态
+      },
       onCancel() {},
     });
   };
+
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const rowSelection = {
     selectedRowKeys,
-    onChange: (selectedRowKeys: React.Key[]) => {
-      setSelectedRowKeys(selectedRowKeys);
+    onChange: (newSelectedRowKeys: React.Key[]) => {
+      setSelectedRowKeys(newSelectedRowKeys);
     },
   };
   const [isMutipleChoice, setIsMutipleChoice] = useState<boolean>(false);
@@ -102,6 +145,26 @@ const LiteratureManage = () => {
     name: "file",
     action,
     multiple: true,
+    onChange(info) {
+      let newFileList = [...info.fileList];
+      newFileList = newFileList.slice(-1);
+      newFileList = newFileList.map((file) => {
+        if (file.response) {
+          // Component will show file.url as link
+          file.url = file.response.url;
+        }
+        return file;
+      });
+
+      setFileList(newFileList);
+      if (info.file.status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === "done") {
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
     customRequest: async (opt) => {
       const formData = new FormData();
       formData.append("file", opt.file);
@@ -113,7 +176,12 @@ const LiteratureManage = () => {
           },
         })
         .then(() => {
+          opt.onSuccess!({}, opt.file as unknown as XMLHttpRequest);
+          message.success(`${(opt.file as RcFile).name} 上传成功`);
           getLiteratureList();
+        })
+        .catch(() => {
+          opt.onError!(new Error("上传失败"));
         });
     },
   };
@@ -124,16 +192,29 @@ const LiteratureManage = () => {
       dataIndex: "title",
       key: "title",
       fixed: "left",
+      render: (title, record) => (
+        <Link
+          className="text-neutral-800 text-[15px] font-bold hover:text-primary/75"
+          to={`/pdf?pdfId=${record.paper_id}`}
+          target="_blank"
+        >
+          {title}
+        </Link>
+      ),
     },
     {
       title: "标签",
       dataIndex: "tags",
       key: "tags",
+      filters: literatureList
+        ? Array.from(new Set(literatureList.flatMap((item) => item.tags)))
+            .filter((tag) => tag !== null) // 过滤掉 null 的 tag
+            .map((tag) => ({ text: tag, value: tag }))
+        : [],
+      onFilter: (value, record) => record.tags.includes(value as string),
       render: (tags: Array<string>) => (
-        <div className="flex gap-2">
-          {tags.map((tag) => (
-            <Tag>{tag}</Tag>
-          ))}
+        <div className="flex">
+          {tags && tags.map((tag) => <Tag key={tag}>{tag}</Tag>)}
         </div>
       ),
     },
@@ -141,33 +222,54 @@ const LiteratureManage = () => {
       title: "作者",
       dataIndex: "author",
       key: "author",
+      render: (authors) => (
+        <Popover
+          placement="leftTop"
+          trigger={"click"}
+          title={<span className="text-stone-900 font-bold">查看作者信息</span>}
+          content={
+            <div className="border-t border-zinc-200 max-h-36 overflow-auto">
+              {authors.map((author: string) => (
+                <li
+                  key={author}
+                  className="text-slate-800 h-8 leading-8 pl-2 whitespace-nowrap overflow-hidden text-ellipsis rounded-sm hover:bg-gray-100 line-clamp-1"
+                >
+                  {author}
+                </li>
+              ))}
+            </div>
+          }
+        >
+          <div
+            className="leading-10 h-10 text-neutral-900 hover:bg-neutral-100 cursor-pointer rounded-sm px-2 whitespace-nowrap overflow-hidden text-ellipsis"
+            style={{ display: "-webkit-box" }}
+          >
+            <AuthorList
+              authors={authors}
+              disabled={true}
+              showAmount={1}
+              className="[&>span:first-child]:text-stone-900 [&>span:first-child]:text-sm"
+            />
+          </div>
+        </Popover>
+      ),
     },
     {
       title: "备注",
       dataIndex: "comment",
       key: "comment",
+      render: (comment) => (comment !== "null" ? comment : ""),
     },
     {
       title: "发布日期",
       dataIndex: "published_at",
       key: "published_at",
       render: (timeString: string) => {
-        return formatDate(timeString);
+        return new Date(timeString).toISOString().slice(0, 10);
       },
       sorter: (a: LiteratureType, b: LiteratureType) =>
         new Date(b.published_at!).getTime() -
         new Date(a.published_at!).getTime(),
-      defaultSortOrder: "ascend",
-    },
-    {
-      title: "添加时间",
-      dataIndex: "created_at",
-      key: "created_at",
-      render: (timeString: string) => {
-        return formatDate(timeString);
-      },
-      sorter: (a: LiteratureType, b: LiteratureType) =>
-        new Date(b.created_at!).getTime() - new Date(a.created_at!).getTime(),
       defaultSortOrder: "ascend",
     },
     {
@@ -191,11 +293,21 @@ const LiteratureManage = () => {
             type="link"
             className="text-primary hover:!text-[#e2a3ac] gap-1 pl-0 justify-start"
             onClick={() => {
-              showDeleteConfirm([record.paper_id]);
+              showDeleteConfirm([record.paper_id], record.title);
             }}
           >
             <DeleteOutlined />
             删除
+          </Button>
+          <Button
+            type="link"
+            className="text-primary hover:!text-[#e2a3ac] gap-1 pl-0 justify-start"
+            onClick={() => {
+              window.open(record.detail_url, "_blank");
+            }}
+          >
+            <FileSearchOutlined />
+            查看详情
           </Button>
         </Flex>
       ),
@@ -220,7 +332,11 @@ const LiteratureManage = () => {
           <ul>
             {literatureList &&
               literatureList.map((literature: LiteratureType) => (
-                <Tooltip title={literature.title} placement="right">
+                <Tooltip
+                  title={literature.title}
+                  placement="right"
+                  key={literature.paper_id}
+                >
                   <Link
                     className="h-10 leading-10 hover:bg-[#fbf2f3] pl-1.5 rounded overflow-hidden text-ellipsis line-clamp-1 hover:text-[#000000e0]"
                     style={{ display: "-webkit-box" }}
@@ -242,10 +358,11 @@ const LiteratureManage = () => {
             <Form form={form} className="w-full">
               <Form.Item name="searchInput" className="mb-0">
                 <Input.Search
-                  placeholder="搜索标题、笔记、备注..."
+                  placeholder="搜索标题、备注"
                   allowClear
                   prefix={<SearchOutlined />}
                   onSearch={onSearch}
+                  onChange={(e) => setSearchValue(e.target.value)}
                   className="[&_.ant-input-group-addon]:hidden [&_.ant-input-affix-wrapper]:!rounded-md"
                 />
               </Form.Item>
@@ -257,6 +374,7 @@ const LiteratureManage = () => {
             <Upload
               {...props}
               className="[&_.ant-upload-list]:absolute [&_.ant-upload-list]:right-0"
+              fileList={fileList}
             >
               <Button type="primary" className="ml-4">
                 添加
@@ -265,13 +383,13 @@ const LiteratureManage = () => {
           </div>
         </div>
         {selectedRowKeys.length > 0 && (
-          <Space className="flex items-start gap-5 ml-4 mb-3">
+          <Space className="flex items-start gap-5">
             <Button
               type="primary"
               danger
               icon={<DeleteOutlined />}
               onClick={() => showDeleteConfirm(selectedRowKeys)}
-              style={{ marginBottom: 16, marginLeft: 16 }}
+              className="ml-3 mb-3"
             >
               删除
             </Button>
@@ -279,7 +397,7 @@ const LiteratureManage = () => {
         )}
         <Table
           columns={columns}
-          dataSource={literatureList}
+          dataSource={filteredData}
           loading={literatureListLoading}
           scroll={{ x: 1300 }}
           rowSelection={isMutipleChoice ? rowSelection : undefined}
