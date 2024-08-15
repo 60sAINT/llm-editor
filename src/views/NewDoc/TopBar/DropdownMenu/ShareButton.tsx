@@ -1,9 +1,7 @@
 import React from "react";
 
 const ShareButton = () => {
-  const handleClick = () => {
-    console.log("Clicked on Share");
-  };
+  const handleClick = () => {};
 
   return (
     <a

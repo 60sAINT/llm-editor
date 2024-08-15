@@ -5,7 +5,6 @@ import Icon, {
   ClockCircleOutlined,
   CommentOutlined,
   EditOutlined,
-  ExperimentOutlined,
   FileTextTwoTone,
   FolderAddTwoTone,
   FolderOutlined,
@@ -117,11 +116,6 @@ const Home: React.FC = () => {
       label: "知识库",
     },
     {
-      key: "laboratory",
-      icon: <ExperimentOutlined />,
-      label: "实验室",
-    },
-    {
       key: "conmmunity",
       icon: <CommentOutlined />,
       label: "社区",
@@ -152,7 +146,6 @@ const Home: React.FC = () => {
     directory: <Directory />,
     conmmunity: <Community />,
     knowledge: <Knowledge />,
-    laboratory: <Developing />,
     aiReadPaper: <AIReadPaper />,
     literatureManage: <LiteratureManage />,
     noteManage: <NoteManage />,

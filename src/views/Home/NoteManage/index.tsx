@@ -11,11 +11,7 @@ const NoteManage = () => {
   const { token } = useAuth();
   const [activeTab, setActiveTab] = useState<string>("1");
 
-  const {
-    run: getSummaryList,
-    data: summaryList,
-    loading: summaryListLoading,
-  } = useRequest(
+  const { data: summaryList, loading: summaryListLoading } = useRequest(
     async () => {
       const res = await literatureApi.getLiteratureList(
         `Bearer ${token}` || ""
@@ -33,7 +29,6 @@ const NoteManage = () => {
     },
   ];
   const onChange = (key: string) => {
-    console.log(key);
     setActiveTab(key);
   };
 

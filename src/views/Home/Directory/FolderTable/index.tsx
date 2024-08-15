@@ -216,7 +216,6 @@ const FolderTable: React.FC = () => {
     type: string,
     initialName: string
   ) => {
-    console.log(id, type, initialName);
     setNewName(initialName);
     confirm({
       title: "重命名文件",

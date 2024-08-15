@@ -1,9 +1,7 @@
 import React from "react";
 
 const PaperlessButton = () => {
-  const handleClick = () => {
-    console.log("Clicked on Paperless");
-  };
+  const handleClick = () => {};
 
   return (
     <a

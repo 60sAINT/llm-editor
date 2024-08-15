@@ -203,8 +203,6 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
     uploadFile: async (file: File) => {
       const data = await defaultApi.getUrl();
       const { upload_url: uploadUrl, public_url: publicUrl } = data.data;
-      console.log(uploadUrl);
-      console.log(publicUrl);
       await putObject(file, uploadUrl);
       return publicUrl;
     },

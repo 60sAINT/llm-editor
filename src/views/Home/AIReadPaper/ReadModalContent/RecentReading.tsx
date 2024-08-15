@@ -42,7 +42,7 @@ export const RecentReading: React.FC<RecentReadingProps> = ({
               </li>
             ))
           ) : (
-            <div className="font-bold text-neutral-600">暂无数据</div>
+            <li className="font-bold text-neutral-600">暂无数据</li>
           )}
         </ul>
       </Skeleton>

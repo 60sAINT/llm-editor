@@ -5,6 +5,7 @@ import { ChartExtraction } from "./ChartExtraction";
 import { HighlightPlugin } from "@react-pdf-viewer/highlight";
 import { Profile } from "./Profile";
 import { PaperInformationType } from "../interface";
+import { References } from "../References";
 
 interface RightToolBarProps {
   jumpToPage: (targetPage: number) => void;
@@ -48,6 +49,11 @@ export const RightToolBar: React.FC<RightToolBarProps> = ({
           paper_id={paperInformation.paper_id}
         />
       ),
+    },
+    {
+      label: "参考文献",
+      key: "references",
+      children: <References paperInformation={paperInformation} />,
     },
   ];
   return (

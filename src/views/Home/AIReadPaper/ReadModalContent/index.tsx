@@ -1,5 +1,6 @@
 import {
   CheckCircleOutlined,
+  CloseOutlined,
   LoadingOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
@@ -29,6 +30,7 @@ export const ReadModalContent: React.FC<getRecentPaperListProps> = ({
   const [recentPaperList, setRecentPaperList] = useState([{ title: "" }]);
   const [fileList, setFileList] = useState<Array<File>>([]);
   const [lastFileUploading, setLastFileUploading] = useState<boolean>(false);
+  const [lastFileError, setlastFileError] = useState<boolean>(false);
   const { token } = useAuth();
 
   const action = `${GATEWAY}/api/v1/paper/upload`;
@@ -37,6 +39,19 @@ export const ReadModalContent: React.FC<getRecentPaperListProps> = ({
     name: "file",
     action,
     multiple: true,
+    onChange(info) {
+      const { status } = info.file;
+      if (status == "uploading") {
+        fileList.shift();
+        setFileList([
+          {
+            name: info.file.name,
+            status,
+          },
+          ...fileList,
+        ]);
+      }
+    },
     customRequest: async (opt) => {
       const formData = new FormData();
       formData.append("file", opt.file);
@@ -60,6 +75,13 @@ export const ReadModalContent: React.FC<getRecentPaperListProps> = ({
         .then(() => {
           getRecentPaperList();
           setRecentPaperList(getRecentPaperList());
+        })
+        .catch(() => {
+          fileList[0].status = "error";
+          setFileList(fileList);
+          setLastFileUploading(false);
+          setlastFileError(true);
+          opt.onError!(new Error("上传失败"));
         });
     },
     beforeUpload: (file) => {
@@ -73,24 +95,9 @@ export const ReadModalContent: React.FC<getRecentPaperListProps> = ({
       setIsModalVisible(true);
       // 在这里做上传前的预处理
       setLastFileUploading(true);
+      setlastFileError(false);
     },
-    onChange(info) {
-      console.log(info);
-      const { status } = info.file;
-      if (status == "uploading") {
-        fileList.shift();
-        setFileList([
-          {
-            name: info.file.name,
-            status,
-          },
-          ...fileList,
-        ]);
-      }
-    },
-    onDrop(e) {
-      console.log("Dropped files", e.dataTransfer.files);
-    },
+    onDrop() {},
     showUploadList: false,
   };
   // 重新渲染Modal使表格的上传进度一栏更新
@@ -113,8 +120,7 @@ export const ReadModalContent: React.FC<getRecentPaperListProps> = ({
   });
   const draggleRef = useRef<HTMLDivElement>(null);
 
-  const handleOk = (e: React.MouseEvent<HTMLElement>) => {
-    console.log(e);
+  const handleOk = () => {
     setIsModalVisible(false);
   };
 
@@ -137,6 +143,7 @@ export const ReadModalContent: React.FC<getRecentPaperListProps> = ({
       title: "文件名",
       dataIndex: "name",
       key: "name",
+      width: "50%",
     },
     {
       title: "上传进度",
@@ -147,12 +154,15 @@ export const ReadModalContent: React.FC<getRecentPaperListProps> = ({
           return <Badge color="orange" text="等待上传" />;
         } else if (status === "uploading") {
           return <Badge color="blue" text="正在解析" />;
+        } else if (status === "error") {
+          return <Badge color="red" text="上传失败" />;
         } else if (status === "done") {
           return <Badge color="#1fe02f" text="上传成功" />;
         } else {
           return <Badge color="#ad1fe0" text="已存在重复论文" />;
         }
       },
+      width: "30%",
     },
     {
       title: "操作",
@@ -173,6 +183,7 @@ export const ReadModalContent: React.FC<getRecentPaperListProps> = ({
           return null;
         }
       },
+      width: "20%",
     },
   ];
 
@@ -229,6 +240,11 @@ export const ReadModalContent: React.FC<getRecentPaperListProps> = ({
               <>
                 <LoadingOutlined className="mr-1.5" />
                 <span>正在上传中</span>
+              </>
+            ) : lastFileError ? (
+              <>
+                <CloseOutlined className="text-red-500 mr-1.5" />
+                <span>上传失败</span>
               </>
             ) : (
               <>

@@ -1,9 +1,7 @@
 import React from "react";
 
 const HistoryButton = () => {
-  const handleClick = () => {
-    console.log("Clicked on History");
-  };
+  const handleClick = () => {};
 
   return (
     <a

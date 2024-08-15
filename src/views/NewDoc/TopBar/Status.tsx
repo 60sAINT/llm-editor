@@ -49,7 +49,6 @@ const Status: React.FC<StatusProps> = ({ is_note, paper_id }) => {
   // 保存现有文档
   const { runAsync: saveDoc } = useRequest(
     async ({ docId, title, content }) => {
-      console.log(content);
       const res = await docApi.updateDoc({
         doc_id: docId,
         title,
@@ -69,9 +68,7 @@ const Status: React.FC<StatusProps> = ({ is_note, paper_id }) => {
         showMessage("保存成功！", 0.65, 200);
         setSaveState(IsSavedType.True);
         docDispatch({ type: "SAVE_DOC_STATUS", payload: IsSavedType.True });
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     }
     // 保存新文档，暂无id
     else {
@@ -81,9 +78,7 @@ const Status: React.FC<StatusProps> = ({ is_note, paper_id }) => {
         setSaveState(IsSavedType.True);
         docDispatch({ type: "SAVE_DOC_ID", payload: data.doc_id });
         docDispatch({ type: "SAVE_DOC_STATUS", payload: IsSavedType.True });
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     }
   };
   return (

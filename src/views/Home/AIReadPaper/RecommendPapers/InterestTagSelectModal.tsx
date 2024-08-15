@@ -9,76 +9,60 @@ import {
 import { useRequest } from "@/hooks/useRequest";
 import { paperApi } from "../api";
 import { useAuth } from "@/provider/authProvider";
-// import { searchApi } from './api';
+import { InterestTagSelectModalProps, TagType } from "../interface";
 
-export interface SearchResult {
-  field: string;
-  discipline: string;
-}
-
-export const InterestTagSelectModal = () => {
+export const InterestTagSelectModal: React.FC<InterestTagSelectModalProps> = ({
+  getInterestTags,
+  userInterestTags,
+}) => {
   const { token } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [middleTags, setMiddleTags] = useState<SearchResult[]>([]);
-  const [selectedTags, setSelectedTags] = useState<SearchResult[]>([]);
+  const [searchResults, setSearchResults] = useState<TagType[]>([]);
+  const [selectedTags, setSelectedTags] = useState<TagType[]>(userInterestTags);
+  const [displayTags, setDisplayTags] = useState<TagType[]>([]);
   const inputRef = useRef(null);
 
-  const { run: fetchSearchResults } = useRequest(async (query) => {
-    // const res = await searchApi(query);
-    // return res.data;
-  });
-  const {
-    run: getAllInterestTags,
-    data: allInterestTags,
-    loading: getAllInterestTagsLoading,
-  } = useRequest(
-    async () => {
-      const res = await paperApi.getAllInterestTags({
-        token: `Bearer ${token}` || "",
-      });
-      return res;
-    },
-    { manual: false }
-  );
+  const { data: allInterestTags, loading: getAllInterestTagsLoading } =
+    useRequest(
+      async () => {
+        const res = await paperApi.getAllInterestTags({
+          token: `Bearer ${token}` || "",
+        });
+        return res;
+      },
+      { manual: false }
+    );
 
-  const handleSearch = async () => {
-    if (searchTerm.trim() === "") {
+  const handleSearch = async (value: string) => {
+    if (value.trim() === "") {
       setShowDropdown(false);
       return;
     }
-    setLoading(true);
     setShowDropdown(true);
-    // const data = await fetchSearchResults(searchTerm);
-    const data = [
-      {
-        field: "Deep learning",
-        discipline: "Artificial intelligence -> Computer science",
-      },
-      {
-        field: "Machine Learning",
-        discipline: "Artificial intelligence -> Computer science",
-      },
-    ];
-    setSearchResults(data);
-    setLoading(false);
+    const filteredResults = allInterestTags.filter((tag: TagType) =>
+      tag.field.toLowerCase().includes(value.toLowerCase())
+    );
+    setSearchResults(filteredResults);
   };
 
-  const handleInputChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setSearchTerm(e.target.value);
+  const handleInputChange = (e: { target: { value: string } }) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    if (value.trim() !== "") {
+      handleSearch(value);
+    } else {
+      setShowDropdown(false);
+    }
   };
 
   const handlePressEnter = (e: { key: string }) => {
     if (e.key === "Enter") {
-      handleSearch();
+      handleSearch(searchTerm);
     }
   };
 
-  const handleTagClick = (tag: SearchResult) => {
+  const handleTagClick = (tag: TagType) => {
     if (selectedTags.some((selectedTag) => selectedTag.field === tag.field)) {
       const updatedSelectedTags = selectedTags.filter(
         (selectedTag) => selectedTag.field !== tag.field
@@ -90,10 +74,23 @@ export const InterestTagSelectModal = () => {
     setShowDropdown(false);
   };
 
-  const handleTagRemove = (tag: SearchResult) => {
+  const handleTagRemove = (tag: TagType) => {
     setSelectedTags(
       selectedTags.filter((selectedTag) => selectedTag.field !== tag.field)
     );
+  };
+
+  const getRandomTags = (tags: TagType[], count: number) => {
+    const shuffled = tags.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  };
+
+  const handleReloadTags = () => {
+    if (allInterestTags.length <= 10) {
+      setDisplayTags(allInterestTags);
+    } else {
+      setDisplayTags(getRandomTags(allInterestTags, 10));
+    }
   };
 
   useEffect(() => {
@@ -103,21 +100,14 @@ export const InterestTagSelectModal = () => {
   }, [searchTerm]);
 
   useEffect(() => {
-    // 模拟从后端获取中间标签数据
-    const fetchMiddleTags = async () => {
-      // const res = await fetchMiddleTagsApi();
-      // setMiddleTags(res.data);
-      const data = [
-        { field: "Transformer", discipline: "NLP -> AI" },
-        { field: "GPT", discipline: "NLP -> AI" },
-        { field: "Computer Vision", discipline: "CV -> AI" },
-        { field: "Reinforcement Learning", discipline: "ML -> AI" },
-      ];
-      setMiddleTags(data);
-    };
+    if (allInterestTags) {
+      handleReloadTags();
+    }
+  }, [allInterestTags]);
 
-    fetchMiddleTags();
-  }, []);
+  useEffect(() => {
+    getInterestTags(selectedTags);
+  }, [selectedTags]);
 
   return (
     <div className="px-4 pt-5 pb-1 w-[720px]">
@@ -126,102 +116,118 @@ export const InterestTagSelectModal = () => {
         <br />
         请选择感兴趣的领域标签
       </div>
-      <div className="mt-1.5 mb-5">
+      <div className="mt-1.5 mb-5 relative">
         <Input
           className="w-72"
           ref={inputRef}
           placeholder="请输入关键词"
           value={searchTerm}
           onChange={handleInputChange}
-          onFocus={handleSearch} // Optionally, you can fetch results when the input gains focus
+          onFocus={() => handleSearch(searchTerm)} // Optionally, you can fetch results when the input gains focus
           onPressEnter={handlePressEnter}
           prefix={<SearchOutlined />}
         />
-      </div>
-      <div className="flex justify-between mb-3">
-        <div className="text-base text-stone-900">热门关注</div>
-        <div className="cursor-pointer text-gray-600">
-          <ReloadOutlined
-            className="mr-2"
-            onClick={() => {
-              console.log("重新请求随机标签");
-            }}
-          />
-          换一批
-        </div>
-      </div>
-      <div className={`dropdown-container ${showDropdown ? "" : "hidden"}`}>
-        <Skeleton active loading={loading}>
-          <div className="flex justify-between">
-            <div>学科领域</div>
-            <div>所属学科</div>
-          </div>
-          <div>
-            {/* Render search results here */}
+
+        <div
+          className={`dropdown-container ${
+            showDropdown ? "" : "hidden"
+          } absolute z-[100] min-w-72 max-w-[640px] max-h-40 overflow-y-auto py-1 bg-white border-gray-200 shadow-interest-search-results top-9`}
+        >
+          <Skeleton active loading={getAllInterestTagsLoading} className="p-3">
+            {searchResults.length > 0 && (
+              <div className="py-1 px-4">
+                <span className="inline-block w-60 mr-4 text-gray-600 text-xs leading-6 h-6">
+                  学科领域
+                </span>
+                <span className="text-gray-600 text-xs leading-6 h-6">
+                  所属学科
+                </span>
+              </div>
+            )}
             {searchResults.length > 0 ? (
               searchResults.map((searchResult, index) => (
                 <div
                   key={index}
                   onClick={() => handleTagClick(searchResult)}
+                  className="py-1 px-4 flex items-center leading-6 text-slate-800 cursor-pointer w-full hover:!bg-gray-100"
                   style={{
                     backgroundColor: selectedTags.some(
                       (tag) => tag.field === searchResult.field
                     )
-                      ? "blue"
+                      ? "#fbf2f3"
                       : "white",
                     color: selectedTags.some(
                       (tag) => tag.field === searchResult.field
                     )
-                      ? "white"
+                      ? "#d67b88"
                       : "black",
-                    padding: "8px",
-                    margin: "4px 0",
-                    cursor: "pointer",
                   }}
                 >
-                  <div>{searchResult.field}</div>
+                  <span className="inline-block w-60 whitespace-nowrap overflow-hidden mr-4">
+                    {searchResult.field}
+                  </span>
                   <div>
                     {selectedTags.some(
                       (tag) => tag.field === searchResult.field
-                    ) && " -> 已添加"}
+                    ) ? (
+                      " √ 已添加"
+                    ) : (
+                      <div className="max-w-[352px] whitespace-nowrap overflow-hidden text-ellipsis text-stone-500">
+                        {searchResult.discipline}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))
             ) : (
-              <div>No results found</div>
+              <div className="py-1 h-24 justify-center flex items-center leading-6 text-stone-400 w-full">
+                <div>未找到相关结果</div>
+              </div>
             )}
-          </div>
-        </Skeleton>
-      </div>
-      <div className="mt-4">
-        <div className="flex flex-wrap gap-1">
-          {middleTags &&
-            middleTags.map((tag, index) => (
-              <Tag
-                key={index}
-                onClick={() => handleTagClick(tag)}
-                color={
-                  selectedTags.some(
-                    (selectedTag) => selectedTag.field === tag.field
-                  )
-                    ? "magenta"
-                    : "default"
-                }
-                style={{ cursor: "pointer" }}
-                className="cursor-pointer h-8 text-stone-900 rounded-[3px] flex items-center text-[15px] border-transparent px-3 bg-slate-50"
-              >
-                {selectedTags.some(
-                  (selectedTag) => selectedTag.field === tag.field
-                ) ? (
-                  <CheckOutlined className="mr-2.5" />
-                ) : (
-                  <PlusOutlined className="mr-2.5" />
-                )}
-                {tag.field}
-              </Tag>
-            ))}
+          </Skeleton>
         </div>
       </div>
+      <div className="flex justify-between mb-3">
+        <div className="text-base text-stone-900">热门关注</div>
+        <div
+          className="cursor-pointer text-gray-600"
+          onClick={handleReloadTags}
+        >
+          <ReloadOutlined className="mr-2" />
+          换一批
+        </div>
+      </div>
+      <Skeleton active loading={getAllInterestTagsLoading}>
+        <div className="mt-4">
+          <div className="flex flex-wrap gap-1">
+            {displayTags &&
+              displayTags.map((tag, index) => (
+                <Tag
+                  key={index}
+                  onClick={() => handleTagClick(tag)}
+                  color={
+                    selectedTags.some(
+                      (selectedTag) => selectedTag.field === tag.field
+                    )
+                      ? "magenta"
+                      : "default"
+                  }
+                  style={{ cursor: "pointer" }}
+                  className="cursor-pointer h-8 text-stone-900 rounded-[3px] flex items-center text-[15px] border-transparent px-3 bg-slate-50"
+                >
+                  {selectedTags.some(
+                    (selectedTag) => selectedTag.field === tag.field
+                  ) ? (
+                    <CheckOutlined className="mr-2.5" />
+                  ) : (
+                    <PlusOutlined className="mr-2.5" />
+                  )}
+                  {tag.field}
+                </Tag>
+              ))}
+          </div>
+        </div>
+      </Skeleton>
       <div className="mt-8 bg-slate-50 py-2.5 px-4">
         <span className="text-zinc-500 mr-4">{`已选（${selectedTags.length}）`}</span>
         {selectedTags.map((tag, index) => {
@@ -237,7 +243,6 @@ export const InterestTagSelectModal = () => {
               className="mr-4 my-1"
             >
               {tag.field}
-              {"加长加长"}
             </Tag>
           );
         })}

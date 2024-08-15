@@ -158,7 +158,6 @@ const LiteratureManage = () => {
 
       setFileList(newFileList);
       if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
       }
       if (info.file.status === "done") {
       } else if (info.file.status === "error") {

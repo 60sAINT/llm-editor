@@ -19,7 +19,6 @@ export class DefaultApi {
 
   public async getUrl() {
     const result = await axiosInstance.get(`${apikeyPrefix}/upload/get_url`);
-    console.log(result.data);
     return result.data;
   }
 

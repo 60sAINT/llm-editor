@@ -18,3 +18,13 @@ export interface RecommendPaperType {
   summary: string;
   title: string;
 }
+
+export interface TagType {
+  field: string;
+  discipline: string;
+}
+
+export interface InterestTagSelectModalProps {
+  getInterestTags: any;
+  userInterestTags: TagType[];
+}

@@ -1,4 +1,5 @@
 import { axios } from "@/api/AxiosInstance";
+import { TagType } from "../interface";
 
 const apikeyPrefix = "/api/v1";
 
@@ -13,13 +14,19 @@ export interface SearchPapersParams {
 export interface GetAllInterestTagsParams {
   token: string;
 }
+export interface SubmitInterestTagsParams {
+  token: string;
+  interestTags: TagType[];
+}
+export interface GetUserInterestTagsParams {
+  token: string;
+}
 
 export class PaperApi {
   public async getRecentPaperList(token: string) {
     const result = await axios.get(`${apikeyPrefix}/paper/recent`, {
       headers: { "X-Authorization": token },
     });
-    console.log(result);
     return result.data.data.recent_paper_list;
   }
   public async uploadPdf({ token, file }: UploadPdfParams) {
@@ -41,7 +48,26 @@ export class PaperApi {
     const result = await axios.get(`${apikeyPrefix}/paper/interest/all`, {
       headers: { "X-Authorization": token },
     });
-    return result.data;
+    return result.data.data;
+  }
+  public async submitInterestTags({
+    token,
+    interestTags,
+  }: SubmitInterestTagsParams) {
+    const result = await axios.post(
+      `${apikeyPrefix}/paper/interest`,
+      { tags: interestTags },
+      {
+        headers: { "X-Authorization": token },
+      }
+    );
+    return result.data.data;
+  }
+  public async getUserInterestTags({ token }: GetUserInterestTagsParams) {
+    const result = await axios.get(`${apikeyPrefix}/paper/interest`, {
+      headers: { "X-Authorization": token },
+    });
+    return result.data.data;
   }
 }
 
