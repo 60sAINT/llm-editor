@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
-import Editor from "./Editor";
+import ColEditor from "./Editor/ColEditor";
 import { DispatchContext, StateContext, initialState } from "./utils/context";
 import { reducer } from "./utils/reducer";
 import TopBar from "./TopBar";
@@ -22,6 +22,7 @@ import { useAuth } from "@/provider/authProvider";
 import Outline from "./Outline";
 import { MenuOutlined } from "@ant-design/icons";
 import classNames from "classnames";
+import Editor from "./Editor";
 
 interface NewDocProps {
   className?: string;
@@ -167,6 +168,7 @@ const NewDoc: React.FC<NewDocProps> = ({
                 getIfStartUnfold={getIfStartUnfold}
                 is_note={is_note}
                 paper_id={paper_id}
+                is_shared={doc?.is_shared}
               />
               <Row className="flex-grow justify-center items-start py-4 px-2">
                 {(fullText || fullTextLoading) && !isOutlineVisible ? (
@@ -221,23 +223,42 @@ const NewDoc: React.FC<NewDocProps> = ({
                     {!docId ? (
                       <>
                         <DocTitle />
-                        <Editor
-                          fullFormat={fullFormat}
-                          getEditor={(e) => {
-                            setEditor(e);
-                          }}
-                        />
+                        {doc?.is_shared ? (
+                          <ColEditor
+                            fullFormat={fullFormat}
+                            getEditor={(e) => {
+                              setEditor(e);
+                            }}
+                          />
+                        ) : (
+                          <Editor
+                            fullFormat={fullFormat}
+                            getEditor={(e) => {
+                              setEditor(e);
+                            }}
+                          />
+                        )}
                       </>
                     ) : docData ? (
                       <>
                         <DocTitle />
-                        <Editor
-                          docData={docData}
-                          fullFormat={fullFormat}
-                          getEditor={(e) => {
-                            setEditor(e);
-                          }}
-                        />
+                        {doc?.is_shared ? (
+                          <ColEditor
+                            docData={docData}
+                            fullFormat={fullFormat}
+                            getEditor={(e) => {
+                              setEditor(e);
+                            }}
+                          />
+                        ) : (
+                          <Editor
+                            docData={docData}
+                            fullFormat={fullFormat}
+                            getEditor={(e) => {
+                              setEditor(e);
+                            }}
+                          />
+                        )}
                       </>
                     ) : (
                       <Skeleton

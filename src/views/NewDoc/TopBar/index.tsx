@@ -5,10 +5,11 @@ import Status from "./Status";
 import ActionButton from "./ActionButton";
 import DropdownMenu from "./DropdownMenu";
 import "./index.css";
-import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Col, Row } from "antd";
 import { Start } from "./Start";
 import { useNewDocState } from "../utils/provider";
+import { Avatars } from "./Avatars";
+import { UserOutlined } from "@ant-design/icons";
 
 interface TopBarProps {
   getShowCards: (showCards: boolean) => void;
@@ -16,6 +17,7 @@ interface TopBarProps {
   getIfStartUnfold: (ifStartUnfold: boolean) => void;
   is_note?: boolean;
   paper_id?: string;
+  is_shared: boolean;
 }
 const TopBar: React.FC<TopBarProps> = ({
   getShowCards: sendShowCardsToTopBar,
@@ -23,6 +25,7 @@ const TopBar: React.FC<TopBarProps> = ({
   getIfStartUnfold: sendIfStartUnfold,
   is_note,
   paper_id,
+  is_shared,
 }) => {
   const [animate, setAnimate] = useState(false);
   const [animateReverse, setAnimateReverse] = useState(false);
@@ -54,7 +57,7 @@ const TopBar: React.FC<TopBarProps> = ({
         !animate && "shadow-md border-b border-gray-300"
       }`}
     >
-      <Row className="w-full flex items-center justify-between bg-white py-4 h-14 z-100 sticky top-0">
+      <Row className="w-full flex items-center justify-between bg-white h-14 z-100 sticky top-0">
         <Col span={is_note ? 12 : 9}>
           <div className="flex items-center w0full justify-start">
             <ExitButton />
@@ -75,11 +78,15 @@ const TopBar: React.FC<TopBarProps> = ({
         </Col>
         <Col span={is_note ? 12 : 9}>
           <div className="flex items-center mr-1 justify-end">
-            <Avatar
-              icon={<UserOutlined />}
-              size="small"
-              className="h-5 w-5 mr-5"
-            />
+            {is_shared ? (
+              <Avatars is_shared={is_shared} />
+            ) : (
+              <Avatar
+                icon={<UserOutlined />}
+                size="small"
+                className="h-6 w-6 mr-4"
+              />
+            )}
             <DropdownMenu />
           </div>
         </Col>

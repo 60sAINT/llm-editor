@@ -1,19 +1,25 @@
-import { Space, Tooltip } from "antd";
+import { Space } from "antd";
 import React, { useMemo } from "react";
-import {
-  BookTwoTone,
-  BulbOutlined,
-  FileAddOutlined,
-  ImportOutlined,
-  OpenAIOutlined,
-} from "@ant-design/icons";
+import { BookTwoTone, FileAddOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { OPERATE } from "../../model";
 import Icon from "@ant-design/icons/lib/components/Icon";
 import { GradientBulbOutlined } from "@/common/icons/GradientBulbOutlined";
 import "./index.css";
+import { useRequest } from "@/hooks/useRequest";
+import { docApi } from "@/views/NewDoc/api/Doc";
+import { useAuth } from "@/provider/authProvider";
 
 export const QuickAccess = () => {
+  const { token } = useAuth();
+  const { runAsync: newDoc } = useRequest(async (title) => {
+    const res = await docApi.newDoc({
+      token: `Bearer ${token}` || "",
+      title,
+      content: "[{}]",
+    });
+    return res.data;
+  });
   const navigate = useNavigate();
   const operates = useMemo(
     () => [
@@ -44,9 +50,11 @@ export const QuickAccess = () => {
     [OPERATE]
   );
 
-  const handle = (type: OPERATE) => {
+  const handle = async (type: OPERATE) => {
     if (type == "create") {
-      navigate("/newDoc");
+      const newDocinfo = await newDoc("无标题");
+      const { doc_id } = newDocinfo;
+      navigate(`/newDoc?doc_id=${doc_id}`);
     }
   };
 

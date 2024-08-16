@@ -32,7 +32,6 @@ import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
 import Knowledge from "./Knowledge";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Developing } from "./Developing";
 import Directory from "./Directory";
 import Recent from "./Recent";
 import Community from "./Community";
@@ -42,6 +41,9 @@ import { AIReadPaper } from "./AIReadPaper";
 import LiteratureManage from "./LiteratureManage";
 import NoteManage from "./NoteManage";
 import { Share } from "./Share";
+import { useAuth } from "@/provider/authProvider";
+import { useRequest } from "@/hooks/useRequest";
+import { docApi } from "../NewDoc/api/Doc";
 
 const Home: React.FC = () => {
   const [modalUpgradeOpen, setModalUpgradeOpen] = useState(false);
@@ -51,12 +53,26 @@ const Home: React.FC = () => {
     location.pathname.substring(1)
   );
 
+  const { token } = useAuth();
+  const { runAsync: newDoc } = useRequest(async (title) => {
+    const res = await docApi.newDoc({
+      token: `Bearer ${token}` || "",
+      title,
+      content: "[{}]",
+    });
+    return res.data;
+  });
+
   const dropdownContent = (
     <div className="bg-white shadow-lg p-3 mt-3 rounded border border-gray-300 text-zinc-600 text-sm">
       <div className="grid grid-cols-2 gap-4 mt-1.5 mx-2.5">
         <div
           className="text-center hover:bg-gray-100 py-2.5"
-          onClick={() => navigate("/newDoc")}
+          onClick={async () => {
+            const newDocinfo = await newDoc("无标题");
+            const { doc_id } = newDocinfo;
+            navigate(`/newDoc?doc_id=${doc_id}`);
+          }}
         >
           <div className="mb-4">
             <FileTextTwoTone className="text-3xl" twoToneColor="#ddc5c9" />

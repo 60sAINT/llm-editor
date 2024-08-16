@@ -1,0 +1,32 @@
+/* Avatars.css */
+.relative {
+  position: relative;
+}
+
+.ml-8 {
+  margin-left: 2rem;
+}
+
+.first\:ml-0:first-child {
+  margin-left: 0;
+}
+
+[data-tooltip]::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 100%;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  padding: 5px 10px;
+  color: var(--color-surface-elevated);
+  font-size: 0.75rem;
+  border-radius: 8px;
+  margin-top: 10px;
+  z-index: 1;
+  background: var(--color-text);
+  white-space: nowrap;
+}
+
+[data-tooltip]:hover::before {
+  opacity: 1;
+}

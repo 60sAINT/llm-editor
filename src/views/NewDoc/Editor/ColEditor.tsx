@@ -1,4 +1,6 @@
-import React, { useEffect } from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import "@blocknote/core/fonts/inter.css";
 import {
   FormattingToolbarController,
@@ -27,6 +29,9 @@ import {
   TextAlignButton,
   UnnestBlockButton,
 } from "@blocknote/react";
+import * as Y from "yjs";
+import { LiveblocksYjsProvider } from "@liveblocks/yjs";
+import { useRoom, useSelf } from "@liveblocks/react/suspense";
 
 // import { CustomFormattingToolbar } from "./CustomFormattingToolBar";
 import { useDispatch, useNewDocState } from "../utils/provider";
@@ -51,6 +56,8 @@ import { AudioRecognitionButton } from "./CustomFormattingToolBar/AudioRecogniti
 import { AudioRecognitionFrame } from "./CustomFormattingToolBar/AudioRecognitionFrame";
 import { useRequest } from "@/hooks/useRequest";
 import { defaultApi } from "../api";
+import { docApi } from "../api/Doc";
+import { useAuth } from "@/provider/authProvider";
 
 let showTextButton = true;
 let showOcrButton = true;
@@ -185,7 +192,58 @@ interface EditorProps {
   fullFormat?: any;
   getEditor: (editor: BlockNoteEditor) => void;
 }
-const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
+const ColEditor: React.FC<EditorProps> = ({
+  docData,
+  fullFormat,
+  getEditor,
+}) => {
+  const room = useRoom();
+  const [doc, setDoc] = useState<Y.Doc>();
+  const [provider, setProvider] = useState<any>();
+
+  // Set up Liveblocks Yjs provider
+  useEffect(() => {
+    const yDoc = new Y.Doc();
+    const yProvider = new LiveblocksYjsProvider(room, yDoc);
+    setDoc(yDoc);
+    setProvider(yProvider);
+
+    return () => {
+      yDoc?.destroy();
+      yProvider?.destroy();
+    };
+  }, [room]);
+
+  if (!doc || !provider) {
+    return null;
+  }
+  // Renders the editor instance.
+  return (
+    <BlockNote
+      doc={doc}
+      provider={provider}
+      docData={docData}
+      getEditor={getEditor}
+      fullFormat={fullFormat}
+    />
+  );
+};
+export default ColEditor;
+
+type BlockNoteProps = {
+  doc: Y.Doc;
+  provider: any;
+  docData: any;
+  getEditor: any;
+  fullFormat: any;
+};
+function BlockNote({
+  doc,
+  provider,
+  docData,
+  getEditor,
+  fullFormat,
+}: BlockNoteProps) {
   const dispatch = useDispatch();
   const docDispatch = useDocDispatch();
   const { formatKeyDown } = useNewDocState();
@@ -197,6 +255,8 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
       await defaultApi.putObject(file, presignedUrl);
     }
   );
+  const self = useSelf();
+
   const editor = useCreateBlockNote({
     schema: customSchema,
     initialContent,
@@ -205,6 +265,16 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
       const { upload_url: uploadUrl, public_url: publicUrl } = data.data;
       await putObject(file, uploadUrl);
       return publicUrl;
+    },
+    collaboration: {
+      provider,
+      // Where to store BlockNote data in the Y.Doc:
+      fragment: doc.getXmlFragment("document-store"),
+      // Information for this user:
+      user: {
+        name: self.info?.name!,
+        color: self.info?.color! as string,
+      },
     },
   });
 
@@ -341,9 +411,31 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
     dispatch({ type: "FORMAT_KEY_DOWN" });
   }, [fullFormat]);
 
+  const search = window.location.search;
+  const urlParams = new URLSearchParams(search.split("?")[1]);
+  const docId = urlParams.get("doc_id");
+  const { token } = useAuth();
+  const { runAsync: getDocInfo } = useRequest(async () => {
+    const res = await docApi.getDocByDocId(`Bearer ${token}` || "", docId!);
+    return res.data.doc;
+  });
+  useEffect(() => {
+    if (docId) getDocInfo();
+  }, [docId]);
+
+  const { data: permission } = useRequest(
+    async () => {
+      const res = await defaultApi.getSelfDocPermission({ doc_id: docId! });
+      return res;
+    },
+    { manual: false }
+  );
+  console.log(permission);
+
   // Renders the editor instance.
   return (
     <BlockNoteView
+      editable={permission == "write" || permission == "own" ? true : false}
       editor={editor}
       formattingToolbar={false}
       onSelectionChange={() => {
@@ -370,6 +462,4 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
       />
     </BlockNoteView>
   );
-};
-
-export default Editor;
+}

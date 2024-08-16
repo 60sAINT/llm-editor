@@ -52,6 +52,19 @@ module.exports = {
         ],
         include: /node_modules/, // 包括 node_modules 目录
       },
+      {
+        test: /\.module\.css$/,
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              modules: true,
+            },
+          },
+          "postcss-loader", // 如果你使用 postcss
+        ],
+      },
     ],
   },
   plugins: [

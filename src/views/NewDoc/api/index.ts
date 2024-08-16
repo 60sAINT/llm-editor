@@ -4,6 +4,23 @@ import axios from "axios";
 
 const apikeyPrefix = "/api/v1";
 
+export interface UserInfoType {
+  nickname: string;
+  email: string;
+  phone: string;
+  paper_interest_tags: {
+    tags: [
+      {
+        field: string;
+        discipline: string;
+      }
+    ];
+  };
+}
+export interface GetSelfDocPermissionParams {
+  doc_id: string;
+}
+
 export class DefaultApi {
   public async getReference(text: string) {
     const result = await fetch.get(`${apikeyPrefix}/reference?text=${text}`);
@@ -29,6 +46,25 @@ export class DefaultApi {
         "Content-Type": file.type,
       },
     });
+  }
+
+  public async getUserInfo(): Promise<UserInfoType> {
+    const result = await axiosInstance.get(`${apikeyPrefix}/user/self`);
+    return result.data.data;
+  }
+
+  public async getColAuthToken() {
+    const result = await axiosInstance.get(
+      `${apikeyPrefix}/collaboration/auth`
+    );
+    return result.data.data;
+  }
+
+  public async getSelfDocPermission({ doc_id }: GetSelfDocPermissionParams) {
+    const result = await axiosInstance.get(
+      `${apikeyPrefix}/collaboration/doc_permission?doc_id=${doc_id}`
+    );
+    return result.data.data;
   }
 }
 
