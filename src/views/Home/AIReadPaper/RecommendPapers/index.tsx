@@ -55,7 +55,6 @@ export const RecommendPapers = () => {
     },
     { manual: false }
   );
-  console.log("userInterestTags", userInterestTags);
   return (
     <>
       <Button
@@ -63,6 +62,7 @@ export const RecommendPapers = () => {
         size="large"
         className="h-8 border-primary text-sm font text-primary rounded-sm mb-5"
         onClick={() => setModalInterestOpen(true)}
+        disabled={getInterestTagsListLoading}
       >
         <PlusOutlined />
         添加兴趣标签

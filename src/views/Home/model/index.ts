@@ -2,6 +2,8 @@ export enum OPERATE {
   CREATE = "create",
   WRITE = "write",
   UPLOAD = "upload",
+  ACADEMIC = "academic",
+  COURSEREPORT = "courseReport",
 }
 
 export interface TableData {

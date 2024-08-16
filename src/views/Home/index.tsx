@@ -15,6 +15,7 @@ import Icon, {
   UserOutlined,
 } from "@ant-design/icons";
 import {
+  Affix,
   Avatar,
   Button,
   ConfigProvider,
@@ -40,6 +41,7 @@ import { AIReadPaperIcon } from "@/common/icons/AIReadPaperIcon";
 import { AIReadPaper } from "./AIReadPaper";
 import LiteratureManage from "./LiteratureManage";
 import NoteManage from "./NoteManage";
+import { Share } from "./Share";
 
 const Home: React.FC = () => {
   const [modalUpgradeOpen, setModalUpgradeOpen] = useState(false);
@@ -95,30 +97,17 @@ const Home: React.FC = () => {
     {
       key: "recent",
       icon: <ClockCircleOutlined />,
-      label: "最近文件",
+      label: "快速访问",
     },
     {
       key: "share",
       icon: <ShareAltOutlined />,
-      label: "共享给我",
+      label: "共享文档",
     },
     {
       key: "directory",
       icon: <FolderOutlined />,
       label: "我的文档",
-    },
-    {
-      type: "divider",
-    },
-    {
-      key: "knowledge",
-      icon: <AppstoreOutlined />,
-      label: "知识库",
-    },
-    {
-      key: "conmmunity",
-      icon: <CommentOutlined />,
-      label: "社区",
     },
     {
       type: "divider",
@@ -138,11 +127,24 @@ const Home: React.FC = () => {
       icon: <EditOutlined />,
       label: "笔记管理",
     },
+    {
+      type: "divider",
+    },
+    {
+      key: "knowledge",
+      icon: <AppstoreOutlined />,
+      label: "知识库",
+    },
+    {
+      key: "conmmunity",
+      icon: <CommentOutlined />,
+      label: "社区",
+    },
   ];
 
   const contents: Record<string, React.JSX.Element> = {
     recent: <Recent />,
-    share: <Developing />,
+    share: <Share />,
     directory: <Directory />,
     conmmunity: <Community />,
     knowledge: <Knowledge />,
@@ -169,58 +171,69 @@ const Home: React.FC = () => {
             colorPrimary: "#d67b88",
             colorPrimaryHover: "#dc8f9a",
           },
+          Radio: {
+            buttonSolidCheckedActiveBg: "#ab626d",
+            buttonSolidCheckedBg: "#d67b88",
+            buttonSolidCheckedHoverBg: "#e09ca6",
+          },
         },
       }}
     >
-      <Layout>
-        <Header className="h-14 bg-white pr-10 border-b border-gray-200">
-          <div className="h-full leading-[56px] float-left text-primary text-2xl font-bold tracking-wide">
-            协心 编辑器
-          </div>
-          <Space
-            className="float-right leading-[56px] [&>div]:flex [&>div]:align-middle h-[56px]"
-            size={25}
-          >
-            <div
-              onClick={() => setModalUpgradeOpen(true)}
-              className="px-2.5 py-1 text-sm hover:bg-neutral-200 rounded-sm font-bold cursor-pointer"
-            >
-              <UpCircleOutlined className="mr-1.5 font-bold" />
-              应用升级
+      <Layout className="h-full">
+        <Affix offsetTop={0}>
+          <Header className="h-14 bg-white pr-10 border-b border-gray-200">
+            <div className="h-full leading-[56px] float-left text-primary text-2xl font-bold tracking-wide">
+              协心 编辑器
             </div>
-            <Avatar icon={<UserOutlined />} size="small" />
-          </Space>
-        </Header>
-        <Layout className="bg-white">
-          <Sider
-            width={232}
-            className="px-4 py-6 !bg-white border-r border-home-border"
-          >
-            <Dropdown
-              trigger={["click"]}
-              dropdownRender={() => dropdownContent}
+            <Space
+              className="float-right leading-[56px] [&>div]:flex [&>div]:align-middle h-[56px]"
+              size={25}
             >
-              <Button
-                onClick={(e) => e.preventDefault()}
-                type="primary"
-                className="w-full border-none h-9 text-sm rounded-sm font-bold bg-primary text-white tracking-tighter"
+              <div
+                onClick={() => setModalUpgradeOpen(true)}
+                className="px-2.5 py-1 text-sm hover:bg-neutral-200 rounded-sm font-bold cursor-pointer"
               >
-                创建
-              </Button>
-            </Dropdown>
-            <Menu
-              mode="inline"
-              defaultSelectedKeys={[selectKey]}
-              defaultOpenKeys={["sub1"]}
-              style={{ borderRight: 0 }}
-              className="mt-6 [&_.ant-menu-item-divider]:my-2"
-              items={menuItems}
-              onClick={(e) => {
-                setSelectKey(e.key);
-                navigate(`/${e.key}`);
-              }}
-            />
-          </Sider>
+                <UpCircleOutlined className="mr-1.5 font-bold" />
+                应用升级
+              </div>
+              <Avatar icon={<UserOutlined />} size="small" />
+            </Space>
+          </Header>
+        </Affix>
+        <Layout className="bg-white">
+          <Affix offsetTop={56}>
+            <Sider
+              width={232}
+              className="!bg-white border-r border-home-border fixed"
+            >
+              <div className="mx-4 my-6">
+                <Dropdown
+                  trigger={["click"]}
+                  dropdownRender={() => dropdownContent}
+                >
+                  <Button
+                    onClick={(e) => e.preventDefault()}
+                    type="primary"
+                    className="w-full border-none h-9 text-sm rounded-sm font-bold bg-primary text-white tracking-tighter"
+                  >
+                    创建
+                  </Button>
+                </Dropdown>
+                <Menu
+                  mode="inline"
+                  defaultSelectedKeys={[selectKey]}
+                  defaultOpenKeys={["sub1"]}
+                  style={{ borderRight: 0 }}
+                  className="mt-6 [&_.ant-menu-item-divider]:my-2 overflow-y-suto h-screen"
+                  items={menuItems}
+                  onClick={(e) => {
+                    setSelectKey(e.key);
+                    navigate(`/${e.key}`);
+                  }}
+                />
+              </div>
+            </Sider>
+          </Affix>
           <Content
             style={{
               margin: 0,

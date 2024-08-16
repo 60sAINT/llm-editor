@@ -1,6 +1,6 @@
 import React from "react";
 import FolderTable from "./FolderTable";
-import { QuickAccess } from "./QuickAccess";
+import { QuickAccess } from "../components/QuickAccess";
 
 const Directory = () => {
   return (

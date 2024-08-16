@@ -344,6 +344,7 @@ const Editor: React.FC<EditorProps> = ({ docData, fullFormat, getEditor }) => {
   // Renders the editor instance.
   return (
     <BlockNoteView
+      // editable={false}
       editor={editor}
       formattingToolbar={false}
       onSelectionChange={() => {
