@@ -1,10 +1,10 @@
 import Icon, { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { GradientBulbOutlined } from "@/common/icons/GradientBulbOutlined";
 import React, { useState } from "react";
-import { Button, Divider, Form, Input, Radio, Space } from "antd";
+import { Button, Divider, Form, Input, InputNumber } from "antd";
 import { OPERATE } from "@/views/Home/model";
+import { Train } from "@/common/icons";
 
-export const Academic = () => {
+export const TeacherTrain = () => {
   const [form] = Form.useForm();
 
   const [keywords, setKeywords] = useState([""]);
@@ -20,27 +20,27 @@ export const Academic = () => {
     <>
       <div className="h-20 flex items-center w-full">
         <div className="shadow-menu-switcher bg-white w-10 h-10 rounded-circle flex items-center justify-center mr-5">
-          <Icon component={GradientBulbOutlined} />
+          <Icon component={Train} />
         </div>
         <div className="flex flex-col">
           <div className="text-topbar-text h-6 leading-6 font-bold">
-            学术论文
+            教师培训心得
           </div>
           <div className="leading-5 text-xs text-stone-500">
-            专业化、条理化、结构化的论文框架轻松写作，全学科适用
+            根据培训内容及体验，生成言之有物的心得体会
           </div>
         </div>
       </div>
       <Divider className="mb-3 mt-0 border-gray-300" />
-      <Form form={form} name={OPERATE.ACADEMIC}>
+      <Form form={form} name={OPERATE.SPEECH}>
         <div className="flex justify-between h-12 items-center">
-          <div className="text-topbar-text">论文题目</div>
+          <div className="text-topbar-text">培训主题</div>
           <Form.Item
             name="title"
-            rules={[{ required: true, message: "请填写论文题目！" }]}
+            rules={[{ required: true, message: "请填写培训主题！" }]}
             className="w-ai-writing-form-item mb-0"
           >
-            <Input placeholder="请输入论文题目" className="h-10" />
+            <Input placeholder="请输入培训主题" className="h-10" />
           </Form.Item>
         </div>
         <div className="flex justify-between items-top mt-3">
@@ -73,60 +73,34 @@ export const Academic = () => {
             </Button>
           </div>
         </div>
-        <div className="flex justify-between h-12 items-center mt-3">
-          <div className="text-topbar-text">学科</div>
-          <Form.Item
-            name="subject"
-            rules={[{ required: true, message: "请填写学科！" }]}
-            className="mb-0 w-ai-writing-form-item"
-          >
-            <Input placeholder="请输入学科" className="h-10" />
+        <div className="flex justify-between items-start mt-3">
+          <div className="text-topbar-text h-10 leading-10">仿写样本</div>
+          <Form.Item name="subject" className="mb-0 w-ai-writing-form-item">
+            <Input.TextArea placeholder="请输入仿写样本" rows={4} />
           </Form.Item>
         </div>
-        <div className="flex justify-between h-12 items-center mt-3">
-          <div className="text-topbar-text">研究目标</div>
-          <Form.Item
-            name="researchObjective"
-            rules={[{ required: true, message: "请填写研究目标！" }]}
-            className="mb-0 w-ai-writing-form-item"
-          >
-            <Input placeholder="请输入研究目标" className="h-10" />
+        <div className="flex justify-between items-start mt-3">
+          <div className="text-topbar-text h-10 leading-10">写作要求</div>
+          <Form.Item name="subject" className="mb-0 w-ai-writing-form-item">
+            <Input.TextArea placeholder="语言风格、案例分析等" rows={4} />
           </Form.Item>
         </div>
         <div className="flex justify-between h-12 items-center mt-2">
-          <div className="text-topbar-text">语种</div>
-          <Form.Item
-            name="language"
-            rules={[{ required: true, message: "请选择语种！" }]}
-            className="mb-0 w-ai-writing-form-item"
-          >
-            <Radio.Group>
-              <Space direction="horizontal">
-                <Radio value="chinese">中文</Radio>
-                <Radio value="english">英文</Radio>
-              </Space>
-            </Radio.Group>
-          </Form.Item>
-        </div>
-        <div className="flex justify-between h-12 items-center">
-          <div className="text-topbar-text">论文标准</div>
-          <Form.Item
-            name="standard"
-            rules={[{ required: true, message: "请选择论文标准！" }]}
-            className="mb-0 w-ai-writing-form-item"
-          >
-            <Radio.Group>
-              <Space direction="horizontal">
-                <Radio value="undergraduate">本科毕设</Radio>
-                <Radio value="graduate">研究生毕业论文</Radio>
-                <Radio value="journal">期刊会议学术论文</Radio>
-              </Space>
-            </Radio.Group>
-          </Form.Item>
+          <div className="text-topbar-text">字数限制</div>
+          <div className="w-ai-writing-form-item flex items-center">
+            <Form.Item
+              name="language"
+              rules={[{ required: true, message: "请限制字数" }]}
+              className="mb-0 inline-block"
+            >
+              <InputNumber className="h-10" />
+            </Form.Item>
+            <span className="ml-2">字</span>
+          </div>
         </div>
         <div className="flex justify-between h-12 items-center">
           <Button type="primary" className="w-full mt-3 h-10">
-            生成论文大纲
+            生成教师培训心得
           </Button>
         </div>
       </Form>

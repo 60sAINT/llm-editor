@@ -54,7 +54,7 @@ export const QuickAccess = () => {
         key: OPERATE.ACADEMIC,
         icon: <Icon component={GradientBulbOutlined} />,
         title: "学术论文",
-        desc: "专业化、条理化、结构化的论文内容轻松写作，全学科适用",
+        desc: "专业化、条理化、结构化的论文大纲轻松写作，全学科适用",
       },
       {
         key: OPERATE.COURSEREPORT,
@@ -103,13 +103,13 @@ export const QuickAccess = () => {
         desc: "根据培训内容及体验，生成言之有物的心得体会",
       },
       {
-        key: OPERATE.TEACH,
+        key: OPERATE.TEACHPLAN,
         icon: <Icon component={Teacher} />,
         title: "教学计划",
         desc: "结合教学目标及进度，一键生成详尽、高效的教学计划",
       },
       {
-        key: OPERATE.TEACHPLAN,
+        key: OPERATE.TEACHCONCLUSION,
         icon: <Icon component={Calendar} />,
         title: "教师学期工作总结",
         desc: "汇总课堂教学、学生管理等内容，生成全面的学期工作总结",
@@ -173,7 +173,7 @@ export const QuickAccess = () => {
     {
       key: "2",
       label: "学术论文",
-      children: <CardList operateArr={operates.slice(0, 1)} />,
+      children: <CardList operateArr={operates.slice(1, 2)} />,
     },
     {
       key: "3",

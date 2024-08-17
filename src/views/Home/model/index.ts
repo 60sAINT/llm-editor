@@ -10,8 +10,8 @@ export enum OPERATE {
   COMPOSITION = "composition",
   EXPERIMENT = "experiment",
   TRAIN = "train",
-  TEACH = "teach",
   TEACHPLAN = "teachPlan",
+  TEACHCONCLUSION = "teachConclusion",
   ANALYZE = "analyze",
 }
 
