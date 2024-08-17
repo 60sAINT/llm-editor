@@ -26,6 +26,9 @@ module.exports = {
       },
       borderRadius: {
         'circle': '50%',
+      },
+      width: {
+        'ai-writing-form-item': '71.8%',
       }
     },
   },

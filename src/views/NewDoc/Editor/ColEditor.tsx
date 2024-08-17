@@ -188,9 +188,9 @@ const CustomFormattingToolbar: FunctionComponent<
 };
 
 interface EditorProps {
-  docData?: any;
   fullFormat?: any;
   getEditor: (editor: BlockNoteEditor) => void;
+  docData: any;
 }
 const ColEditor: React.FC<EditorProps> = ({
   docData,
@@ -200,6 +200,18 @@ const ColEditor: React.FC<EditorProps> = ({
   const room = useRoom();
   const [doc, setDoc] = useState<Y.Doc>();
   const [provider, setProvider] = useState<any>();
+  const { token } = useAuth();
+  const { runAsync: saveDoc } = useRequest(
+    async ({ docId, title, content }) => {
+      const res = await docApi.updateDoc({
+        doc_id: docId,
+        title,
+        content,
+        token: `Bearer ${token}` || "",
+      });
+      return res;
+    }
+  );
 
   // Set up Liveblocks Yjs provider
   useEffect(() => {
@@ -214,6 +226,17 @@ const ColEditor: React.FC<EditorProps> = ({
     };
   }, [room]);
 
+  useEffect(() => {
+    // 返回一个清理函数，在组件卸载时执行
+    return () => {
+      saveDoc({
+        docId: docData.doc_id,
+        title: docData.title,
+        content: JSON.stringify(docData.content),
+      });
+    };
+  }, []);
+
   if (!doc || !provider) {
     return null;
   }
@@ -222,7 +245,6 @@ const ColEditor: React.FC<EditorProps> = ({
     <BlockNote
       doc={doc}
       provider={provider}
-      docData={docData}
       getEditor={getEditor}
       fullFormat={fullFormat}
     />
@@ -233,23 +255,13 @@ export default ColEditor;
 type BlockNoteProps = {
   doc: Y.Doc;
   provider: any;
-  docData: any;
   getEditor: any;
   fullFormat: any;
 };
-function BlockNote({
-  doc,
-  provider,
-  docData,
-  getEditor,
-  fullFormat,
-}: BlockNoteProps) {
+function BlockNote({ doc, provider, getEditor, fullFormat }: BlockNoteProps) {
   const dispatch = useDispatch();
   const docDispatch = useDocDispatch();
   const { formatKeyDown } = useNewDocState();
-  const initialContent = docData?.content
-    ? docData?.content
-    : [{ type: "paragraph", content: "Welcom to llm editor!" }];
   const { runAsync: putObject } = useRequest(
     async (file: File, presignedUrl: string) => {
       await defaultApi.putObject(file, presignedUrl);
@@ -259,7 +271,6 @@ function BlockNote({
 
   const editor = useCreateBlockNote({
     schema: customSchema,
-    initialContent,
     uploadFile: async (file: File) => {
       const data = await defaultApi.getUrl();
       const { upload_url: uploadUrl, public_url: publicUrl } = data.data;

@@ -225,6 +225,7 @@ const NewDoc: React.FC<NewDocProps> = ({
                         <DocTitle />
                         {doc?.is_shared ? (
                           <ColEditor
+                            docData={docData}
                             fullFormat={fullFormat}
                             getEditor={(e) => {
                               setEditor(e);
