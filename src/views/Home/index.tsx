@@ -21,6 +21,7 @@ import {
   ConfigProvider,
   Divider,
   Dropdown,
+  Input,
   Layout,
   Menu,
   MenuProps,
@@ -44,6 +45,7 @@ import { Share } from "./Share";
 import { useAuth } from "@/provider/authProvider";
 import { useRequest } from "@/hooks/useRequest";
 import { docApi } from "../NewDoc/api/Doc";
+import { directoryApi } from "./Directory/api";
 
 const Home: React.FC = () => {
   const [modalUpgradeOpen, setModalUpgradeOpen] = useState(false);
@@ -52,6 +54,28 @@ const Home: React.FC = () => {
   const [selectKey, setSelectKey] = useState<string>(
     location.pathname.substring(1)
   );
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [newFolderName, setNewFolderName] = useState("");
+  const { runAsync: newDirectory } = useRequest(async (dir_name) => {
+    const res = await directoryApi.newDirectory({
+      token: `Bearer ${token}` || "",
+      dir_name,
+    });
+    return res.data;
+  });
+  const { run: getFolderList } = useRequest(
+    async () => {
+      const res = await directoryApi.getDirectoryTree(`Bearer ${token}` || "");
+      return res.data;
+    },
+    { manual: false }
+  );
+  const handleAddFolder = () => {
+    newDirectory(newFolderName).then(() => getFolderList());
+    setNewFolderName("");
+    setIsModalVisible(false);
+  };
 
   const { token } = useAuth();
   const { runAsync: newDoc } = useRequest(async (title) => {
@@ -79,25 +103,27 @@ const Home: React.FC = () => {
           </div>
           <span>新建文档</span>
         </div>
-        <Tooltip title="功能开发中">
-          <div className="text-center hover:bg-gray-100 py-2.5 hover:cursor-not-allowed">
-            <div className="mb-4">
-              <RobotFilled className="text-3xl text-[#f1d1d5]" />
-            </div>
-            <span>AI写作</span>
+        <div
+          className="text-center hover:bg-gray-100 py-2.5"
+          onClick={() => navigate(`../recent`)}
+        >
+          <div className="mb-4">
+            <RobotFilled className="text-3xl text-[#f1d1d5]" />
           </div>
-        </Tooltip>
+          <span>AI写作</span>
+        </div>
       </div>
       <Divider className="my-4" />
       <div className="grid grid-cols-2 gap-4 mt-2">
-        <Tooltip title="功能开发中">
-          <div className="text-center hover:bg-gray-100 py-2.5 hover:cursor-not-allowed">
-            <div className="mb-4">
-              <FolderAddTwoTone className="text-3xl" twoToneColor="#f5bdc5" />
-            </div>
-            <span>新建文件夹</span>
+        <div
+          className="text-center hover:bg-gray-100 py-2.5"
+          onClick={() => setIsModalVisible(true)}
+        >
+          <div className="mb-4">
+            <FolderAddTwoTone className="text-3xl" twoToneColor="#f5bdc5" />
           </div>
-        </Tooltip>
+          <span>新建文件夹</span>
+        </div>
         <Tooltip title="功能开发中">
           <div className="text-center hover:bg-gray-100 py-2.5 hover:cursor-not-allowed">
             <div className="mb-4">
@@ -295,6 +321,23 @@ const Home: React.FC = () => {
           <Upgrade />
         </Modal>
       </Layout>
+      <Modal
+        title={
+          <span className="text-sm font-bold text-stone-800">新建文件夹</span>
+        }
+        open={isModalVisible}
+        onOk={handleAddFolder}
+        onCancel={() => setIsModalVisible(false)}
+        centered
+        className="[&_.ant-modal-content]:p-7 [&_.ant-modal-content]:rounded [&_.ant-modal-content]:w-[480px] [&_.ant-modal-close]:top-6 [&_.ant-modal-close]:right-6 [&_.ant-modal-footer>button]:w-20"
+      >
+        <Input
+          placeholder="请输入文件夹名称"
+          value={newFolderName}
+          onChange={(e) => setNewFolderName(e.target.value)}
+          className="mt-6 mb-5 h-8"
+        />
+      </Modal>
     </ConfigProvider>
   );
 };

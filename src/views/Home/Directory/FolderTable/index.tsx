@@ -319,7 +319,7 @@ const FolderTable: React.FC = () => {
       dataIndex: "last_saved_at",
       width: "35%",
       render: (timeString: string) => {
-        return formatDate(timeString);
+        return timeString ? formatDate(timeString) : "--";
       },
       sorter: (a: DataType, b: DataType) =>
         new Date(b.last_saved_at!).getTime() -

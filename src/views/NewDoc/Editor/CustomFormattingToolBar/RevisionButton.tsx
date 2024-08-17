@@ -4,14 +4,16 @@ import { useComponentsContext } from "@blocknote/react";
 import { sideMenuApi } from "../../api/FormattingToolBar";
 import { useDispatch, useNewDocState } from "../../utils/provider";
 import { DisplayStyle } from "../../utils/context";
+import { useAuth } from "@/provider/authProvider";
 
 export function RevisionButton() {
   const dispatch = useDispatch();
   const state = useNewDocState();
   const Components = useComponentsContext()!;
 
+  const { token } = useAuth();
   const { runAsync: textRevise } = useRequest(async (text) => {
-    const res = await sideMenuApi.textRevise(text);
+    const res = await sideMenuApi.textRevise(text, token!);
     return res;
   });
   // 翻译逻辑

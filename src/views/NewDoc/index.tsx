@@ -11,7 +11,7 @@ import {
 } from "./utils/docContext";
 import { docReducer } from "./utils/docReducer";
 import CardList from "@/common/components/CardList";
-import { Button, Col, Row, Skeleton, Tooltip } from "antd";
+import { Affix, Button, Col, Row, Skeleton, Tooltip } from "antd";
 import { useLocation } from "react-router-dom";
 import { useRequest } from "@/hooks/useRequest";
 import { docApi } from "./api/Doc";
@@ -178,6 +178,7 @@ const NewDoc: React.FC<NewDocProps> = ({
                   >
                     <CardList
                       dataSource={[fullText]}
+                      loading={!fullText}
                       classname="!pr-2 [&>div]:min-h-64 [&>div]:!mb-0 [&>div]:!px-5 [&>div]:!pt-5 [&>div]:!pb-14"
                       maxHeight={`${leftColHeight}px`}
                       fullBtn={
@@ -270,8 +271,15 @@ const NewDoc: React.FC<NewDocProps> = ({
                     )}
                   </div>
                 </Col>
-                <Col span={editorOnly ? 0 : showCards ? 7 : 6}>
-                  {showCards && <Efficiency />}
+                <Col span={editorOnly ? 0 : showCards ? 7 : 6} className="">
+                  {showCards && (
+                    <Affix
+                      offsetTop={ifStartUnfold ? 108 : 72}
+                      className="h-efficiency-affix overflow-y-auto"
+                    >
+                      <Efficiency />
+                    </Affix>
+                  )}
                 </Col>
               </Row>
             </div>

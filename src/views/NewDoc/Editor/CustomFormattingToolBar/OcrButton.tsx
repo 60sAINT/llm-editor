@@ -4,6 +4,7 @@ import { useComponentsContext } from "@blocknote/react";
 import { sideMenuApi } from "../../api/FormattingToolBar";
 import { useDispatch, useNewDocState } from "../../utils/provider";
 import { showError } from "@/common/utils/message";
+import { useAuth } from "@/provider/authProvider";
 
 // TODO 添加认证逻辑
 
@@ -11,8 +12,9 @@ export const OcrButton = () => {
   const dispatch = useDispatch();
   const state = useNewDocState();
   const Components = useComponentsContext()!;
+  const { token } = useAuth();
   const { runAsync: imageOcr } = useRequest(async (baseUrl) => {
-    const res = await sideMenuApi.imageOcr(baseUrl);
+    const res = await sideMenuApi.imageOcr(baseUrl, token!);
     return res;
   });
 

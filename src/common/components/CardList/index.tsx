@@ -1,5 +1,6 @@
 import React from "react";
 import "./index.css"; // 确保你有一个 CSS 文件来定义动画
+import { Skeleton } from "antd";
 // import { Spin } from "antd";
 
 interface CardListProps {
@@ -15,21 +16,22 @@ const CardList = ({
   classname,
   maxHeight,
   fullBtn,
+  loading,
 }: CardListProps) => {
   return (
-    // <Spin spinning={loading}>
     <div
       className={`card-list ${classname}`}
       style={maxHeight ? { maxHeight: maxHeight } : {}}
     >
       {dataSource.map((item, index) => (
         <Card key={index} index={index}>
-          {item}
-          <div className="absolute bottom-5 right-5">{fullBtn}</div>
+          <Skeleton loading={loading} active>
+            {item}
+            <div className="absolute bottom-5 right-5">{fullBtn}</div>
+          </Skeleton>
         </Card>
       ))}
     </div>
-    // </Spin>
   );
 };
 

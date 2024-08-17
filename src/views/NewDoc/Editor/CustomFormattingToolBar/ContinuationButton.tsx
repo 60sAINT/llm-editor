@@ -4,6 +4,7 @@ import { useComponentsContext } from "@blocknote/react";
 import { sideMenuApi } from "../../api/FormattingToolBar";
 import { DisplayStyle } from "../../utils/context";
 import { useDispatch, useNewDocState } from "../../utils/provider";
+import { useAuth } from "@/provider/authProvider";
 
 // TODO 添加认证逻辑
 
@@ -11,8 +12,9 @@ export const ContinuationButton = () => {
   const dispatch = useDispatch();
   const state = useNewDocState();
   const Components = useComponentsContext()!;
+  const { token } = useAuth();
   const { runAsync: textContinue } = useRequest(async (text) => {
-    const res = await sideMenuApi.textContinue(text);
+    const res = await sideMenuApi.textContinue(text, token!);
     return res;
   });
 

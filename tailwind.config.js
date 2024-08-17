@@ -23,6 +23,7 @@ module.exports = {
       },
       height: {
         'pdf-viewer': 'calc(100vh - 53px)',
+        'efficiency-affix': 'calc(100vh - 92px)'
       },
       borderRadius: {
         'circle': '50%',

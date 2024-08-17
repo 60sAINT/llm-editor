@@ -4,6 +4,7 @@ import { useComponentsContext } from "@blocknote/react";
 import { sideMenuApi } from "../../api/FormattingToolBar";
 import { useDispatch, useNewDocState } from "../../utils/provider";
 import { showError } from "@/common/utils/message";
+import { useAuth } from "@/provider/authProvider";
 
 // TODO 添加认证逻辑
 
@@ -11,8 +12,9 @@ export const AudioRecognitionButton = () => {
   const dispatch = useDispatch();
   const state = useNewDocState();
   const Components = useComponentsContext()!;
+  const { token } = useAuth();
   const { runAsync: audioRecognition } = useRequest(async (baseUrl) => {
-    const res = await sideMenuApi.audioRecognition(baseUrl);
+    const res = await sideMenuApi.audioRecognition(baseUrl, token!);
     return res;
   });
 

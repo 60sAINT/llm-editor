@@ -4,16 +4,18 @@ import { useComponentsContext } from "@blocknote/react";
 import { sideMenuApi } from "../../api/FormattingToolBar";
 import { useDispatch, useNewDocState } from "../../utils/provider";
 import { DisplayStyle } from "../../utils/context";
+import { useAuth } from "@/provider/authProvider";
 
 export function PolishButton({ isFull }: { isFull?: boolean }) {
   const dispatch = useDispatch();
   const state = useNewDocState();
   const Components = useComponentsContext()!;
 
+  const { token } = useAuth();
   const { runAsync: textPolish } = useRequest(async (text) => {
     const res = isFull
-      ? await sideMenuApi.textPolishDoc(text)
-      : await sideMenuApi.textPolish(text);
+      ? await sideMenuApi.textPolishDoc(text, token!)
+      : await sideMenuApi.textPolish(text, token!);
     return res;
   });
 

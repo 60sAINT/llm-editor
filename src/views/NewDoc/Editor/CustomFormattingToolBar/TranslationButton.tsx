@@ -6,6 +6,7 @@ import { useDispatch, useNewDocState } from "../../utils/provider";
 import { DisplayStyle } from "../../utils/context";
 import { targetLanguage } from "@/common/utils";
 import { getFullText } from "./SummaryButton";
+import { useAuth } from "@/provider/authProvider";
 
 // TODO 添加认证逻辑
 // TODO 添加目标翻译语言选择按钮
@@ -15,8 +16,9 @@ export function TranslationButton({ isFull }: { isFull?: boolean }) {
   const state = useNewDocState();
   const Components = useComponentsContext()!;
 
+  const { token } = useAuth();
   const { runAsync: textTranslate } = useRequest(async (tar_lang, text) => {
-    const res = await sideMenuApi.textTranslate(tar_lang, text);
+    const res = await sideMenuApi.textTranslate(tar_lang, text, token!);
     return res;
   });
   // 翻译逻辑

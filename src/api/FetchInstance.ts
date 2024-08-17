@@ -1,25 +1,30 @@
 import { GATEWAY } from "./AxiosInstance";
-// export const GATEWAY = "http://43.138.11.21:12099";
 export const baseUrl = `${GATEWAY}`;
 
 const fetchInstance = {
-  get: async (url: string, config: RequestInit = {}) => {
+  get: async (url: string, token: string | null, config: RequestInit = {}) => {
     const response = await fetch(`${baseUrl}${url}`, {
       ...config,
       method: "GET",
       headers: {
-        Authorization: "token 523e30f63c241a80401a68b61afa1f7708b0eb8c",
+        ...config.headers,
+        "X-Authorization": token ? `Bearer ${token}` : "",
       },
     });
     return handleResponse(response);
   },
-  post: async (url: string, data?: any, config: RequestInit = {}) => {
+  post: async (
+    url: string,
+    data: any,
+    token: string | null,
+    config: RequestInit = {}
+  ) => {
     const response = await fetch(`${baseUrl}${url}`, {
       ...config,
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "token 523e30f63c241a80401a68b61afa1f7708b0eb8c",
+        "X-Authorization": token ? `Bearer ${token}` : "",
         ...config.headers,
       },
       body: JSON.stringify(data),

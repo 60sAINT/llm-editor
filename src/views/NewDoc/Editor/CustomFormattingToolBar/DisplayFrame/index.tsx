@@ -7,7 +7,7 @@ import {
   StyleSchema,
   StyledText,
 } from "@blocknote/core";
-import { Button, Space } from "antd";
+import { Button, Skeleton, Space } from "antd";
 
 const DisplayFrame = () => {
   const { buttonDisplay, frameText, editor, blockToUpdate, selection, range } =
@@ -158,13 +158,15 @@ const DisplayFrame = () => {
     <div
       className={`${buttonDisplay} bg-white border-x border-b border-gray-100 rounded-e-md shadow-lg pt-5 pb-2.5 pl-2.5 pr-7`}
     >
-      <TextArea
-        autoSize={{ minRows: 1, maxRows: 5 }}
-        className="py-2 border-none mr-3"
-        value={frameText}
-        contentEditable={false}
-        ref={textAreaRef}
-      />
+      <Skeleton active loading={!frameText}>
+        <TextArea
+          autoSize={{ minRows: 1, maxRows: 5 }}
+          className="py-2 border-none mr-3"
+          value={frameText}
+          contentEditable={false}
+          ref={textAreaRef}
+        />
+      </Skeleton>
       <div className="pt-2.5 w-full flex justify-end">
         <Space size={16}>
           <Button

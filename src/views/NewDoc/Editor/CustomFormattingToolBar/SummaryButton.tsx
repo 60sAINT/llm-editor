@@ -5,14 +5,16 @@ import { sideMenuApi } from "../../api/FormattingToolBar";
 import { useDispatch, useNewDocState } from "../../utils/provider";
 import { DisplayStyle, State } from "../../utils/context";
 import { flatMap as _flatMap } from "lodash";
+import { useAuth } from "@/provider/authProvider";
 
 export function SummaryButton({ isFull }: { isFull?: boolean }) {
   const dispatch = useDispatch();
   const state = useNewDocState();
   const Components = useComponentsContext()!;
 
+  const { token } = useAuth();
   const { runAsync: textSummary } = useRequest(async (text) => {
-    const res = await sideMenuApi.textSummary(text);
+    const res = await sideMenuApi.textSummary(text, token!);
     return res;
   });
 
