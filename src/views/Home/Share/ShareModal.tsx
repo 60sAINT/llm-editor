@@ -283,6 +283,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
                 unShareLoading
               }
               paragraph={{ rows: 2 }}
+              title={false}
             >
               <List
                 itemLayout="horizontal"

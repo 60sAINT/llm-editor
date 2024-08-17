@@ -192,6 +192,12 @@ const Home: React.FC = () => {
             buttonSolidCheckedBg: "#d67b88",
             buttonSolidCheckedHoverBg: "#e09ca6",
           },
+          Tabs: {
+            inkBarColor: "#242424",
+            itemActiveColor: "#d67b88",
+            itemHoverColor: "#e2a3ac",
+            itemSelectedColor: "#d67b88",
+          },
         },
       }}
     >

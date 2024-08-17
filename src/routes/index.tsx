@@ -8,6 +8,7 @@ import { useAuth } from "../provider/authProvider";
 import { ProtectedRoute } from "./ProtectedRoute";
 import Spinning from "./Spinning";
 import ReadPdfViewer from "@/views/Home/AIReadPaper/ReadPdfViewer";
+import { AIWriting } from "@/views/Home/components/QuickAccess/AIWriting";
 
 const Routes = () => {
   const Login = lazy(() => import("../views/Login"));
@@ -143,6 +144,14 @@ const Routes = () => {
           element: (
             <Suspense fallback={<Spinning />}>
               <NewDoc />
+            </Suspense>
+          ),
+        },
+        {
+          path: "/aiWriting",
+          element: (
+            <Suspense fallback={<Spinning />}>
+              <AIWriting />
             </Suspense>
           ),
         },

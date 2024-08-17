@@ -1,39 +1,20 @@
 import { useRequest } from "@/hooks/useRequest";
 import { useAuth } from "@/provider/authProvider";
-import {
-  Button,
-  Divider,
-  Flex,
-  Table,
-  Tooltip,
-  Dropdown,
-  MenuProps,
-} from "antd";
+import { Button, Divider, Flex, Table, Tooltip } from "antd";
 import React, { useMemo, useState } from "react";
 import { shareApi } from "./api";
 import { ColumnType } from "antd/es/table";
 import { ShareDocType } from "./model";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  ExportOutlined,
-  FileTextOutlined,
-  UsergroupAddOutlined,
-  EllipsisOutlined,
-} from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import { FileTextOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import { formatDate } from "@/common/utils";
-import Icon from "@ant-design/icons/lib/components/Icon";
-import { CurrentTab } from "@/common/icons/CurrentTab";
 import { ShareModal } from "./ShareModal";
+import { MoreOperation } from "../components/MoreOperation";
 
 export const Share = () => {
   const { token } = useAuth();
-  const navigate = useNavigate();
 
-  const {
-    run: getShareDocList,
-    data: shareDocList,
-    loading: shareDocListLoading,
-  } = useRequest(
+  const { data: shareDocList, loading: shareDocListLoading } = useRequest(
     async () => {
       const res = await shareApi.getShareDocList({
         token: `Bearer ${token}` || "",
@@ -63,7 +44,6 @@ export const Share = () => {
         render: (fileName: string, record: { doc_id: any }) => (
           <Link
             className="text-topbar-text font-normal flex justify-start cursor-pointer hover:text-[#de95a0]"
-            target="_blank"
             to={`/newDoc?doc_id=${record.doc_id}`}
           >
             <Tooltip title={fileName}>
@@ -100,38 +80,6 @@ export const Share = () => {
         dataIndex: "operation",
         width: "19%",
         render: (_, record) => {
-          const menu: MenuProps["items"] = [
-            {
-              key: "currentTab",
-              label: (
-                <div
-                  key="currentTab"
-                  onClick={() => {
-                    navigate(`/newDoc?doc_id=${record.doc_id}`);
-                  }}
-                  className="flex p-0.5 text-[13px] text-neutral-700 items-center w-44"
-                >
-                  <Icon component={CurrentTab} className="mr-2" />
-                  当前标签页打开
-                </div>
-              ),
-            },
-            {
-              key: "newTab",
-              label: (
-                <Link
-                  key="newTab"
-                  onClick={() => {}}
-                  className="flex p-0.5 text-[13px] text-neutral-700 items-center w-44"
-                  to={`/newDoc?doc_id=${record.doc_id}`}
-                  target="_blank"
-                >
-                  <ExportOutlined className="mr-2" />
-                  新建标签页打开
-                </Link>
-              ),
-            },
-          ];
           return (
             <Flex gap={2}>
               <Button
@@ -145,14 +93,7 @@ export const Share = () => {
                 <UsergroupAddOutlined />
                 协作
               </Button>
-              <Dropdown menu={{ items: menu }} trigger={["click"]}>
-                <Button
-                  type="link"
-                  className="text-primary hover:!text-[#e2a3ac] gap-1 pl-0 justify-start"
-                >
-                  <EllipsisOutlined />
-                </Button>
-              </Dropdown>
+              <MoreOperation record={record} />
             </Flex>
           );
         },
@@ -174,11 +115,6 @@ export const Share = () => {
         loading={shareDocListLoading}
         className="[&_.ant-table-cell]:overflow-hidden mx-10 [&_.ant-spin-dot-spin]:text-primary [&_.ant-table-column-sorter-down.active]:text-primary [&_.ant-table-column-sorter-up.active]:text-primary [&_.ant-pagination-item-active]:border-primary [&_.ant-pagination-item-active:hover]:border-primary [&_.ant-pagination-item-active>a]:text-primary [&_.ant-pagination-item-active>a:hover]:text-primary"
       />
-      {/* <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Modal> */}
       <ShareModal
         isModalOpen={isModalOpen}
         handleOk={handleOk}

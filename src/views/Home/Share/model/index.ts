@@ -4,14 +4,14 @@ export interface ShareDocType {
   owner_email: string;
   owner_nickname: string;
   title: string;
-  shared_at: string;
+  shared_at?: string;
 }
 
 export interface ShareModalProps {
   isModalOpen: boolean;
   handleOk: () => void;
   handleCancel: () => void;
-  currentDoc: ShareDocType;
+  currentDoc: { doc_id: string };
 }
 
 export type SearchResultItemType = {

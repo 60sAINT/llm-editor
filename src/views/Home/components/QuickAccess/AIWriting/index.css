@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.box {
+  height: 200px;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 2s ease-out, transform 2s ease-out,
+    background-color 2s ease-out;
+}
+
+.box.animate {
+  opacity: 1;
+  transform: translateX(0);
+  background-color: #333;
+}

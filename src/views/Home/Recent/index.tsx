@@ -1,13 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Button, Flex, Space, Table, Tooltip, Modal, Input } from "antd";
+import { Button, Flex, Table, Tooltip, Modal, Input } from "antd";
 import {
   DeleteOutlined,
-  FileAddOutlined,
   FileTextOutlined,
-  ImportOutlined,
-  OpenAIOutlined,
   ExclamationCircleFilled,
   EditOutlined,
+  UsergroupAddOutlined,
 } from "@ant-design/icons";
 import { useRequest } from "@/hooks/useRequest";
 import { useAuth } from "@/provider/authProvider";
@@ -15,14 +13,24 @@ import { ColumnType } from "antd/es/table";
 import { formatDate } from "@/common/utils";
 import { useNavigate } from "react-router-dom";
 import { docApi } from "@/views/NewDoc/api/Doc";
-import { OPERATE, TableData } from "../model";
+import { TableData } from "../model";
 import { QuickAccess } from "../components/QuickAccess";
+import { ShareModal } from "../Share/ShareModal";
+import { MoreOperation } from "../components/MoreOperation";
 
 const Recent = () => {
   const { token } = useAuth();
   const navigate = useNavigate();
   const [newName, setNewName] = useState("");
   const newNameRef = useRef(newName);
+  const [currentDoc, setCurrentDoc] = useState<TableData>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const {
     run: getDocList,
@@ -87,35 +95,6 @@ const Recent = () => {
       onCancel() {},
     });
   };
-  const operates = useMemo(
-    () => [
-      {
-        key: OPERATE.CREATE,
-        icon: <FileAddOutlined className="text-3xl text-primary mr-2 h-full" />,
-        title: "新建文档",
-        desc: "从空文本起草",
-      },
-      {
-        key: OPERATE.WRITE,
-        icon: <OpenAIOutlined className="text-3xl text-primary mr-2 h-full" />,
-        title: "AI写作",
-        desc: "让AI辅助您高效写作",
-      },
-      {
-        key: OPERATE.UPLOAD,
-        icon: <ImportOutlined className="text-3xl text-primary mr-2 h-full" />,
-        title: "上传Word",
-        desc: "从本地上传文档",
-      },
-    ],
-    [OPERATE]
-  );
-
-  const handle = (type: OPERATE) => {
-    if (type == "create") {
-      navigate("/newDoc");
-    }
-  };
 
   const columns: ColumnType<TableData>[] = useMemo(
     () => [
@@ -154,49 +133,71 @@ const Recent = () => {
         title: "操作",
         dataIndex: "operation",
         width: "30%",
-        render: (_, record) => (
-          <Flex gap={2}>
-            <Button
-              type="link"
-              className="text-primary hover:!text-[#e2a3ac] gap-1 pl-0 justify-start"
-              onClick={() => {
-                showDeleteConfirm(record.doc_id);
-              }}
-            >
-              <DeleteOutlined />
-              删除
-            </Button>
-            <Button
-              type="link"
-              className="text-primary hover:!text-[#e2a3ac] gap-1 pl-0 justify-start"
-              onClick={() => {
-                showRenameConfirm(record.doc_id, record.title);
-              }}
-            >
-              <EditOutlined />
-              重命名
-            </Button>
-          </Flex>
-        ),
+        render: (_, record) => {
+          return (
+            <Flex gap={2}>
+              <Button
+                type="link"
+                className="text-primary hover:!text-[#e2a3ac] gap-1 pl-0 justify-start"
+                onClick={() => {
+                  showDeleteConfirm(record.doc_id);
+                }}
+              >
+                <DeleteOutlined />
+                删除
+              </Button>
+              <Button
+                type="link"
+                className="text-primary hover:!text-[#e2a3ac] gap-1 pl-0 justify-start"
+                onClick={() => {
+                  showRenameConfirm(record.doc_id, record.title);
+                }}
+              >
+                <EditOutlined />
+                重命名
+              </Button>
+              <Button
+                type="link"
+                className="text-primary hover:!text-[#e2a3ac] gap-1 pl-0 justify-start"
+                onClick={() => {
+                  setCurrentDoc(record);
+                  setIsModalOpen(true);
+                }}
+              >
+                <UsergroupAddOutlined />
+                协作
+              </Button>
+              <MoreOperation record={record} />
+            </Flex>
+          );
+        },
       },
     ],
     []
   );
 
   return (
-    <div className="w-full h-full overflow-auto py-6 px-10">
-      <QuickAccess />
-      <h3 className="mt-6 mb-5 font-bold text-neutral-700 text-base">
-        最近文件
-      </h3>
-      <Table
-        rowKey={"doc_id"}
-        dataSource={docList}
-        columns={columns}
-        loading={docListLoading}
-        className="[&_.ant-spin-dot-spin]:text-primary [&_.ant-table-column-sorter-down.active]:text-primary [&_.ant-table-column-sorter-up.active]:text-primary [&_.ant-pagination-item-active]:border-primary [&_.ant-pagination-item-active:hover]:border-primary [&_.ant-pagination-item-active>a]:text-primary [&_.ant-pagination-item-active>a:hover]:text-primary"
+    <>
+      <div className="w-full h-full overflow-y-auto py-6 px-10">
+        <QuickAccess />
+        <h3 className="mt-6 mb-5 font-bold text-neutral-700 text-base">
+          最近文件
+        </h3>
+        <Table
+          rowKey={"doc_id"}
+          dataSource={docList}
+          columns={columns}
+          loading={docListLoading}
+          className="[&_.ant-spin-dot-spin]:text-primary [&_.ant-table-column-sorter-down.active]:text-primary [&_.ant-table-column-sorter-up.active]:text-primary [&_.ant-pagination-item-active]:border-primary [&_.ant-pagination-item-active:hover]:border-primary [&_.ant-pagination-item-active>a]:text-primary [&_.ant-pagination-item-active>a:hover]:text-primary"
+        />
+      </div>
+      <ShareModal
+        isModalOpen={isModalOpen}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        currentDoc={currentDoc!}
       />
-    </div>
+    </>
   );
 };
 

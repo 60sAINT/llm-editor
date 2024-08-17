@@ -5,6 +5,7 @@ import axios from "axios";
 const apikeyPrefix = "/api/v1";
 
 export interface UserInfoType {
+  user_id: string;
   nickname: string;
   email: string;
   phone: string;
