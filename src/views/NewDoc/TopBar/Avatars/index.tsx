@@ -16,24 +16,26 @@ export const Avatars: React.FC<AvatarsProps> = ({ is_shared }) => {
   return (
     <div className="flex items-center space-x-2 mr-4">
       {is_shared &&
-        users.map(({ connectionId, info }) => {
-          return <Avatar key={connectionId} name={info!.name!} />;
+        users.map(({ connectionId, info }, index) => {
+          return (
+            <Avatar key={connectionId} name={info!.name!} index={index + 1} />
+          );
         })}
 
-      {currentUser && (
-        <div className="relative ml-8 first:ml-0">
-          <Avatar name={currentUser.info!.name!} />
-        </div>
-      )}
+      {currentUser && <Avatar name={currentUser.info!.name!} index={0} />}
     </div>
   );
 };
 
-export function Avatar({ name }: { name: string }) {
+export function Avatar({ name, index }: { name: string; index: number }) {
   return (
     <div
-      className="relative flex-shrink-0 rounded-full border-[3px] border-white h-7 w-7 -ml-4"
-      style={{ background: gradient }}
+      className="flex-shrink-0 rounded-full border-[3px] border-white h-7 w-7 absolute"
+      style={{
+        background: gradient,
+        right: `${index * 19 + 70}px`,
+        zIndex: index,
+      }}
       data-tooltip={name}
     >
       <img className="w-full h-full rounded-full" data-tooltip={name} />
