@@ -64,7 +64,7 @@ const TopBar: React.FC<TopBarProps> = ({
           <div className="flex items-center w0full justify-start">
             <ExitButton />
             <TopBarTitle />
-            <Status is_note={is_note} paper_id={paper_id} docId={docId} />
+            <Status is_note={is_note} paper_id={paper_id} noteId={docId} />
           </div>
         </Col>
         <Col span={is_note ? 0 : 6} className="flex justify-center">

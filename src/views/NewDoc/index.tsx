@@ -64,11 +64,8 @@ const NewDoc: React.FC<NewDocProps> = ({
   const [title, setTitle] = useState("");
   const { search } = useLocation();
   const { token } = useAuth();
-  let docId = useDocId(search) as string;
+  let docId = useDocId(search) || note_id!;
   // 如果是pdfViewer右侧边栏的笔记，则把根据pdfId获取到的对应笔记docId传给docId
-  if (note_id) {
-    docId = note_id;
-  }
   const { data: doc } = useRequest(
     async () => {
       const res = await docApi.getDocByDocId(`Bearer ${token}` || "", docId);

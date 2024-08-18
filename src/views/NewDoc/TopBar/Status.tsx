@@ -17,19 +17,21 @@ import { throttle } from "lodash";
 export interface StatusProps {
   is_note?: boolean;
   paper_id?: string;
-  docId?: string;
+  noteId?: string;
 }
 
-const Status: React.FC<StatusProps> = ({ is_note, paper_id, docId }) => {
+const Status: React.FC<StatusProps> = ({ is_note, paper_id, noteId }) => {
   const { token } = useAuth() as { token: string };
-  const { isSaved, title, docContent } = useDocState();
+  const { isSaved, docId, title, docContent } = useDocState();
   const { saveKeyDown } = useNewDocState();
   const dispatch = useDispatch();
   const docDispatch = useDocDispatch();
   const [saveState, setSaveState] = useState<IsSavedType>(isSaved);
+
   useEffect(() => {
     setSaveState(isSaved);
   }, [isSaved]);
+
   useEffect(() => {
     if (saveKeyDown) {
       handleSaveDoc().then(() => showMessage("保存成功！", 0.65, 200));
@@ -49,6 +51,7 @@ const Status: React.FC<StatusProps> = ({ is_note, paper_id, docId }) => {
       return res;
     }
   );
+
   // 保存新文档
   const { runAsync: saveNewDoc } = useRequest(async (title) => {
     const res = await docApi.newDoc({
@@ -61,6 +64,7 @@ const Status: React.FC<StatusProps> = ({ is_note, paper_id, docId }) => {
     setSaveState(IsSavedType.True);
     return res;
   });
+
   useEffect(() => {
     const throttledSave = throttle(() => {
       if (!is_note) handleSaveDoc();
@@ -74,18 +78,22 @@ const Status: React.FC<StatusProps> = ({ is_note, paper_id, docId }) => {
   }, [docContent]);
 
   useEffect(() => {
-    if (is_note && !docId) {
+    if (is_note && !noteId) {
       // 如果是笔记类型
-      try {
-        saveNewDoc(title).then((data) => {
+      saveNewDoc(title).then(
+        (data) => {
           showMessage("保存成功！", 0.65, 200);
           setSaveState(IsSavedType.True);
           docDispatch({ type: "SAVE_DOC_ID", payload: data.data.doc_id });
           docDispatch({ type: "SAVE_DOC_STATUS", payload: IsSavedType.True });
-        });
-      } catch (err) {}
+        },
+        (err) => {
+          docDispatch({ type: "SAVE_DOC_ID", payload: err.detail });
+        }
+      );
     }
-  }, [is_note, docId]);
+  }, [is_note, noteId]);
+
   const handleSaveDoc = async () => {
     setSaveState(IsSavedType.Saving);
     // 已有id，不是新文档
@@ -97,6 +105,7 @@ const Status: React.FC<StatusProps> = ({ is_note, paper_id, docId }) => {
       } catch (err) {}
     }
   };
+
   return (
     <div className="ml-3 flex items-center">
       <Tooltip title="点击保存">
