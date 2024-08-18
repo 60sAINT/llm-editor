@@ -1,12 +1,41 @@
-import { Col, Popover, Row, Tooltip } from "antd";
-import React from "react";
+import { Button, Col, Popover, Row, Skeleton, Tooltip } from "antd";
+import React, { useEffect, useState } from "react";
 import { ProfileProps } from "../../interface";
 import AuthorList from "../../components/AuthorList";
 import TruncatedText from "../../components/TruncatedText";
 import EditableTags from "../../components/EditableTags";
 import EditableNote from "../../components/EditableNote";
+import { useRequest } from "@/hooks/useRequest";
+import { sideMenuApi } from "@/views/NewDoc/api/FormattingToolBar";
+import { useAuth } from "@/provider/authProvider";
 
 export const Profile: React.FC<ProfileProps> = ({ paperInformation }) => {
+  const [displayTransFrame, setDisplayTransFrame] = useState<boolean>(false);
+  const [translation, setTranslation] = useState<string | null>(null);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
+  const [displayedText, setDisplayedText] = useState<string>("");
+  const { token } = useAuth();
+  const { runAsync: translateText } = useRequest(async (tar_lang, text) => {
+    const res = await sideMenuApi.textTranslate(tar_lang, text, token!);
+    return res;
+  });
+  useEffect(() => {
+    if (translation) {
+      setIsTyping(true); // 开始打字时设置为 true
+      let index = 0;
+      const interval = setInterval(() => {
+        setDisplayedText((prev) => prev + translation[index]);
+        index++;
+        if (index >= translation.length) {
+          clearInterval(interval);
+          setIsTyping(false); // 打字结束时设置为 false
+        }
+      }, 50); // 每50ms显示一个字符
+      return () => clearInterval(interval);
+    } else {
+      return;
+    }
+  }, [translation]);
   return (
     <div className="py-5 px-2.5">
       <Popover
@@ -95,8 +124,54 @@ export const Profile: React.FC<ProfileProps> = ({ paperInformation }) => {
         </Col>
         <Col span={20}>
           <div className="pl-2 text-neutral-900">
-            {/* {paperInformation.comment} */}
             <EditableNote initialNote={paperInformation.comment} />
+          </div>
+        </Col>
+      </Row>
+      <Row className="mt-2 pl-2 flex items-top">
+        <Col span={4}>
+          <div className="text-black opacity-45">摘要</div>
+        </Col>
+        <Col span={20}>
+          <div className="text-neutral-900 pl-2">
+            <TruncatedText
+              text={paperInformation.abstract}
+              className="[&>p]:max-h-none"
+            />
+            <Button
+              className="mt-2"
+              onClick={async () => {
+                setDisplayTransFrame(true);
+                const response = await translateText(
+                  "chinese",
+                  paperInformation.abstract
+                );
+                const reader = response!
+                  .pipeThrough(new TextDecoderStream())
+                  .getReader();
+                let fullText = "";
+                while (true) {
+                  const { done, value } = await reader.read();
+                  if (value) {
+                    fullText += value;
+                    setTranslation(fullText);
+                  }
+                  if (done) {
+                    break;
+                  }
+                }
+              }}
+            >
+              翻译摘要
+            </Button>
+            {displayTransFrame && (
+              <div className="py-2 border-blue-100 border rounded mt-2 px-2.5 text-base">
+                <Skeleton loading={!displayedText} active title={false}>
+                  {displayedText}
+                  {isTyping && <span className="blinking-cursor">|</span>}
+                </Skeleton>
+              </div>
+            )}
           </div>
         </Col>
       </Row>

@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/provider/authProvider";
 
 export interface EditableNoteProps {
-  initialNote: string;
+  initialNote: string | null;
 }
 
 const EditableNote: React.FC<EditableNoteProps> = ({ initialNote }) => {
@@ -22,7 +22,7 @@ const EditableNote: React.FC<EditableNoteProps> = ({ initialNote }) => {
     return res;
   });
 
-  const [note, setNote] = useState(initialNote);
+  const [note, setNote] = useState(initialNote || "");
   const [editing, setEditing] = useState(false);
   const [hover, setHover] = useState(false);
 

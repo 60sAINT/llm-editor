@@ -8,6 +8,15 @@ export interface BoundaryType {
   pageIndex: number;
 }
 
+export type ReferenceType = {
+  key: number;
+  title: string;
+  author: string;
+  published_at: string;
+  publisher: string;
+  detail_url: string;
+};
+
 export interface PaperInformationType {
   doc_id: string;
   tags: [string];
@@ -42,6 +51,7 @@ export interface PaperInformationType {
         key: number;
         title: string;
         author: string;
+        detail_url: string;
         published_at: string;
         publisher: string;
       }

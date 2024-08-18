@@ -1,11 +1,13 @@
 import { DownOutlined, UpOutlined } from "@ant-design/icons";
+import classNames from "classnames";
 import React, { useState } from "react";
 
 export interface TruncatedTextProps {
   text: string;
+  className?: string;
 }
 
-const TruncatedText: React.FC<TruncatedTextProps> = ({ text }) => {
+const TruncatedText: React.FC<TruncatedTextProps> = ({ text, className }) => {
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpanded = () => {
@@ -13,7 +15,7 @@ const TruncatedText: React.FC<TruncatedTextProps> = ({ text }) => {
   };
 
   return (
-    <div className="max-w-[425px]">
+    <div className={classNames(className, "max-w-[425px]")}>
       <p className="max-h-36 overflow-auto text-neutral-800 text-[13px]">
         {expanded ? text : text.slice(0, 300) + "..."}
         {!expanded && (
