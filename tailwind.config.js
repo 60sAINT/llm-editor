@@ -17,6 +17,7 @@ module.exports = {
         'menu-switcher': '0 1px 4px rgba(0,0,0,.04),0 4px 10px rgba(0,0,0,.08)',
         'interest-search-results': '2px 6px 12px 4px rgba(0,0,0,.08),1px 3px 8px 1px rgba(0,0,0,.12)',
         'home-card': '1px 2px 2px rgba(0,0,0,.02),1px 3px 5px rgba(0,0,0,.04)',
+        'pdfviewer-modal': '0 4px 24px rgba(0,0,0,.2)',
       },
       fontFamily: {
         'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],

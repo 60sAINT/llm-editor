@@ -5,7 +5,7 @@ import { ChartExtraction } from "./ChartExtraction";
 import { HighlightPlugin } from "@react-pdf-viewer/highlight";
 import { Profile } from "./Profile";
 import { PaperInformationType } from "../interface";
-import { References } from "../References";
+import { References } from "./References";
 
 interface RightToolBarProps {
   jumpToPage: (targetPage: number) => void;
