@@ -30,7 +30,11 @@ export class DocApi {
     is_note,
     dir_id,
     paper_id,
-  }: NewDocParams) {
+  }: NewDocParams): Promise<{
+    data: {
+      doc_id: string;
+    };
+  }> {
     const result = await axios.post(
       `${apikeyPrefix}/doc/new`,
       {

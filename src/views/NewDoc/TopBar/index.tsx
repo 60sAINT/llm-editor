@@ -18,6 +18,7 @@ interface TopBarProps {
   is_note?: boolean;
   paper_id?: string;
   is_shared: boolean;
+  docId?: string;
 }
 const TopBar: React.FC<TopBarProps> = ({
   getShowCards: sendShowCardsToTopBar,
@@ -26,6 +27,7 @@ const TopBar: React.FC<TopBarProps> = ({
   is_note,
   paper_id,
   is_shared,
+  docId,
 }) => {
   const [animate, setAnimate] = useState(false);
   const [animateReverse, setAnimateReverse] = useState(false);
@@ -62,7 +64,7 @@ const TopBar: React.FC<TopBarProps> = ({
           <div className="flex items-center w0full justify-start">
             <ExitButton />
             <TopBarTitle />
-            <Status is_note={is_note} paper_id={paper_id} />
+            <Status is_note={is_note} paper_id={paper_id} docId={docId} />
           </div>
         </Col>
         <Col span={is_note ? 0 : 6} className="flex justify-center">

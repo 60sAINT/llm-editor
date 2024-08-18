@@ -169,6 +169,7 @@ const NewDoc: React.FC<NewDocProps> = ({
                 is_note={is_note}
                 paper_id={paper_id}
                 is_shared={doc?.is_shared}
+                docId={docId}
               />
               <Row className="flex-grow justify-center items-start py-4 px-2">
                 {(fullText || fullTextLoading) && !isOutlineVisible ? (
@@ -176,26 +177,31 @@ const NewDoc: React.FC<NewDocProps> = ({
                     span={editorOnly ? 0 : showCards ? 5 : 6}
                     className={`max-h-[${leftColHeight}px] min-h-64`}
                   >
-                    <CardList
-                      dataSource={[fullText]}
-                      loading={!fullText}
-                      classname="!pr-2 [&>div]:min-h-64 [&>div]:!mb-0 [&>div]:!px-5 [&>div]:!pt-5 [&>div]:!pb-14"
-                      maxHeight={`${leftColHeight}px`}
-                      fullBtn={
-                        isDone ? (
-                          <Button
-                            size="small"
-                            type="primary"
-                            className="h-7 w-20 rounded-sm"
-                            onClick={replaceHandle}
-                          >
-                            替换全文
-                          </Button>
-                        ) : (
-                          <></>
-                        )
-                      }
-                    />
+                    <Affix
+                      offsetTop={ifStartUnfold ? 108 : 72}
+                      className="h-efficiency-affix overflow-y-auto"
+                    >
+                      <CardList
+                        dataSource={[fullText]}
+                        loading={!fullText}
+                        classname="!pr-2 [&>div]:min-h-64 [&>div]:!mb-0 [&>div]:!px-5 [&>div]:!pt-5 [&>div]:!pb-14"
+                        maxHeight={`${leftColHeight}px`}
+                        fullBtn={
+                          isDone ? (
+                            <Button
+                              size="small"
+                              type="primary"
+                              className="h-7 w-20 rounded-sm"
+                              onClick={replaceHandle}
+                            >
+                              替换全文
+                            </Button>
+                          ) : (
+                            <></>
+                          )
+                        }
+                      />
+                    </Affix>
                   </Col>
                 ) : (
                   <Col span={editorOnly ? 0 : showCards ? 5 : 6}>

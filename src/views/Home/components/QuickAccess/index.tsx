@@ -170,19 +170,13 @@ export const QuickAccess = () => {
             "X-Authorization": `Bearer ${token}`,
           },
           cancelToken: source.token,
-          onUploadProgress: (progressEvent) => {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total!
-            );
-            console.log(`Upload progress: ${percentCompleted}%`);
-          },
+          onUploadProgress: () => {},
         });
         setModalOpen(false); // Close the modal when upload is complete
         // 上传成功后的逻辑
         console.log(response);
       } catch (error) {
         if (axios.isCancel(error)) {
-          console.log("Upload canceled:", error.message);
         } else {
           console.error(error);
         }
@@ -226,7 +220,7 @@ export const QuickAccess = () => {
           return (
             <Space
               key={item.key}
-              className="quickAccessCard w-full h-full p-4 items-start [&>.ant-space-item]:h-full cursor-pointer bg-home-card-bg rounded-[5px] shadow-home-card"
+              className="quickAccessCard w-full h-full p-4 items-start [&>.ant-space-item]:h-full cursor-pointer bg-home-card-bg rounded-[5px] shadow-home-card max-h-[108px]"
               onClick={() => handle(item.key)}
             >
               <div className="shadow-menu-switcher bg-white w-10 h-10 rounded-circle flex items-center justify-center">

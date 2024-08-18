@@ -17,11 +17,12 @@ import { throttle } from "lodash";
 export interface StatusProps {
   is_note?: boolean;
   paper_id?: string;
+  docId?: string;
 }
 
-const Status: React.FC<StatusProps> = () => {
+const Status: React.FC<StatusProps> = ({ is_note, paper_id, docId }) => {
   const { token } = useAuth() as { token: string };
-  const { isSaved, docId, title, docContent } = useDocState();
+  const { isSaved, title, docContent } = useDocState();
   const { saveKeyDown } = useNewDocState();
   const dispatch = useDispatch();
   const docDispatch = useDocDispatch();
@@ -48,9 +49,21 @@ const Status: React.FC<StatusProps> = () => {
       return res;
     }
   );
+  // 保存新文档
+  const { runAsync: saveNewDoc } = useRequest(async (title) => {
+    const res = await docApi.newDoc({
+      token: `Bearer ${token}` || "",
+      title,
+      content: "[{}]",
+      is_note,
+      paper_id,
+    });
+    setSaveState(IsSavedType.True);
+    return res;
+  });
   useEffect(() => {
     const throttledSave = throttle(() => {
-      handleSaveDoc();
+      if (!is_note) handleSaveDoc();
     }, 10000);
     // 调用节流函数
     throttledSave();
@@ -60,6 +73,19 @@ const Status: React.FC<StatusProps> = () => {
     };
   }, [docContent]);
 
+  useEffect(() => {
+    if (is_note && !docId) {
+      // 如果是笔记类型
+      try {
+        saveNewDoc(title).then((data) => {
+          showMessage("保存成功！", 0.65, 200);
+          setSaveState(IsSavedType.True);
+          docDispatch({ type: "SAVE_DOC_ID", payload: data.data.doc_id });
+          docDispatch({ type: "SAVE_DOC_STATUS", payload: IsSavedType.True });
+        });
+      } catch (err) {}
+    }
+  }, [is_note, docId]);
   const handleSaveDoc = async () => {
     setSaveState(IsSavedType.Saving);
     // 已有id，不是新文档
