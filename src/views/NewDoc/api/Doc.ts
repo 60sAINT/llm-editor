@@ -92,6 +92,18 @@ export class DocApi {
     );
     return result.data;
   }
+  public async uploadWord(token: string, file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+    const result = await axios.post(
+      `${apikeyPrefix}/doc/import`,
+      { formData },
+      {
+        headers: { "X-Authorization": token },
+      }
+    );
+    return result.data;
+  }
 }
 
 export const docApi = new DocApi();

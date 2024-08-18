@@ -1,149 +1,16 @@
 import { Button, Col, Form, Input, Row, Select, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "../../utils/provider";
-
-const fontSizeOptions = [
-  {
-    value: 5,
-    label: "八号",
-  },
-  {
-    value: 6,
-    label: "七号",
-  },
-  {
-    value: 7,
-    label: "小六",
-  },
-  {
-    value: 8,
-    label: "六号",
-  },
-  {
-    value: 9,
-    label: "小五",
-  },
-  {
-    value: 11,
-    label: "五号",
-  },
-  {
-    value: 12,
-    label: "小四",
-  },
-  {
-    value: 14,
-    label: "四号",
-  },
-  {
-    value: 15,
-    label: "小三",
-  },
-  {
-    value: 16,
-    label: "三号",
-  },
-  {
-    value: 18,
-    label: "小二",
-  },
-  {
-    value: 22,
-    label: "二号",
-  },
-  {
-    value: 24,
-    label: "小一",
-  },
-  {
-    value: 26,
-    label: "一号",
-  },
-  {
-    value: 36,
-    label: "小初",
-  },
-  {
-    value: 42,
-    label: "初号",
-  },
-  {
-    value: 54,
-    label: "特号",
-  },
-  {
-    value: 63,
-    label: "大特号",
-  },
-  {
-    value: 72,
-    label: "1英寸",
-  },
-];
-const segSpacingOptions = [
-  {
-    value: 1.0,
-    label: 1.0,
-  },
-  {
-    value: 1.15,
-    label: 1.15,
-  },
-  {
-    value: 1.5,
-    label: 1.5,
-  },
-  {
-    value: 2.0,
-    label: 2.0,
-  },
-  {
-    value: 2.5,
-    label: 2.5,
-  },
-  {
-    value: 3.0,
-    label: 3.0,
-  },
-];
-const dataSource = [
-  {
-    key: "1",
-    position: "段前",
-    heading1: "before",
-    heading2: "before",
-    heading3: "before",
-    paragraph: "before",
-  },
-  {
-    key: "2",
-    position: "段后",
-    heading1: "after",
-    heading2: "after",
-    heading3: "after",
-    paragraph: "after",
-  },
-];
-const paddingOptions = [
-  { label: "窄", value: "narrow" },
-  { label: "适中", value: "moderate" },
-  { label: "宽", value: "wide" },
-  { label: "自定义", value: "custom" },
-];
-const paddingValues: {
-  [key: string]: { top: string; bottom: string; left: string; right: string };
-} = {
-  narrow: { top: "1.27", bottom: "1.27", left: "1.27", right: "1.27" },
-  moderate: { top: "2.54", bottom: "2.54", left: "1.91", right: "1.91" },
-  wide: { top: "2.54", bottom: "2.54", left: "5.08", right: "5.08" },
-};
+import {
+  dataSource,
+  fontSizeOptions,
+  paddingOptions,
+  paddingValues,
+  segSpacingOptions,
+} from "../../model";
 
 export const FormattingDoc = () => {
   const dispatch = useDispatch();
-  const formItemLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 17 },
-  };
   const { Option } = Select;
   const [customPadding, setCustomPadding] = useState(paddingValues.moderate);
   const [isCustom, setIsCustom] = useState(false);
@@ -177,10 +44,10 @@ export const FormattingDoc = () => {
   };
 
   return (
-    <>
+    <div className="pl-4">
       <Form
         name="validate_other"
-        {...formItemLayout}
+        // {...formItemLayout}
         initialValues={{
           "heading1-fontFamily": "-apple-system",
           "heading1-fontSize": 36,
@@ -207,176 +74,158 @@ export const FormattingDoc = () => {
         }}
         style={{ maxWidth: 600 }}
         form={form}
+        colon={false}
       >
-        <Form.Item
-          label="标题1"
-          className="mb-3 font-semibold [&_label]:!text-base"
-          colon={false}
-        ></Form.Item>
-        <Form.Item
-          name="heading1-fontFamily"
-          label="字体"
-          hasFeedback
-          className="mb-5"
-        >
-          <Select placeholder="请选择一种字体">
-            <Option value="-apple-system">
-              <div style={{ fontFamily: "-apple-system" }}>默认</div>
-            </Option>
-            <Option value="SimSun">
-              <div style={{ fontFamily: "SimSun" }}>宋体</div>
-            </Option>
-            <Option value="SimHei">
-              <div style={{ fontFamily: "SimHei" }}>黑体</div>
-            </Option>
-            <Option value="FangSong">
-              <div style={{ fontFamily: "FangSong" }}>仿宋</div>
-            </Option>
-            <Option value="KaiTi">
-              <div style={{ fontFamily: "KaiTi" }}>楷体</div>
-            </Option>
-          </Select>
-        </Form.Item>
-        <Form.Item name="heading1-fontSize" label="字号" className="mb-[21px]">
-          <Select
-            showSearch
-            placeholder="请选择字号"
-            optionFilterProp="label"
-            filterSort={(optionA, optionB) =>
-              (optionA.value as number) - (optionB.value as number)
-            }
-            options={fontSizeOptions}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="标题2"
-          className="mb-3 font-semibold [&_label]:!text-base"
-          colon={false}
-        ></Form.Item>
-        <Form.Item
-          name="heading2-fontFamily"
-          label="字体"
-          hasFeedback
-          className="mb-5"
-        >
-          <Select placeholder="请选择一种字体">
-            <Option value="-apple-system">
-              <div style={{ fontFamily: "-apple-system" }}>默认</div>
-            </Option>
-            <Option value="SimSun">
-              <div style={{ fontFamily: "SimSun" }}>宋体</div>
-            </Option>
-            <Option value="SimHei">
-              <div style={{ fontFamily: "SimHei" }}>黑体</div>
-            </Option>
-            <Option value="FangSong">
-              <div style={{ fontFamily: "FangSong" }}>仿宋</div>
-            </Option>
-            <Option value="KaiTi">
-              <div style={{ fontFamily: "KaiTi" }}>楷体</div>
-            </Option>
-          </Select>
-        </Form.Item>
-        <Form.Item name="heading2-fontSize" label="字号" className="mb-[21px]">
-          <Select
-            showSearch
-            placeholder="请选择字号"
-            optionFilterProp="label"
-            filterSort={(optionA, optionB) =>
-              (optionA.value as number) - (optionB.value as number)
-            }
-            options={fontSizeOptions}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="标题3"
-          className="mb-3 font-semibold [&_label]:!text-base"
-          colon={false}
-        ></Form.Item>
-        <Form.Item
-          name="heading3-fontFamily"
-          label="字体"
-          hasFeedback
-          className="mb-5"
-        >
-          <Select placeholder="请选择一种字体">
-            <Option value="-apple-system">
-              <div style={{ fontFamily: "-apple-system" }}>默认</div>
-            </Option>
-            <Option value="SimSun">
-              <div style={{ fontFamily: "SimSun" }}>宋体</div>
-            </Option>
-            <Option value="SimHei">
-              <div style={{ fontFamily: "SimHei" }}>黑体</div>
-            </Option>
-            <Option value="FangSong">
-              <div style={{ fontFamily: "FangSong" }}>仿宋</div>
-            </Option>
-            <Option value="KaiTi">
-              <div style={{ fontFamily: "KaiTi" }}>楷体</div>
-            </Option>
-          </Select>
-        </Form.Item>
-        <Form.Item name="heading3-fontSize" label="字号" className="mb-[21px]">
-          <Select
-            showSearch
-            placeholder="请选择字号"
-            optionFilterProp="label"
-            filterSort={(optionA, optionB) =>
-              (optionA.value as number) - (optionB.value as number)
-            }
-            options={fontSizeOptions}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="正文"
-          className="mb-3 font-semibold [&_label]:!text-base"
-          colon={false}
-        ></Form.Item>
-        <Form.Item
-          name="paragraph-fontFamily"
-          label="字体"
-          hasFeedback
-          className="mb-5"
-        >
-          <Select placeholder="请选择一种字体">
-            <Option value="-apple-system">
-              <div style={{ fontFamily: "-apple-system" }}>默认</div>
-            </Option>
-            <Option value="SimSun">
-              <div style={{ fontFamily: "SimSun" }}>宋体</div>
-            </Option>
-            <Option value="SimHei">
-              <div style={{ fontFamily: "SimHei" }}>黑体</div>
-            </Option>
-            <Option value="FangSong">
-              <div style={{ fontFamily: "FangSong" }}>仿宋</div>
-            </Option>
-            <Option value="KaiTi">
-              <div style={{ fontFamily: "KaiTi" }}>楷体</div>
-            </Option>
-          </Select>
-        </Form.Item>
-        <Form.Item name="paragraph-fontSize" label="字号" className="mb-[21px]">
-          <Select
-            showSearch
-            placeholder="请选择字号"
-            optionFilterProp="label"
-            filterSort={(optionA, optionB) =>
-              (optionA.value as number) - (optionB.value as number)
-            }
-            options={fontSizeOptions}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="段间距"
-          className="mb-1.5 font-semibold [&_label]:!text-base"
-          colon={false}
-        ></Form.Item>
+        <div className="font-semibold mb-4">文字样式</div>
+        <div className="flex justify-stretch items-center mb-3">
+          <div className="mr-3.5">一级标题</div>
+          <Form.Item
+            name="heading1-fontFamily"
+            hasFeedback
+            className="mb-0 mr-3.5 w-1/3"
+          >
+            <Select placeholder="请选择一种字体">
+              <Option value="-apple-system">
+                <div style={{ fontFamily: "-apple-system" }}>默认</div>
+              </Option>
+              <Option value="SimSun">
+                <div style={{ fontFamily: "SimSun" }}>宋体</div>
+              </Option>
+              <Option value="SimHei">
+                <div style={{ fontFamily: "SimHei" }}>黑体</div>
+              </Option>
+              <Option value="FangSong">
+                <div style={{ fontFamily: "FangSong" }}>仿宋</div>
+              </Option>
+              <Option value="KaiTi">
+                <div style={{ fontFamily: "KaiTi" }}>楷体</div>
+              </Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name="heading1-fontSize" className="mb-0 w-1/3">
+            <Select
+              showSearch
+              placeholder="请选择字号"
+              optionFilterProp="label"
+              filterSort={(optionA, optionB) =>
+                (optionA.value as number) - (optionB.value as number)
+              }
+              options={fontSizeOptions}
+            />
+          </Form.Item>
+        </div>
+        <div className="flex justify-stretch items-center mb-3">
+          <div className="mr-3.5">二级标题</div>
+          <Form.Item
+            name="heading2-fontFamily"
+            hasFeedback
+            className="mb-0 mr-3.5 w-1/3"
+          >
+            <Select placeholder="请选择一种字体">
+              <Option value="-apple-system">
+                <div style={{ fontFamily: "-apple-system" }}>默认</div>
+              </Option>
+              <Option value="SimSun">
+                <div style={{ fontFamily: "SimSun" }}>宋体</div>
+              </Option>
+              <Option value="SimHei">
+                <div style={{ fontFamily: "SimHei" }}>黑体</div>
+              </Option>
+              <Option value="FangSong">
+                <div style={{ fontFamily: "FangSong" }}>仿宋</div>
+              </Option>
+              <Option value="KaiTi">
+                <div style={{ fontFamily: "KaiTi" }}>楷体</div>
+              </Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name="heading2-fontSize" className="mb-0 w-1/3">
+            <Select
+              showSearch
+              placeholder="请选择字号"
+              optionFilterProp="label"
+              filterSort={(optionA, optionB) =>
+                (optionA.value as number) - (optionB.value as number)
+              }
+              options={fontSizeOptions}
+            />
+          </Form.Item>
+        </div>
+        <div className="flex justify-stretch items-center mb-3">
+          <div className="mr-3.5">三级标题</div>
+          <Form.Item
+            name="heading3-fontFamily"
+            hasFeedback
+            className="mb-0 mr-3.5 w-1/3"
+          >
+            <Select placeholder="请选择一种字体">
+              <Option value="-apple-system">
+                <div style={{ fontFamily: "-apple-system" }}>默认</div>
+              </Option>
+              <Option value="SimSun">
+                <div style={{ fontFamily: "SimSun" }}>宋体</div>
+              </Option>
+              <Option value="SimHei">
+                <div style={{ fontFamily: "SimHei" }}>黑体</div>
+              </Option>
+              <Option value="FangSong">
+                <div style={{ fontFamily: "FangSong" }}>仿宋</div>
+              </Option>
+              <Option value="KaiTi">
+                <div style={{ fontFamily: "KaiTi" }}>楷体</div>
+              </Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name="heading3-fontSize" className="mb-0 w-1/3">
+            <Select
+              showSearch
+              placeholder="请选择字号"
+              optionFilterProp="label"
+              filterSort={(optionA, optionB) =>
+                (optionA.value as number) - (optionB.value as number)
+              }
+              options={fontSizeOptions}
+            />
+          </Form.Item>
+        </div>
+        <div className="flex justify-stretch items-center mb-5">
+          <div className="mr-[42px]">正文</div>
+          <Form.Item
+            name="paragraph-fontFamily"
+            hasFeedback
+            className="mb-0 w-1/3 mr-3.5"
+          >
+            <Select placeholder="请选择一种字体">
+              <Option value="-apple-system">
+                <div style={{ fontFamily: "-apple-system" }}>默认</div>
+              </Option>
+              <Option value="SimSun">
+                <div style={{ fontFamily: "SimSun" }}>宋体</div>
+              </Option>
+              <Option value="SimHei">
+                <div style={{ fontFamily: "SimHei" }}>黑体</div>
+              </Option>
+              <Option value="FangSong">
+                <div style={{ fontFamily: "FangSong" }}>仿宋</div>
+              </Option>
+              <Option value="KaiTi">
+                <div style={{ fontFamily: "KaiTi" }}>楷体</div>
+              </Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name="paragraph-fontSize" className="w-1/3 mb-0">
+            <Select
+              showSearch
+              placeholder="请选择字号"
+              optionFilterProp="label"
+              filterSort={(optionA, optionB) =>
+                (optionA.value as number) - (optionB.value as number)
+              }
+              options={fontSizeOptions}
+            />
+          </Form.Item>
+        </div>
+        <div className="font-semibold mb-4">段间距</div>
         <Form.Item
           name="segSpacing"
           className="mb-5"
@@ -476,19 +325,8 @@ export const FormattingDoc = () => {
             ]}
           />
         </Form.Item>
-
-        <Form.Item
-          label="页边距(cm)"
-          className="mb-0.5 font-semibold [&_label]:!text-base overflow-visible"
-          colon={false}
-          labelCol={{ offset: 0, span: 24 }}
-        ></Form.Item>
-        <Form.Item
-          name="padding"
-          hasFeedback
-          wrapperCol={{ offset: 2, span: 21 }}
-          className="mb-5"
-        >
+        <div className="font-semibold mb-4">页边距(cm)</div>
+        <Form.Item name="padding" hasFeedback className="mb-5">
           <Select
             optionFilterProp="label"
             options={paddingOptions}
@@ -556,6 +394,6 @@ export const FormattingDoc = () => {
       >
         确认
       </Button>
-    </>
+    </div>
   );
 };

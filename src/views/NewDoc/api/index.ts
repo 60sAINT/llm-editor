@@ -23,8 +23,11 @@ export interface GetSelfDocPermissionParams {
 }
 
 export class DefaultApi {
-  public async getReference(text: string) {
-    const result = await fetch.get(`${apikeyPrefix}/reference?text=${text}`);
+  public async getReference(text: string, token: string) {
+    const result = await fetch.get(
+      `${apikeyPrefix}/reference?text=${text}`,
+      token
+    );
     return result.body;
   }
 

@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 import { useRequest } from "@/hooks/useRequest";
 import { defaultApi } from "../../api";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/provider/authProvider";
 
 interface Paper {
   title: string;
@@ -20,7 +20,6 @@ const Reference: React.FC = () => {
   const [papers, setPapers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [placeholder, setPlaceholder] = useState<string>("");
-  const navigate = useNavigate();
 
   useEffect(() => {
     setPlaceholder(
@@ -28,8 +27,9 @@ const Reference: React.FC = () => {
     );
   }, []);
 
+  const { token } = useAuth();
   const { runAsync: getReference } = useRequest(async (searchText) => {
-    const res = await defaultApi.getReference(searchText);
+    const res = await defaultApi.getReference(searchText, token!);
     return res;
   });
   const handleSearch = async () => {

@@ -80,7 +80,7 @@ const Outline: React.FC<OutlineProps> = ({
 
   const handleHeadingClick = (id: string) => {
     setSelectedHeadingId(id);
-    scrollToElement(id);
+    scrollToElement(id, ifStartUnfold);
   };
 
   const renderHeadings = (headings: Heading[]) => {

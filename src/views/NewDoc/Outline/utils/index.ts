@@ -1,10 +1,11 @@
-export const scrollToElement = (id: string) => {
+export const scrollToElement = (id: string, ifStartUnfold: boolean) => {
+  console.log(ifStartUnfold);
   const element = document.querySelector(`[data-id="${id}"]`);
   if (element) {
     // Calculate the current scroll position
     const elementRect = element.getBoundingClientRect();
     const absoluteElementTop = elementRect.top + window.scrollY;
-    const offset = -60; // Adjust this value as needed
+    const offset = ifStartUnfold ? -90 : -60; // Adjust this value as needed
 
     // Calculate the target scroll position
     const targetScrollPosition = absoluteElementTop + offset;
