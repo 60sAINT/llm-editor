@@ -1,22 +1,19 @@
 import { useRequest } from "@/hooks/useRequest";
 import { Skeleton, Tabs, TabsProps } from "antd";
 import React, { useState } from "react";
-// import { literatureApi } from "./api";
 import { useAuth } from "@/provider/authProvider";
-import { literatureApi } from "./api";
-import { Summary } from "./Summary";
 import { SummaryTable } from "./SummaryTable";
+import Summary from "./Summary";
+import { directoryApi } from "../Directory/api";
 
 const NoteManage = () => {
   const { token } = useAuth();
   const [activeTab, setActiveTab] = useState<string>("1");
 
-  const { data: summaryList, loading: summaryListLoading } = useRequest(
+  const { data: folderListData, loading: folderListLoading } = useRequest(
     async () => {
-      const res = await literatureApi.getLiteratureList(
-        `Bearer ${token}` || ""
-      );
-      return res;
+      const res = await directoryApi.getDirectoryTree(`Bearer ${token}` || "");
+      return res.data;
     },
     { manual: false }
   );
@@ -24,8 +21,8 @@ const NoteManage = () => {
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: "总结",
-      children: <Summary summaryList={summaryList} />,
+      label: "笔记",
+      children: <Summary folderListData={folderListData} />,
     },
   ];
   const onChange = (key: string) => {
@@ -36,7 +33,7 @@ const NoteManage = () => {
     <div className="flex h-full">
       <div className="bg-stone-100 w-[22.8%] border-r border-slate-200">
         <Skeleton
-          loading={summaryListLoading}
+          loading={folderListLoading}
           active
           paragraph={{ rows: 8 }}
           className="p-3"
@@ -53,8 +50,8 @@ const NoteManage = () => {
       <div className="w-[77.2%]">
         {activeTab === "1" ? (
           <SummaryTable
-            summaryList={summaryList}
-            summaryListLoading={summaryListLoading}
+            summaryList={folderListData}
+            summaryListLoading={folderListLoading}
           />
         ) : null}
       </div>
