@@ -178,7 +178,7 @@ const Home: React.FC = () => {
         </div>
       </div>
       <Divider className="my-4" />
-      <div className="grid grid-cols-2 gap-4 mt-2">
+      <div className="grid grid-cols-2 gap-4 mt-1.5 mx-2.5">
         <div
           className="text-center hover:bg-gray-100 py-2.5"
           onClick={() => setIsModalVisible(true)}
@@ -188,7 +188,7 @@ const Home: React.FC = () => {
           </div>
           <span>新建文件夹</span>
         </div>
-        <Upload className="[&_div.ant-upload]:h-full" {...uploadProps}>
+        <Upload {...uploadProps}>
           <div className="text-center hover:bg-gray-100 py-2.5">
             <div className="mb-4">
               <UploadOutlined className="text-3xl text-gray-300" />
