@@ -13,6 +13,7 @@ import { UserOutlined } from "@ant-design/icons";
 
 interface TopBarProps {
   getShowCards: (showCards: boolean) => void;
+  getShowAIWriting: (showAIWriting: boolean) => void;
   getFullText: (text: string) => void;
   getIfStartUnfold: (ifStartUnfold: boolean) => void;
   is_note?: boolean;
@@ -22,6 +23,7 @@ interface TopBarProps {
 }
 const TopBar: React.FC<TopBarProps> = ({
   getShowCards: sendShowCardsToTopBar,
+  getShowAIWriting: sendShowAIWritingToTopBar,
   getFullText,
   getIfStartUnfold: sendIfStartUnfold,
   is_note,
@@ -32,6 +34,7 @@ const TopBar: React.FC<TopBarProps> = ({
   const [animate, setAnimate] = useState(false);
   const [animateReverse, setAnimateReverse] = useState(false);
   const [showCards, setShowCards] = useState(false);
+  const [showAIWriting, setShowAIWriting] = useState(false);
   const { cardText } = useNewDocState();
 
   // 点击“开始”后
@@ -43,11 +46,23 @@ const TopBar: React.FC<TopBarProps> = ({
 
   // 点击“效率”后，把最新的是否展示Cards传给父组件NewDoc
   const handleEfficiencyClick = useCallback(() => {
+    if (showAIWriting)
+      setShowAIWriting((prevShowAIWriting) => !prevShowAIWriting);
     setShowCards((prevShowCards) => !prevShowCards);
-  }, []);
+  }, [showAIWriting]);
   useEffect(() => {
     sendShowCardsToTopBar(showCards);
   }, [showCards]);
+
+  // 点击AI写作后
+  const handleAIClick = useCallback(() => {
+    console.log(showCards);
+    if (showCards) setShowCards((prevShowCards) => !prevShowCards);
+    setShowAIWriting((prevShowAIWriting) => !prevShowAIWriting);
+  }, [showCards]);
+  useEffect(() => {
+    sendShowAIWritingToTopBar(showAIWriting);
+  }, [showAIWriting]);
 
   useEffect(() => {
     getFullText(cardText);
@@ -71,11 +86,7 @@ const TopBar: React.FC<TopBarProps> = ({
           <div className="flex items-center justify-between w-[300px]">
             <ActionButton label="开始" onClick={handleStartClick} />
             <ActionButton label="效率" onClick={handleEfficiencyClick} />
-            <ActionButton
-              label="审阅"
-              onClick={() => {}}
-              className="hover:cursor-not-allowed"
-            />
+            <ActionButton label="AI写作" onClick={handleAIClick} />
           </div>
         </Col>
         <Col span={is_note ? 12 : 9}>

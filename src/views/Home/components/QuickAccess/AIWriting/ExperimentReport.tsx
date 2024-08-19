@@ -3,12 +3,13 @@ import React from "react";
 import { Button, Divider, Form, Input, InputNumber, Tooltip } from "antd";
 import { OPERATE } from "@/views/Home/model";
 import { Microscope } from "@/common/icons";
+import { AIWritingProps } from "../interface";
 
-export const ExperimentReport = () => {
+export const ExperimentReport: React.FC<AIWritingProps> = ({ className }) => {
   const [form] = Form.useForm();
 
   return (
-    <>
+    <div className={className}>
       <div className="h-20 flex items-center w-full">
         <div className="shadow-menu-switcher bg-white w-10 h-10 rounded-circle flex items-center justify-center mr-5">
           <Icon component={Microscope} />
@@ -34,7 +35,7 @@ export const ExperimentReport = () => {
             <Input placeholder="请输入实验名称" className="h-10" />
           </Form.Item>
         </div>
-        <div className="flex justify-between h-12 items-center">
+        <div className="flex justify-between items-top mt-3">
           <div className="text-topbar-text">实验目的</div>
           <Form.Item
             name="title"
@@ -44,7 +45,7 @@ export const ExperimentReport = () => {
             <Input.TextArea placeholder="请输入实验目的" rows={4} />
           </Form.Item>
         </div>
-        <div className="flex justify-between h-12 items-center">
+        <div className="flex justify-between items-top mt-3">
           <div className="text-topbar-text">
             报告目录
             <Tooltip title="选填">
@@ -80,6 +81,6 @@ export const ExperimentReport = () => {
           </Button>
         </div>
       </Form>
-    </>
+    </div>
   );
 };

@@ -1,0 +1,33 @@
+.quickAccessCard {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.quickAccessCard:hover {
+  transform: translateZ(10px) scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.box {
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 2s ease-out, transform 2s ease-out,
+    background-color 2s ease-out;
+}
+
+.box.animate {
+  opacity: 1;
+  transform: translateX(0);
+  background-color: #333;
+}

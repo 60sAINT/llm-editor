@@ -23,6 +23,7 @@ import Outline from "./Outline";
 import { MenuOutlined } from "@ant-design/icons";
 import classNames from "classnames";
 import Editor from "./Editor";
+import { InnerAIWriting } from "./InnerAIWriting";
 
 interface NewDocProps {
   className?: string;
@@ -41,6 +42,7 @@ const NewDoc: React.FC<NewDocProps> = ({
   const [state, dispatch] = useReducer(reducer, initialState);
   const [docState, docDispatch] = useReducer(docReducer, initialDocState);
   const [showCards, setShowCards] = useState<boolean>(false);
+  const [showAIWriting, setShowAIWriting] = useState<boolean>(false);
   const [fullText, setFullText] = useState<string>("");
   const [fullTextLoading, setFullTextLoading] = useState<boolean>(
     state.fullTextLoading
@@ -56,6 +58,9 @@ const NewDoc: React.FC<NewDocProps> = ({
   }, [state.fullTextLoading]);
   const getShowCards = (showCards: boolean) => {
     setShowCards(showCards);
+  };
+  const getShowAIWriting = (showAIWriting: boolean) => {
+    setShowAIWriting(showAIWriting);
   };
 
   // 根据id获取当前doc的内容
@@ -161,6 +166,7 @@ const NewDoc: React.FC<NewDocProps> = ({
             >
               <TopBar
                 getShowCards={getShowCards}
+                getShowAIWriting={getShowAIWriting}
                 getFullText={setFullText}
                 getIfStartUnfold={getIfStartUnfold}
                 is_note={is_note}
@@ -201,7 +207,11 @@ const NewDoc: React.FC<NewDocProps> = ({
                     </Affix>
                   </Col>
                 ) : (
-                  <Col span={editorOnly ? 0 : showCards ? 5 : 6}>
+                  <Col
+                    span={
+                      editorOnly ? 0 : showCards ? 5 : showAIWriting ? 5 : 6
+                    }
+                  >
                     <Outline
                       editor={editor}
                       isVisible={isOutlineVisible}
@@ -274,15 +284,24 @@ const NewDoc: React.FC<NewDocProps> = ({
                     )}
                   </div>
                 </Col>
-                <Col span={editorOnly ? 0 : showCards ? 7 : 6} className="">
-                  {showCards && (
+                <Col
+                  span={editorOnly ? 0 : showCards ? 7 : showAIWriting ? 7 : 6}
+                >
+                  {showCards ? (
                     <Affix
                       offsetTop={ifStartUnfold ? 108 : 72}
                       className="h-efficiency-affix overflow-y-auto"
                     >
                       <Efficiency />
                     </Affix>
-                  )}
+                  ) : showAIWriting ? (
+                    <Affix
+                      offsetTop={ifStartUnfold ? 108 : 72}
+                      className="h-efficiency-affix overflow-y-auto"
+                    >
+                      <InnerAIWriting />
+                    </Affix>
+                  ) : null}
                 </Col>
               </Row>
             </div>

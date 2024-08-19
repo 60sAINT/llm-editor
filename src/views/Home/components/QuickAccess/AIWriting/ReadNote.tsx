@@ -3,15 +3,16 @@ import React from "react";
 import { Button, Divider, Form, Input, InputNumber, Select } from "antd";
 import { OPERATE } from "@/views/Home/model";
 import { ReadingNote } from "@/common/icons";
+import { AIWritingProps } from "../interface";
 
-export const ReadNote = () => {
+export const ReadNote: React.FC<AIWritingProps> = ({ className }) => {
   const [form] = Form.useForm();
   const handleChange = (value: string) => {
     console.log(`selected ${value}`);
   };
 
   return (
-    <>
+    <div className={className}>
       <div className="h-20 flex items-center w-full">
         <div className="shadow-menu-switcher bg-white w-10 h-10 rounded-circle flex items-center justify-center mr-5">
           <Icon component={ReadingNote} />
@@ -83,6 +84,6 @@ export const ReadNote = () => {
           </Button>
         </div>
       </Form>
-    </>
+    </div>
   );
 };

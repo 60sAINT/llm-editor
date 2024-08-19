@@ -1,11 +1,15 @@
 import Icon, { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { GradientBulbOutlined } from "@/common/icons/GradientBulbOutlined";
 import React, { useState } from "react";
-import { Button, Divider, Form, Input, Radio, Space } from "antd";
+import { Button, Divider, Form, Input, Radio, Select, Space } from "antd";
 import { OPERATE } from "@/views/Home/model";
+import { AIWritingProps } from "../interface";
 
-export const Academic = () => {
+export const Academic: React.FC<AIWritingProps> = ({ className }) => {
   const [form] = Form.useForm();
+  const handleChange = (value: string) => {
+    console.log(`selected ${value}`);
+  };
 
   const [keywords, setKeywords] = useState([""]);
   const addKeyword = () => {
@@ -17,7 +21,7 @@ export const Academic = () => {
   };
 
   return (
-    <>
+    <div className={className}>
       <div className="h-20 flex items-center w-full">
         <div className="shadow-menu-switcher bg-white w-10 h-10 rounded-circle flex items-center justify-center mr-5">
           <Icon component={GradientBulbOutlined} />
@@ -115,13 +119,16 @@ export const Academic = () => {
             rules={[{ required: true, message: "请选择论文标准！" }]}
             className="mb-0 w-ai-writing-form-item"
           >
-            <Radio.Group>
-              <Space direction="horizontal">
-                <Radio value="undergraduate">本科毕设</Radio>
-                <Radio value="graduate">研究生毕业论文</Radio>
-                <Radio value="journal">期刊会议学术论文</Radio>
-              </Space>
-            </Radio.Group>
+            <Select
+              defaultValue="undergraduate"
+              className="h-10"
+              onChange={handleChange}
+              options={[
+                { value: "undergraduate", label: "本科毕设" },
+                { value: "graduate", label: "研究生毕业论文" },
+                { value: "journal", label: "期刊会议学术论文" },
+              ]}
+            />
           </Form.Item>
         </div>
         <div className="flex justify-between h-12 items-center">
@@ -130,6 +137,6 @@ export const Academic = () => {
           </Button>
         </div>
       </Form>
-    </>
+    </div>
   );
 };

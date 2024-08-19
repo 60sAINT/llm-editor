@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { Button, Divider, Form, Input, InputNumber } from "antd";
 import { OPERATE } from "@/views/Home/model";
 import { Teacher } from "@/common/icons";
+import { AIWritingProps } from "../interface";
 
-export const TeachPlan = () => {
+export const TeachPlan: React.FC<AIWritingProps> = ({ className }) => {
   const [form] = Form.useForm();
 
   const [keywords, setKeywords] = useState([""]);
@@ -17,7 +18,7 @@ export const TeachPlan = () => {
   };
 
   return (
-    <>
+    <div className={className}>
       <div className="h-20 flex items-center w-full">
         <div className="shadow-menu-switcher bg-white w-10 h-10 rounded-circle flex items-center justify-center mr-5">
           <Icon component={Teacher} />
@@ -104,6 +105,6 @@ export const TeachPlan = () => {
           </Button>
         </div>
       </Form>
-    </>
+    </div>
   );
 };

@@ -1,11 +1,12 @@
 import NewDoc from "@/views/NewDoc";
-import { Tabs } from "antd";
+import { ConfigProvider, Tabs } from "antd";
 import React from "react";
 import { ChartExtraction } from "./ChartExtraction";
 import { HighlightPlugin } from "@react-pdf-viewer/highlight";
 import { Profile } from "./Profile";
 import { PaperInformationType } from "../interface";
 import { References } from "./References";
+import QA from "./QA";
 
 interface RightToolBarProps {
   jumpToPage: (targetPage: number) => void;
@@ -38,6 +39,11 @@ export const RightToolBar: React.FC<RightToolBarProps> = ({
       children: <Profile paperInformation={paperInformation} />,
     },
     {
+      label: "AI 问答",
+      key: "qa",
+      children: <QA pdfId={paperInformation.paper_id} />,
+    },
+    {
       label: "笔记",
       key: "note",
       children: (
@@ -57,16 +63,26 @@ export const RightToolBar: React.FC<RightToolBarProps> = ({
     },
   ];
   return (
-    <Tabs
-      className="[&>.ant-tabs-nav]:!mb-0 [&>.ant-tabs-nav]:px-5 [&>.ant-tabs-nav]:pt-2"
-      defaultActiveKey="chartExtraction"
-      items={rightToolbar.map((item) => {
-        return {
-          label: item.label,
-          key: item.key,
-          children: item.children,
-        };
-      })}
-    />
+    <ConfigProvider
+      theme={{
+        components: {
+          Tabs: {
+            horizontalItemGutter: 28,
+          },
+        },
+      }}
+    >
+      <Tabs
+        className="[&>.ant-tabs-nav]:!mb-0 [&>.ant-tabs-nav]:px-5 [&>.ant-tabs-nav]:pt-2"
+        defaultActiveKey="chartExtraction"
+        items={rightToolbar.map((item) => {
+          return {
+            label: item.label,
+            key: item.key,
+            children: item.children,
+          };
+        })}
+      />
+    </ConfigProvider>
   );
 };

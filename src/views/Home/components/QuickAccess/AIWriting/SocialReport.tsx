@@ -3,12 +3,13 @@ import React from "react";
 import { Button, Divider, Form, Input, InputNumber } from "antd";
 import { OPERATE } from "@/views/Home/model";
 import { green } from "@ant-design/colors";
+import { AIWritingProps } from "../interface";
 
-export const SocialReport = () => {
+export const SocialReport: React.FC<AIWritingProps> = ({ className }) => {
   const [form] = Form.useForm();
 
   return (
-    <>
+    <div className={className}>
       <div className="h-20 flex items-center w-full">
         <div className="shadow-menu-switcher bg-white w-10 h-10 rounded-circle flex items-center justify-center mr-5">
           <FlagTwoTone twoToneColor={green.primary} className="text-[22px]" />
@@ -71,6 +72,6 @@ export const SocialReport = () => {
           </Button>
         </div>
       </Form>
-    </>
+    </div>
   );
 };

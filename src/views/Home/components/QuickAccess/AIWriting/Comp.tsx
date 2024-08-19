@@ -7,8 +7,9 @@ import React, { useState } from "react";
 import { Button, Divider, Form, Input, InputNumber, Radio, Space } from "antd";
 import { OPERATE } from "@/views/Home/model";
 import { red } from "@ant-design/colors";
+import { AIWritingProps } from "../interface";
 
-export const Comp = () => {
+export const Comp: React.FC<AIWritingProps> = ({ className }) => {
   const [form] = Form.useForm();
   const [keywords, setKeywords] = useState([""]);
   const addKeyword = () => {
@@ -20,7 +21,7 @@ export const Comp = () => {
   };
 
   return (
-    <>
+    <div className={className}>
       <div className="h-20 flex items-center w-full">
         <div className="shadow-menu-switcher bg-white w-10 h-10 rounded-circle flex items-center justify-center mr-5">
           <EditTwoTone twoToneColor={red.primary} className="text-[22px]" />
@@ -116,6 +117,6 @@ export const Comp = () => {
           </Button>
         </div>
       </Form>
-    </>
+    </div>
   );
 };

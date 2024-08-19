@@ -2,12 +2,13 @@ import { BookTwoTone, QuestionCircleFilled } from "@ant-design/icons";
 import React from "react";
 import { Button, Divider, Form, Input, InputNumber, Tooltip } from "antd";
 import { OPERATE } from "@/views/Home/model";
+import { AIWritingProps } from "../interface";
 
-export const CourseReport = () => {
+export const CourseReport: React.FC<AIWritingProps> = ({ className }) => {
   const [form] = Form.useForm();
 
   return (
-    <>
+    <div className={className}>
       <div className="h-20 flex items-center w-full">
         <div className="shadow-menu-switcher bg-white w-10 h-10 rounded-circle flex items-center justify-center mr-5">
           <BookTwoTone twoToneColor="hotpink" className="text-[22px]" />
@@ -79,6 +80,6 @@ export const CourseReport = () => {
           </Button>
         </div>
       </Form>
-    </>
+    </div>
   );
 };

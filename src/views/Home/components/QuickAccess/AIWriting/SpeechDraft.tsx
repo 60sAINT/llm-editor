@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { Button, Divider, Form, Input, InputNumber } from "antd";
 import { OPERATE } from "@/views/Home/model";
 import { Speech } from "@/common/icons";
+import { AIWritingProps } from "../interface";
 
-export const SpeechDraft = () => {
+export const SpeechDraft: React.FC<AIWritingProps> = ({ className }) => {
   const [form] = Form.useForm();
   const [keywords, setKeywords] = useState([""]);
   const addKeyword = () => {
@@ -16,7 +17,7 @@ export const SpeechDraft = () => {
   };
 
   return (
-    <>
+    <div className={className}>
       <div className="h-20 flex items-center w-full">
         <div className="shadow-menu-switcher bg-white w-10 h-10 rounded-circle flex items-center justify-center mr-5">
           <Icon component={Speech} />
@@ -111,6 +112,6 @@ export const SpeechDraft = () => {
           </Button>
         </div>
       </Form>
-    </>
+    </div>
   );
 };

@@ -66,6 +66,24 @@ export class PdfApi {
     );
     return result.data.data;
   }
+  public async getQaSumNQuestions(token: string, paper_id: string) {
+    const result = await axios.get(
+      `${apikeyPrefix}/text/paper_summary_and_questions?paper_id=${paper_id}`,
+      {
+        headers: { "X-Authorization": token },
+      }
+    );
+    return result.data.data;
+  }
+  public async getHistoryNToken(token: string, memory_id: string) {
+    const result = await axios.get(
+      `${apikeyPrefix}/text/chat_history_and_token?memor_id=${memory_id}`,
+      {
+        headers: { "X-Authorization": token },
+      }
+    );
+    return result.data.data;
+  }
 }
 
 export const pdfApi = new PdfApi();
