@@ -88,7 +88,6 @@ export const References: React.FC<ReferencesProps> = ({ paperInformation }) => {
               <div
                 key={reference.key}
                 onClick={() => {
-                  console.log(reference.detail_url);
                   window.open(reference.detail_url, "_blank");
                 }}
                 className="leading-9 h-9 text-neutral-900 hover:bg-neutral-100 cursor-pointer rounded-sm px-2 whitespace-nowrap overflow-hidden text-ellipsis"

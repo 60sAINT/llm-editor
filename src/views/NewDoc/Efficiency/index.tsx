@@ -5,6 +5,7 @@ import { FormattingDoc } from "./FormattingDoc";
 import Reference from "./Reference";
 import MindMap from "./MindMap";
 import Visualization from "./Visualization";
+import { ReferenceNote } from "./ReferenceNote";
 
 export const Efficiency: React.FC = () => {
   const items = [
@@ -27,6 +28,11 @@ export const Efficiency: React.FC = () => {
       label: "数据可视化",
       key: "visualization",
       children: <Visualization />,
+    },
+    {
+      label: "文献笔记",
+      key: "referenceNote",
+      children: <ReferenceNote />,
     },
   ];
   const effectDataSource = [

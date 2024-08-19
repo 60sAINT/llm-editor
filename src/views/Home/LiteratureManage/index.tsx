@@ -40,7 +40,7 @@ export interface LiteratureType {
   paper_id: string;
   doi: string;
   title: string;
-  author: string;
+  author: string[];
   published_at: string;
   tags: Array<string>;
   comment: string;
@@ -48,6 +48,10 @@ export interface LiteratureType {
   last_read_at: string;
   key?: string;
   detail_url: string;
+  publisher?: string;
+  abstract?: string;
+  page_count?: number;
+  doc_id?: string;
 }
 
 // ... existing code ...
@@ -258,6 +262,12 @@ const LiteratureManage = () => {
       dataIndex: "comment",
       key: "comment",
       render: (comment) => (comment !== "null" ? comment : ""),
+    },
+    {
+      title: "出版社",
+      dataIndex: "publisher",
+      key: "publisher",
+      render: (publisher) => (publisher !== "null" ? publisher : ""),
     },
     {
       title: "发布日期",
