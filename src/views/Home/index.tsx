@@ -27,7 +27,8 @@ import {
   MenuProps,
   Modal,
   Space,
-  Tooltip,
+  Upload,
+  UploadProps,
 } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
@@ -46,6 +47,10 @@ import { useAuth } from "@/provider/authProvider";
 import { useRequest } from "@/hooks/useRequest";
 import { docApi } from "../NewDoc/api/Doc";
 import { directoryApi } from "./Directory/api";
+import axios from "axios";
+import { GATEWAY } from "@/api/AxiosInstance";
+import { useCreateBlockNote } from "@blocknote/react";
+import ProcessBar from "@/common/components/ProcessBar";
 
 const Home: React.FC = () => {
   const [modalUpgradeOpen, setModalUpgradeOpen] = useState(false);
@@ -78,14 +83,73 @@ const Home: React.FC = () => {
   };
 
   const { token } = useAuth();
-  const { runAsync: newDoc } = useRequest(async (title) => {
+  const { runAsync: newDoc } = useRequest(async (title, content?) => {
     const res = await docApi.newDoc({
       token: `Bearer ${token}` || "",
       title,
-      content: "[{}]",
+      content: content || "[{}]",
     });
     return res.data;
   });
+
+  // 上传Word
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [cancelTokenSource, setCancelTokenSource] = useState<any>(null);
+  const action = `${GATEWAY}/api/v1/doc/import`;
+  const handleCancel = () => {
+    if (cancelTokenSource) {
+      cancelTokenSource.cancel("Upload canceled by user.");
+    }
+    setModalOpen(false);
+  };
+  const editor = useCreateBlockNote({
+    initialContent: [
+      {
+        type: "paragraph",
+        content: ["Hello, "],
+      },
+    ],
+  });
+  const uploadProps: UploadProps = {
+    accept: ".docx,.doc",
+    name: "docx_file",
+    multiple: true,
+    showUploadList: false,
+    customRequest: async (opt) => {
+      setModalOpen(true); // Show the modal when upload starts
+      const formData = new FormData();
+      formData.append("docx_file", opt.file);
+      const source = axios.CancelToken.source();
+      setCancelTokenSource(source);
+      try {
+        const response = await axios.post(action, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "X-Authorization": `Bearer ${token}`,
+          },
+          cancelToken: source.token,
+          onUploadProgress: () => {},
+        });
+        setModalOpen(false); // Close the modal when upload is complete
+        // 上传成功后的逻辑
+        const blocks = await editor.tryParseHTMLToBlocks(
+          response.data.data.content
+        );
+        const newDocinfo = await newDoc(
+          response.data.data.title,
+          JSON.stringify(blocks)
+        );
+        const { doc_id } = newDocinfo;
+        navigate(`/newDoc?doc_id=${doc_id}`);
+      } catch (error) {
+        if (axios.isCancel(error)) {
+        } else {
+          console.error(error);
+        }
+        setModalOpen(false); // Close the modal if there's an error
+      }
+    },
+  };
 
   const dropdownContent = (
     <div className="bg-white shadow-lg p-3 mt-3 rounded border border-gray-300 text-zinc-600 text-sm">
@@ -124,14 +188,14 @@ const Home: React.FC = () => {
           </div>
           <span>新建文件夹</span>
         </div>
-        <Tooltip title="功能开发中">
-          <div className="text-center hover:bg-gray-100 py-2.5 hover:cursor-not-allowed">
+        <Upload className="[&_div.ant-upload]:h-full" {...uploadProps}>
+          <div className="text-center hover:bg-gray-100 py-2.5">
             <div className="mb-4">
               <UploadOutlined className="text-3xl text-gray-300" />
             </div>
-            <span>上传文件</span>
+            <span>上传Word</span>
           </div>
-        </Tooltip>
+        </Upload>
       </div>
     </div>
   );
@@ -337,6 +401,25 @@ const Home: React.FC = () => {
           onChange={(e) => setNewFolderName(e.target.value)}
           className="mt-6 mb-5 h-8"
         />
+      </Modal>
+      <Modal
+        open={modalOpen}
+        centered
+        className="[&_.ant-modal-content]:p-7 [&_.ant-modal-content]:rounded [&_.ant-modal-content]:w-[480px] [&_.ant-modal-close]:top-6 [&_.ant-modal-close]:right-6 [&_.ant-modal-footer>button]:w-20"
+        onCancel={handleCancel}
+        footer={null}
+        closable={false}
+      >
+        <div className="text-zinc-500 mb-4">文件上传中...</div>
+        <ProcessBar />
+        <div className="w-full flex justify-end mt-4">
+          <div
+            className="border border-primary bg-[#fbf2f3] text-primary flex justify-center items-center h-8 w-20 rounded cursor-pointer"
+            onClick={handleCancel}
+          >
+            <span>取消上传</span>
+          </div>
+        </div>
       </Modal>
     </ConfigProvider>
   );

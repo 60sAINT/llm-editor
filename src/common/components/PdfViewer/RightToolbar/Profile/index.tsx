@@ -37,7 +37,7 @@ export const Profile: React.FC<ProfileProps> = ({ paperInformation }) => {
     }
   }, [translation]);
   return (
-    <div className="py-5 px-2.5">
+    <div className="p-2.5">
       <Popover
         placement="leftTop"
         title={
@@ -162,10 +162,10 @@ export const Profile: React.FC<ProfileProps> = ({ paperInformation }) => {
                 }
               }}
             >
-              翻译摘要
+              <span className="text-[13px]">翻译摘要</span>
             </Button>
             {displayTransFrame && (
-              <div className="py-2 border-blue-100 border rounded mt-2 px-2.5 text-base">
+              <div className="py-2 border-blue-100 border rounded mt-2 px-2.5 text-[13px]">
                 <Skeleton loading={!displayedText} active title={false}>
                   {displayedText}
                   {isTyping && <span className="blinking-cursor">|</span>}

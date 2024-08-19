@@ -28,6 +28,7 @@ import {
 import { GATEWAY } from "@/api/AxiosInstance";
 import ProcessBar from "@/common/components/ProcessBar";
 import axios from "axios";
+import { useCreateBlockNote } from "@blocknote/react";
 
 export const QuickAccess = () => {
   const { token } = useAuth();
@@ -149,6 +150,14 @@ export const QuickAccess = () => {
     setModalOpen(false);
   };
 
+  const editor = useCreateBlockNote({
+    initialContent: [
+      {
+        type: "paragraph",
+        content: ["Hello, "],
+      },
+    ],
+  });
   const action = `${GATEWAY}/api/v1/doc/import`;
   const uploadProps: UploadProps = {
     accept: ".docx,.doc",
@@ -174,7 +183,15 @@ export const QuickAccess = () => {
         });
         setModalOpen(false); // Close the modal when upload is complete
         // 上传成功后的逻辑
-        console.log(response);
+        const blocks = await editor.tryParseHTMLToBlocks(
+          response.data.data.content
+        );
+        const newDocinfo = await newDoc(
+          response.data.data.title,
+          JSON.stringify(blocks)
+        );
+        const { doc_id } = newDocinfo;
+        navigate(`/newDoc?doc_id=${doc_id}`);
       } catch (error) {
         if (axios.isCancel(error)) {
         } else {

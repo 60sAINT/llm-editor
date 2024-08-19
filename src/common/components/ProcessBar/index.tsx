@@ -6,9 +6,12 @@ const ProgressBar: React.FC = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress((prevProgress) =>
-        prevProgress >= 100 ? 0 : prevProgress + 1
-      );
+      setProgress((prevProgress) => {
+        if (prevProgress >= 90) {
+          return prevProgress + 0.1; // Slow down the progress after 90%
+        }
+        return prevProgress + 1; // Normal speed before 90%
+      });
     }, 100); // Adjust the interval time as needed
 
     return () => clearInterval(interval);
