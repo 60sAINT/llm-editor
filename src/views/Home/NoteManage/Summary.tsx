@@ -1,9 +1,8 @@
 import React, { useMemo } from "react";
 import { ConfigProvider, Tree } from "antd";
-import type { GetProps, TreeDataNode } from "antd";
+import type { TreeDataNode } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
-
-type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
+import { countLeafNodes } from "@/common/utils";
 
 const { DirectoryTree } = Tree;
 
@@ -44,14 +43,6 @@ const Summary: React.FC<SummaryProps> = ({ folderListData }) => {
     [folderListData]
   );
 
-  const onSelect: DirectoryTreeProps["onSelect"] = (keys, info) => {
-    console.log("Trigger Select", keys, info);
-  };
-
-  const onExpand: DirectoryTreeProps["onExpand"] = (keys, info) => {
-    console.log("Trigger Expand", keys, info);
-  };
-
   return (
     <ConfigProvider
       theme={{
@@ -70,13 +61,11 @@ const Summary: React.FC<SummaryProps> = ({ folderListData }) => {
           <FileTextOutlined className="[&>svg]:h-[22px]" />
           <div className="ml-4">全部笔记</div>
         </div>
-        <div className="mr-4">{folderListData && folderListData.length}</div>
+        <div className="mr-4">{countLeafNodes(treeData)}</div>
       </div>
       <DirectoryTree
         multiple
         defaultExpandAll
-        onSelect={onSelect}
-        onExpand={onExpand}
         treeData={treeData}
         className="bg-transparent [&_.ant-tree-switcher]:flex [&_.ant-tree-switcher]:items-center [&_.ant-tree-switcher]:justify-center"
       />

@@ -80,3 +80,18 @@ const downloadZipFile = (blob: BlobPart, filename = "downloaded.zip") => {
 };
 
 export default downloadZipFile;
+
+export const countLeafNodes = (nodes: any) => {
+  let count = 0;
+  const traverse = (nodeList: any[]) => {
+    nodeList.forEach((node) => {
+      if (node.isLeaf) {
+        count++;
+      } else if (node.children) {
+        traverse(node.children);
+      }
+    });
+  };
+  traverse(nodes);
+  return count;
+};
