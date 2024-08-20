@@ -5,3 +5,4 @@ export { Train } from "./Train";
 export { Teacher } from "./Teacher";
 export { Calendar } from "./Calendar";
 export { Analyze } from "./Analyze";
+export { AccountInfo } from "./AccountInfo";

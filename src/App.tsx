@@ -10,6 +10,7 @@ import { useRequest } from "./hooks/useRequest";
 import { docApi } from "./views/NewDoc/api/Doc";
 import { defaultApi } from "./views/NewDoc/api";
 import Spinning from "./routes/Spinning";
+import { ConfigProvider } from "antd";
 
 const App: React.FC = () => {
   const search = window.location.search;
@@ -27,22 +28,54 @@ const App: React.FC = () => {
 
   return (
     <AuthProvider>
-      {docInfo && docInfo.is_shared && docId ? (
-        <LiveblocksProvider
-          authEndpoint={async () => {
-            const res = await defaultApi.getColAuthToken();
-            return res;
-          }}
-        >
-          <RoomProvider id={docId}>
-            <ClientSideSuspense fallback={<Spinning />}>
-              <Routes />
-            </ClientSideSuspense>
-          </RoomProvider>
-        </LiveblocksProvider>
-      ) : (
-        <Routes />
-      )}
+      <ConfigProvider
+        theme={{
+          components: {
+            Menu: {
+              itemSelectedBg: "#fbf2f3",
+              itemActiveBg: "#fbf2f3",
+              itemSelectedColor: "#d67b88",
+            },
+            Button: {
+              colorPrimary: "#d67b88",
+              colorPrimaryHover: "#dc8f9a",
+              colorPrimaryActive: "#e65c70",
+            },
+            Input: {
+              colorPrimary: "#d67b88",
+              colorPrimaryHover: "#dc8f9a",
+            },
+            Radio: {
+              buttonSolidCheckedActiveBg: "#ab626d",
+              buttonSolidCheckedBg: "#d67b88",
+              buttonSolidCheckedHoverBg: "#e09ca6",
+            },
+            Tabs: {
+              inkBarColor: "#242424",
+              itemActiveColor: "#d67b88",
+              itemHoverColor: "#e2a3ac",
+              itemSelectedColor: "#d67b88",
+            },
+          },
+        }}
+      >
+        {docInfo && docInfo.is_shared && docId ? (
+          <LiveblocksProvider
+            authEndpoint={async () => {
+              const res = await defaultApi.getColAuthToken();
+              return res;
+            }}
+          >
+            <RoomProvider id={docId}>
+              <ClientSideSuspense fallback={<Spinning />}>
+                <Routes />
+              </ClientSideSuspense>
+            </RoomProvider>
+          </LiveblocksProvider>
+        ) : (
+          <Routes />
+        )}
+      </ConfigProvider>
     </AuthProvider>
   );
 };

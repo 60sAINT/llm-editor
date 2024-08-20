@@ -41,7 +41,7 @@ export const CourseReport: React.FC<AIWritingProps> = ({ className }) => {
             rules={[{ required: true, message: "请填写报告主题！" }]}
             className="w-ai-writing-form-item mb-0"
           >
-            <Input placeholder="请输入课程名称" className="h-10" />
+            <Input placeholder="请输入报告主题" className="h-10" />
           </Form.Item>
         </div>
         <div className="flex justify-between items-start mt-3">

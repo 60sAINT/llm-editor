@@ -12,13 +12,10 @@ import Icon, {
   ShareAltOutlined,
   UpCircleOutlined,
   UploadOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import {
   Affix,
-  Avatar,
   Button,
-  ConfigProvider,
   Divider,
   Dropdown,
   Input,
@@ -51,6 +48,7 @@ import axios from "axios";
 import { GATEWAY } from "@/api/AxiosInstance";
 import { useCreateBlockNote } from "@blocknote/react";
 import ProcessBar from "@/common/components/ProcessBar";
+import { UserOperation } from "./UserOperation";
 
 const Home: React.FC = () => {
   const [modalUpgradeOpen, setModalUpgradeOpen] = useState(false);
@@ -260,37 +258,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <ConfigProvider
-      theme={{
-        components: {
-          Menu: {
-            itemSelectedBg: "#fbf2f3",
-            itemActiveBg: "#fbf2f3",
-            itemSelectedColor: "#d67b88",
-          },
-          Button: {
-            colorPrimary: "#d67b88",
-            colorPrimaryHover: "#dc8f9a",
-            colorPrimaryActive: "#e65c70",
-          },
-          Input: {
-            colorPrimary: "#d67b88",
-            colorPrimaryHover: "#dc8f9a",
-          },
-          Radio: {
-            buttonSolidCheckedActiveBg: "#ab626d",
-            buttonSolidCheckedBg: "#d67b88",
-            buttonSolidCheckedHoverBg: "#e09ca6",
-          },
-          Tabs: {
-            inkBarColor: "#242424",
-            itemActiveColor: "#d67b88",
-            itemHoverColor: "#e2a3ac",
-            itemSelectedColor: "#d67b88",
-          },
-        },
-      }}
-    >
+    <>
       <Layout className="h-full">
         <Affix offsetTop={0}>
           <Header className="h-14 bg-white pr-10 border-b border-gray-200">
@@ -308,7 +276,7 @@ const Home: React.FC = () => {
                 <UpCircleOutlined className="mr-1.5 font-bold" />
                 应用升级
               </div>
-              <Avatar icon={<UserOutlined />} size="small" />
+              <UserOperation />
             </Space>
           </Header>
         </Affix>
@@ -421,7 +389,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       </Modal>
-    </ConfigProvider>
+    </>
   );
 };
 

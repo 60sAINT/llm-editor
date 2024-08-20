@@ -7,18 +7,20 @@ import {
 import { useAuth } from "../provider/authProvider";
 import { ProtectedRoute } from "./ProtectedRoute";
 import Spinning from "./Spinning";
-import ReadPdfViewer from "@/views/Home/AIReadPaper/ReadPdfViewer";
 import { AIWriting } from "@/views/Home/components/QuickAccess/AIWriting";
 
 const Routes = () => {
   const Login = lazy(() => import("../views/Login"));
   const UserAgreement = lazy(() => import("../views/UserAgreement"));
   const PrivacyPolicy = lazy(() => import("../views/PrivacyPolicy"));
-  const Logout = lazy(() => import("../views/Logout"));
+  const Account = lazy(() => import("../views/Account"));
   const Home = lazy(() => import("../views/Home"));
   const NewDoc = lazy(() => import("../views/NewDoc"));
   const Files = lazy(() => import("../views/Home/Knowledge/Files"));
   const Temp = lazy(() => import("../views/Temp"));
+  const ReadPdfViewer = lazy(
+    () => import("../views/Home/AIReadPaper/ReadPdfViewer")
+  );
   const { token } = useAuth();
 
   // 公共路由配置
@@ -164,10 +166,10 @@ const Routes = () => {
           ),
         },
         {
-          path: "/logout",
+          path: "/account",
           element: (
             <Suspense fallback={<Spinning />}>
-              <Logout />
+              <Account />
             </Suspense>
           ),
         },

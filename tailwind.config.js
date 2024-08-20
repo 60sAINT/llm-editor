@@ -12,6 +12,7 @@ module.exports = {
         'home-border': "#eee",
         'read-paper-blue': "#1f71e0",
         'home-card-bg': '#fdfdfd',
+        'avatar-bg': '#f9ebed',
       },
       boxShadow: {
         'menu-switcher': '0 1px 4px rgba(0,0,0,.04),0 4px 10px rgba(0,0,0,.08)',
