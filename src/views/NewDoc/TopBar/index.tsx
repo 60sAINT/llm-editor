@@ -5,11 +5,13 @@ import Status from "./Status";
 import ActionButton from "./ActionButton";
 import DropdownMenu from "./DropdownMenu";
 import "./index.css";
-import { Avatar, Col, Row } from "antd";
+import { Avatar, Col, Modal, Row } from "antd";
 import { Start } from "./Start";
 import { useNewDocState } from "../utils/provider";
 import { Avatars } from "./Avatars";
 import { UserOutlined } from "@ant-design/icons";
+import classNames from "classnames";
+import { PublicModal } from "./PublicModal";
 
 interface TopBarProps {
   getShowCards: (showCards: boolean) => void;
@@ -36,6 +38,7 @@ const TopBar: React.FC<TopBarProps> = ({
   const [showCards, setShowCards] = useState(false);
   const [showAIWriting, setShowAIWriting] = useState(false);
   const { cardText } = useNewDocState();
+  const [modalPublicOpen, setModalPublicOpen] = useState(false);
 
   // 点击“开始”后
   const handleStartClick = () => {
@@ -97,9 +100,17 @@ const TopBar: React.FC<TopBarProps> = ({
               <Avatar
                 icon={<UserOutlined />}
                 size="small"
-                className="h-6 w-6 mr-4"
+                className="h-6 w-6 mr-2"
               />
             )}
+            <button
+              className={classNames(
+                "px-2.5 w-14 h-6 hover:bg-neutral-200 rounded-sm text-topbar-text"
+              )}
+              onClick={() => setModalPublicOpen(true)}
+            >
+              发布
+            </button>
             <DropdownMenu />
           </div>
         </Col>
@@ -110,6 +121,16 @@ const TopBar: React.FC<TopBarProps> = ({
         animateReverse={animateReverse}
         animate={animate}
       />
+      <Modal
+        title={<div className="border-b border-gray-200 pb-3.5">发布帖子</div>}
+        centered
+        open={modalPublicOpen}
+        onOk={() => setModalPublicOpen(false)}
+        onCancel={() => setModalPublicOpen(false)}
+        className="[&_.ant-modal-footer]:hidden [&_.ant-modal-content]:w-[696px] [&_.ant-modal-content]:h-[420px] [&_.ant-modal-body]:h-[270px]"
+      >
+        <PublicModal setModalPublicOpen={setModalPublicOpen} />
+      </Modal>
     </div>
   );
 };

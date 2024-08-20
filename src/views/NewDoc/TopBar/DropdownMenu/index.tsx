@@ -8,6 +8,7 @@ import { Dropdown, MenuProps, Tooltip } from "antd";
 import {
   DeleteOutlined,
   DownloadOutlined,
+  EllipsisOutlined,
   FileOutlined,
   HistoryOutlined,
   SaveOutlined,
@@ -106,25 +107,13 @@ const DropdownMenu = () => {
     // TODO: 图标样式还需要调整
     <>
       <Dropdown
-        className="text-gray-600 hover:bg-neutral-200 !w-14 rounded-sm text-center"
+        className="px-2.5 h-6 text-gray-600 hover:bg-neutral-200 !w-14 rounded-sm text-center flex justify-center items-center"
         menu={{ items }}
         placement="bottom"
         trigger={["click"]}
         dropdownRender={dropdownRender}
-        // onClick={handleButtonClick}
       >
-        <svg
-          className="w-6 h-6"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fillRule="evenodd"
-            d="M6 10a2 2 0 114 0 2 2 0 01-4 0zM2 10a6 6 0 1112 0A6 6 0 012 10zM10 2a6 6 0 100 12A6 6 0 0010 2z"
-            clipRule="evenodd"
-          ></path>
-        </svg>
+        <EllipsisOutlined />
       </Dropdown>
     </>
   );
