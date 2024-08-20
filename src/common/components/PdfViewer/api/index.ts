@@ -1,4 +1,5 @@
 import { axios } from "@/api/AxiosInstance";
+import { fetch } from "@/api/FetchInstance";
 import { Note } from "../interface";
 
 const apikeyPrefix = "/api/v1";
@@ -12,6 +13,11 @@ export interface UpdateLastReadPageParams {
   token: string;
   paper_id: string;
   page: number;
+}
+export interface SendQueryParams {
+  token: string;
+  paper_id: string;
+  input_text: string;
 }
 
 export class PdfApi {
@@ -75,14 +81,47 @@ export class PdfApi {
     );
     return result.data.data;
   }
-  public async getHistoryNToken(token: string, memory_id: string) {
+  public async getHistory(token: string, paper_id: string) {
     const result = await axios.get(
-      `${apikeyPrefix}/text/chat_history_and_token?memor_id=${memory_id}`,
+      `${apikeyPrefix}/text/chat_history?paper_id=${paper_id}`,
       {
         headers: { "X-Authorization": token },
       }
     );
     return result.data.data;
+  }
+  public async getTokenUsage(token: string, paper_id: string) {
+    const result = await axios.get(
+      `${apikeyPrefix}/text/chat_history_token?paper_id=${paper_id}`,
+      {
+        headers: { "X-Authorization": token },
+      }
+    );
+    return result.data.data;
+  }
+  // public async chat({ token, paper_id, input_text }: ChatParams) {
+  //   const result = await axios.post(
+  //     `${apikeyPrefix}/text/chat`,
+  //     {
+  //       paper_id,
+  //       input_text,
+  //     },
+  //     {
+  //       headers: { "X-Authorization": token },
+  //     }
+  //   );
+  //   return result.data.data;
+  // }
+  public async sendQuery({ token, paper_id, input_text }: SendQueryParams) {
+    const result = await fetch.post(
+      `${apikeyPrefix}/text/chat`,
+      {
+        paper_id,
+        input_text,
+      },
+      token
+    );
+    return result.body;
   }
 }
 

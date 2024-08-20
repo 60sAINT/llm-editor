@@ -1,17 +1,21 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect, useRef } from "react";
 import TypingEffect from "./TypingEffect";
-import { Button, Input, Skeleton } from "antd";
-import { CopyOutlined, SendOutlined } from "@ant-design/icons";
+import { Button, Input, Skeleton, Spin } from "antd";
+import {
+  CopyOutlined,
+  Loading3QuartersOutlined,
+  SendOutlined,
+} from "@ant-design/icons";
 import { useRequest } from "@/hooks/useRequest";
 import { pdfApi } from "../../api";
 import { useAuth } from "@/provider/authProvider";
 import { CopyButton } from "@/common/components/CopyButton";
 
 interface ChatMessage {
-  type: string;
-  text: string;
+  answer: string;
+  query: string;
 }
+
 export interface QAProps {
   pdfId: string;
 }
@@ -28,44 +32,78 @@ const QA: React.FC<QAProps> = ({ pdfId }) => {
     },
     { manual: false }
   );
-  const { data: historyNToken, loading: historyNTokenLoading } = useRequest(
+  const { data: history, loading: historyLoading } = useRequest(
     async () => {
-      const res = await pdfApi.getHistoryNToken(
-        `Bearer ${token}` || "",
-        pdfId!
-      );
+      const res = await pdfApi.getHistory(`Bearer ${token}` || "", pdfId!);
       return res;
     },
     { manual: false }
   );
-  console.log(historyNToken);
+  const { data: tokenUsage, loading: tokenUsageLoading } = useRequest(
+    async () => {
+      const res = await pdfApi.getTokenUsage(`Bearer ${token}` || "", pdfId!);
+      return res;
+    },
+    { manual: false }
+  );
+  const { runAsync: sendQuestion, loading: answerLoading } = useRequest(
+    async (input: string) => {
+      const res = await pdfApi.sendQuery({
+        token: token!,
+        paper_id: pdfId!,
+        input_text: input,
+      });
+      return res;
+    }
+  );
+
   const [chat, setChat] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [tokenCount, setTokenCount] = useState<number>(0);
+  const chatBoxRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (chatBoxRef.current) {
+      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+    }
+  }, [chat]);
+
+  useEffect(() => {
+    if (history) {
+      console.log(history.chat_history);
+      setChat(history.chat_history);
+    }
+  }, [history]);
 
   const handleSend = async () => {
     if (input.trim() === "") return;
-
-    const newChat = [...chat, { type: "user", text: input }];
+    const newChat = [...chat, { query: input, answer: "" }];
     setChat(newChat);
     setInput("");
-    setLoading(true);
 
-    try {
-      const response = await axios.post("/api/ask", { question: input });
-      setChat([...newChat, { type: "bot", text: response.data.answer }]);
-      setTokenCount(tokenCount + response.data.tokenCount);
-    } catch (error) {
-      console.error("Error sending question:", error);
-    } finally {
-      setLoading(false);
+    // 发送问题请求
+    const response = await sendQuestion(input);
+    const reader = response!.pipeThrough(new TextDecoderStream()).getReader();
+    let answer = "";
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        break;
+      }
+      answer += value;
+      setChat((prevChat) =>
+        prevChat.map((msg, index) =>
+          index === prevChat.length - 1 ? { ...msg, answer } : msg
+        )
+      );
     }
   };
 
   return (
     <div className="p-2.5">
-      <div className="chat-box bg-white p-4 rounded shadow h-96 overflow-y-scroll">
+      <div
+        className="chat-box bg-white p-4 rounded shadow h-96 overflow-y-scroll"
+        ref={chatBoxRef}
+      >
         <div className="bg-gray-100 p-3 rounded shadow mb-4">
           <p>你好，欢迎使用我(协心)为你提供的AI问答功能。</p>
           <p>
@@ -106,17 +144,32 @@ const QA: React.FC<QAProps> = ({ pdfId }) => {
                 })}
           </ul>
         </Skeleton>
-        {chat.map((message, index) => (
-          <div
-            key={index}
-            className={`my-2 ${
-              message.type === "user" ? "text-right" : "text-left"
-            }`}
-          >
-            <TypingEffect text={message.text} />
-          </div>
-        ))}
-        {loading && <div className="typing-indicator">_</div>}
+        <Skeleton
+          loading={historyLoading}
+          active
+          title={false}
+          className="mt-4"
+        >
+          {chat &&
+            chat.map((message, index) => (
+              <div key={index}>
+                {message.query && (
+                  <div className="my-2 text-right bg-blue-500 p-3 rounded shadow mb-4 text-white">
+                    {message.query}
+                  </div>
+                )}
+                {message.answer ? (
+                  <div className="my-2 text-left bg-gray-100 p-3 rounded shadow mb-4">
+                    <TypingEffect text={message.answer} />
+                  </div>
+                ) : index === chat.length - 1 && answerLoading ? (
+                  <div className="my-2 text-left bg-gray-100 p-3 rounded shadow mb-4">
+                    <Spin />
+                  </div>
+                ) : null}
+              </div>
+            ))}
+        </Skeleton>
       </div>
       <div className="input-box mt-4 flex items-stretch">
         <Input
@@ -136,7 +189,8 @@ const QA: React.FC<QAProps> = ({ pdfId }) => {
         </Button>
       </div>
       <div className="mt-2 text-gray-500">
-        此对话，总计消耗 token {tokenCount}
+        此对话，总计消耗 token{" "}
+        {tokenUsageLoading ? <Loading3QuartersOutlined spin /> : tokenUsage}
       </div>
     </div>
   );
