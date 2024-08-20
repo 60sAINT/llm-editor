@@ -102,14 +102,16 @@ const TopBar: React.FC<TopBarProps> = ({
                 className="h-6 w-6 mr-2"
               />
             )}
-            <button
-              className={classNames(
-                "px-2.5 w-14 h-6 hover:bg-neutral-200 rounded-sm text-topbar-text"
-              )}
-              onClick={() => setModalPublicOpen(true)}
-            >
-              发布
-            </button>
+            {!is_shared && (
+              <button
+                className={classNames(
+                  "px-2.5 w-14 h-6 hover:bg-neutral-200 rounded-sm text-topbar-text"
+                )}
+                onClick={() => setModalPublicOpen(true)}
+              >
+                发布
+              </button>
+            )}
             <DropdownMenu />
           </div>
         </Col>
