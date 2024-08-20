@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect } from "react";
-import { Affix, Input, InputRef, Card, Avatar, Button } from "antd";
+import React, { useRef, useState } from "react";
+import { Affix, Input, InputRef, Card, Avatar, Button, Skeleton } from "antd";
 import {
   CloseOutlined,
   SearchOutlined,
@@ -18,14 +18,10 @@ const Community = () => {
   const searchInputRef = useRef<InputRef>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const {
-    data: postList,
-    run: getPostList,
-    loading: getPostListLoading,
-  } = useRequest(
+  const { data: postList, loading: getPostListLoading } = useRequest(
     async () => {
       const res = await postApi.getPostList({ token: `Bearer ${token}` || "" });
-      return res;
+      return res.PostList;
     },
     { manual: false }
   );
@@ -62,35 +58,37 @@ const Community = () => {
         </div>
       </Affix>
       <div className="px-36 grid grid-cols-3 gap-4">
-        {postList &&
-          postList.map((post) => (
-            <Card
-              key={post.post_id}
-              cover={<img alt="cover" src={post.cover} />}
-              actions={[
-                <Button
-                  type="text"
-                  icon={
-                    post.user_like_status ? <LikeFilled /> : <LikeOutlined />
+        <Skeleton active loading={getPostListLoading} title={false}>
+          {postList &&
+            postList.map((post: any) => (
+              <Card
+                key={post.post_id}
+                cover={<img alt="cover" src={post.cover} />}
+                actions={[
+                  <Button
+                    type="text"
+                    icon={
+                      post.user_like_status ? <LikeFilled /> : <LikeOutlined />
+                    }
+                  >
+                    {post.likes}
+                  </Button>,
+                ]}
+                className="border-[6px] border-transparent p-1.5 hover:border-[#f9ebed] bg-[#fdf8f9]"
+              >
+                <Meta
+                  avatar={<Avatar>{post.user_nickname.charAt(0)}</Avatar>}
+                  title={post.title}
+                  description={
+                    <>
+                      <p>{post.summary}</p>
+                      <p>{new Date(post.created_at).toLocaleDateString()}</p>
+                    </>
                   }
-                >
-                  {post.likes}
-                </Button>,
-              ]}
-              className="border-[6px] border-transparent hover:border-[#fbf2f3]"
-            >
-              <Meta
-                avatar={<Avatar>{post.user_nickname.charAt(0)}</Avatar>}
-                title={post.title}
-                description={
-                  <>
-                    <p>{post.summary}</p>
-                    <p>{new Date(post.created_at).toLocaleDateString()}</p>
-                  </>
-                }
-              />
-            </Card>
-          ))}
+                />
+              </Card>
+            ))}
+        </Skeleton>
       </div>
     </div>
   );

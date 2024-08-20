@@ -11,7 +11,7 @@ export class PostApi {
     const result = await axios.get(`${apikeyPrefix}/post/posts`, {
       headers: { "X-Authorization": token },
     });
-    return result.data;
+    return result.data.data;
   }
 }
 
