@@ -1,29 +1,29 @@
 import { Button, message, Upload } from "antd";
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import { useDocState } from "../../utils/docProvider";
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
-import { publicPostApi } from "./api";
 import { useAuth } from "@/provider/authProvider";
 import { useRequest } from "@/hooks/useRequest";
+import { publicPostApi } from "@/views/NewDoc/TopBar/PublicModal/api";
 
 export interface PublicModalProps {
   setModalPublicOpen: (isModalPublicOpen: boolean) => void;
+  setNewPost: (content: string) => void;
 }
 
-export const PublicModal: React.FC<PublicModalProps> = ({
+export const EditNewPostModal: React.FC<PublicModalProps> = ({
   setModalPublicOpen,
+  setNewPost,
 }) => {
   const { token } = useAuth();
   const [cover, setCover] = useState<string | null>(null);
   const [isPublishDisabled, setIsPublishDisabled] = useState(true);
-  const { title, docContent } = useDocState();
   const editor = useCreateBlockNote({
-    initialContent: JSON.parse(docContent!) || [
+    initialContent: [
       {
         type: "paragraph",
-        content: ["暂无笔记"],
+        content: [""],
       },
     ],
   });
@@ -38,6 +38,7 @@ export const PublicModal: React.FC<PublicModalProps> = ({
     await newPost();
     message.success("发布成功！");
     setModalPublicOpen(false);
+    setNewPost(JSON.stringify(editor.document));
   };
 
   const handleChange = async (info: any) => {
@@ -68,12 +69,12 @@ export const PublicModal: React.FC<PublicModalProps> = ({
     const res = await publicPostApi.newPost({
       token: `Bearer ${token}` || "",
       content:
-        docContent ||
+        JSON.stringify(editor.document) ||
         JSON.stringify({
           type: "paragraph",
           content: [""],
         }),
-      title,
+      title: "",
       cover: cover!,
     });
     return res.data.doc;
@@ -82,12 +83,7 @@ export const PublicModal: React.FC<PublicModalProps> = ({
   return (
     <>
       <div className="h-44 pt-3 mb-3 border-stone-300 rounded-lg border overflow-y-auto">
-        <div className="font-semibold text-2xl mb-5 ml-6">{title}</div>
-        <BlockNoteView
-          editor={editor}
-          editable={false}
-          className="[&_.bn-editor]:px-6"
-        />
+        <BlockNoteView editor={editor} className="[&_.bn-editor]:px-6" />
       </div>
       <Upload
         name="cover"
