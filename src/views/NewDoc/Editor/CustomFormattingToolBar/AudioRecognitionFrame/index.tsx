@@ -19,8 +19,12 @@ export const AudioRecognitionFrame = () => {
   const [text, setText] = useState<string>("");
 
   useEffect(() => {
-    if (currentBlock !== blockToUpdate) {
-      setText(""); // Reset text when the selected block changes
+    if (currentBlock && blockToUpdate) {
+      console.log(currentBlock.id, blockToUpdate!.id);
+      if (currentBlock.id !== blockToUpdate!.id) {
+        setText(""); // Reset text when the selected block changes
+        setDisplay(false);
+      }
     }
   }, [blockToUpdate, currentBlock]);
   useEffect(() => {
@@ -33,8 +37,10 @@ export const AudioRecognitionFrame = () => {
     }
     setDisplay(audioRecognitionFrameDisplay);
   }, [blockToUpdate, audioRecognitionFrameDisplay]);
+  console.log(display);
   return (
     <div
+      style={{ display: display ? "block" : "none" }}
       className={`${
         display ? "" : "hidden"
       } bg-white border-x border-b border-gray-100 rounded-e-md shadow-lg pt-5 pb-2.5 px-2.5`}

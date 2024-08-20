@@ -441,7 +441,6 @@ function BlockNote({ doc, provider, getEditor, fullFormat }: BlockNoteProps) {
     },
     { manual: false }
   );
-  console.log(permission);
 
   // Renders the editor instance.
   return (

@@ -13,16 +13,11 @@ export const AudioRecognitionButton = () => {
   const state = useNewDocState();
   const Components = useComponentsContext()!;
   const { token } = useAuth();
-  const { runAsync: audioRecognition } = useRequest(async (baseUrl) => {
-    const res = await sideMenuApi.audioRecognition(baseUrl, token!);
+  const { runAsync: audioRecognition } = useRequest(async (url) => {
+    const res = await sideMenuApi.audioRecognition(url, token!);
     return res;
   });
 
-  function removeBase64Prefix(base64String: string) {
-    const regex =
-      /^data:image\/(jpeg|png|gif|bmp|webp|tiff|svg\+xml|x-icon|heif|heic);base64,/;
-    return base64String.replace(regex, "");
-  }
   const handleRecognition = async (): Promise<void> => {
     dispatch({ type: "AUDIO_RECOGNITION_FRAME_DISPLAY", payload: true });
     dispatch({ type: "LOADING_DISPLAY", payload: true });
@@ -32,8 +27,7 @@ export const AudioRecognitionButton = () => {
     const videoBlock = state.editor?.getTextCursorPosition().block;
     if (videoBlock.type == "audio") {
       let urlString = videoBlock.props.url;
-      const removlePrefixString = removeBase64Prefix(urlString);
-      const response = await audioRecognition(removlePrefixString);
+      const response = await audioRecognition(urlString);
       const reader = response!.pipeThrough(new TextDecoderStream()).getReader();
       while (true) {
         const { done, value } = await reader.read();

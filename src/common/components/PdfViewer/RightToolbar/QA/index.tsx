@@ -69,7 +69,6 @@ const QA: React.FC<QAProps> = ({ pdfId }) => {
 
   useEffect(() => {
     if (history) {
-      console.log(history.chat_history);
       setChat(history.chat_history);
     }
   }, [history]);

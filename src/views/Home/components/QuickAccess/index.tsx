@@ -260,8 +260,6 @@ export const QuickAccess = () => {
       const { doc_id } = newDocinfo;
       navigate(`/newDoc?doc_id=${doc_id}`);
     } else if (type === OPERATE.UPLOAD) {
-      console.log(document.getElementById("hiddenUploadInput"));
-      // document.getElementById("hiddenUploadInput")?.click();
     } else {
       navigate(`/aiWriting?type=${type}`);
     }

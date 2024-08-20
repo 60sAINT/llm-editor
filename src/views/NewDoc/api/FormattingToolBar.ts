@@ -53,55 +53,55 @@ export class ToolBarApi {
     return result.body;
   }
 
-  public async imageOcr(base64: string, token: string) {
+  public async imageOcr(url: string, token: string) {
     const result = await fetch.post(
       `${apikeyPrefix}/image/ocr`,
       {
-        base64,
+        url,
       },
       token
     );
     return result.body;
   }
 
-  public async imageDetection(base64: string, token: string) {
+  public async imageDetection(url: string, token: string) {
     const result = await fetch.post(
       `${apikeyPrefix}/image/detection`,
       {
-        base64,
+        url,
       },
       token
     );
     return result.body;
   }
 
-  public async videoDetection(base64: string, token: string) {
+  public async videoDetection(url: string, token: string) {
     const result = await fetch.post(
       `${apikeyPrefix}/video/detection`,
       {
-        base64,
+        url,
       },
       token
     );
     return result.body;
   }
 
-  public async recognition(base64: string, token: string) {
+  public async recognition(url: string, token: string) {
     const result = await fetch.post(
       `${apikeyPrefix}/video/recognition`,
       {
-        base64,
+        url,
       },
       token
     );
     return result.body;
   }
 
-  public async audioRecognition(base64: string, token: string) {
+  public async audioRecognition(url: string, token: string) {
     const result = await fetch.post(
       `${apikeyPrefix}/audio/recognition`,
       {
-        base64,
+        url,
       },
       token
     );

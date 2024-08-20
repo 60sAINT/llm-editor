@@ -59,7 +59,6 @@ const TopBar: React.FC<TopBarProps> = ({
 
   // 点击AI写作后
   const handleAIClick = useCallback(() => {
-    console.log(showCards);
     if (showCards) setShowCards((prevShowCards) => !prevShowCards);
     setShowAIWriting((prevShowAIWriting) => !prevShowAIWriting);
   }, [showCards]);

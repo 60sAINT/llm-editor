@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./index.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CloseOutlined } from "@ant-design/icons";
 import { OPERATE } from "@/views/Home/model";

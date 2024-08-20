@@ -175,7 +175,6 @@ export const ShareModal: React.FC<ShareModalProps> = ({
       return items;
     }, [selectedOption, user.email, user.permission]);
 
-    console.log(user.permission);
     return (
       <Dropdown
         menu={{ items: menuItems }}

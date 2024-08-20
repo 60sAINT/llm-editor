@@ -19,7 +19,6 @@ export const PublicModal: React.FC<PublicModalProps> = ({
   const [cover, setCover] = useState<string | null>(null);
   const [isPublishDisabled, setIsPublishDisabled] = useState(true);
   const { title, docContent } = useDocState();
-  console.log(docContent);
   const editor = useCreateBlockNote({
     initialContent: JSON.parse(docContent!) || [
       {
@@ -41,7 +40,6 @@ export const PublicModal: React.FC<PublicModalProps> = ({
 
   const handleChange = async (info: any) => {
     const file = info.file;
-    console.log(file);
     if (file) {
       const base64 = await getBase64(file);
       setCover(base64);

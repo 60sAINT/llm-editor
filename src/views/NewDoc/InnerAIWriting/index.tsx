@@ -37,7 +37,6 @@ export const InnerAIWriting = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const handle = (key: string) => {
-    console.log(key);
     setKey(key);
   };
   const onBack = () => {

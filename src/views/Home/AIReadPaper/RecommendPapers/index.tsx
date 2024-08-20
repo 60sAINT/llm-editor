@@ -19,6 +19,7 @@ export const RecommendPapers = () => {
     if (value == "") {
       return;
     }
+    getRecommendPaperList(value);
   };
 
   const {

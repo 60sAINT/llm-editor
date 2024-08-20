@@ -1,11 +1,36 @@
-import React, { useRef, useState } from "react";
-import { Affix, Input, InputRef } from "antd";
-import { CloseOutlined, SearchOutlined } from "@ant-design/icons";
+import React, { useRef, useState, useEffect } from "react";
+import { Affix, Input, InputRef, Card, Avatar, Button } from "antd";
+import {
+  CloseOutlined,
+  SearchOutlined,
+  LikeOutlined,
+  LikeFilled,
+} from "@ant-design/icons";
+import { useRequest } from "@/hooks/useRequest";
+import { postApi } from "./api";
+import { useAuth } from "@/provider/authProvider";
+
+const { Meta } = Card;
 
 const Community = () => {
+  const { token } = useAuth();
   const [introVisible, setIntroVisible] = useState<boolean>(true);
   const searchInputRef = useRef<InputRef>(null);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const {
+    data: postList,
+    run: getPostList,
+    loading: getPostListLoading,
+  } = useRequest(
+    async () => {
+      const res = await postApi.getPostList({ token: `Bearer ${token}` || "" });
+      return res;
+    },
+    { manual: false }
+  );
+  console.log(postList);
+
   return (
     <div className="w-full h-full overflow-auto relative">
       <Affix offsetTop={56}>
@@ -25,18 +50,48 @@ const Community = () => {
             <CloseOutlined className="text-xs" />
           </div>
         </div>
-        <div className="px-36 py-6">
+        <div className="px-36 py-6 bg-white">
           <Input
             ref={searchInputRef}
             prefix={<SearchOutlined />}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="在『推荐』中搜索文章"
+            placeholder="在『社区』中搜索文章"
             className="w-full rounded-[20px] mx-auto h-8"
           />
         </div>
       </Affix>
-      <div className="px-36"></div>
+      <div className="px-36 grid grid-cols-3 gap-4">
+        {postList &&
+          postList.map((post) => (
+            <Card
+              key={post.post_id}
+              cover={<img alt="cover" src={post.cover} />}
+              actions={[
+                <Button
+                  type="text"
+                  icon={
+                    post.user_like_status ? <LikeFilled /> : <LikeOutlined />
+                  }
+                >
+                  {post.likes}
+                </Button>,
+              ]}
+              className="border-[6px] border-transparent hover:border-[#fbf2f3]"
+            >
+              <Meta
+                avatar={<Avatar>{post.user_nickname.charAt(0)}</Avatar>}
+                title={post.title}
+                description={
+                  <>
+                    <p>{post.summary}</p>
+                    <p>{new Date(post.created_at).toLocaleDateString()}</p>
+                  </>
+                }
+              />
+            </Card>
+          ))}
+      </div>
     </div>
   );
 };

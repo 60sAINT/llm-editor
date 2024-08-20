@@ -1,5 +1,4 @@
 export const scrollToElement = (id: string, ifStartUnfold: boolean) => {
-  console.log(ifStartUnfold);
   const element = document.querySelector(`[data-id="${id}"]`);
   if (element) {
     // Calculate the current scroll position

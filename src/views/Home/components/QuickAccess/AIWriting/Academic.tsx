@@ -20,6 +20,11 @@ export const Academic: React.FC<AIWritingProps> = ({ className }) => {
     setKeywords(newKeywords);
   };
 
+  const generatePaperOutline = () => {
+    const value = form.validateFields();
+    console.log(value);
+  };
+
   return (
     <div className={className}>
       <div className="h-20 flex items-center w-full">
@@ -90,7 +95,7 @@ export const Academic: React.FC<AIWritingProps> = ({ className }) => {
         <div className="flex justify-between h-12 items-center mt-3">
           <div className="text-topbar-text">研究目标</div>
           <Form.Item
-            name="researchObjective"
+            name="target"
             rules={[{ required: true, message: "请填写研究目标！" }]}
             className="mb-0 w-ai-writing-form-item"
           >
@@ -112,7 +117,7 @@ export const Academic: React.FC<AIWritingProps> = ({ className }) => {
             </Radio.Group>
           </Form.Item>
         </div>
-        <div className="flex justify-between h-12 items-center">
+        <div className="flex justify-between h-12 items-center mt-2">
           <div className="text-topbar-text">论文标准</div>
           <Form.Item
             name="standard"
@@ -132,7 +137,11 @@ export const Academic: React.FC<AIWritingProps> = ({ className }) => {
           </Form.Item>
         </div>
         <div className="flex justify-between h-12 items-center">
-          <Button type="primary" className="w-full mt-3 h-10">
+          <Button
+            type="primary"
+            className="w-full mt-3 h-10"
+            onClick={generatePaperOutline}
+          >
             生成论文大纲
           </Button>
         </div>

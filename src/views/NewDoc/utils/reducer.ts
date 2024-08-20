@@ -37,7 +37,7 @@ export const reducer = (state: State, action: Action): State => {
     case "RECOGNITION_TEXT":
       return { ...state, videoDetectionText: action.payload };
     case "RECOGNITION_FRAME_DISPLAY":
-      return { ...state, videoDetectionFrameDisplay: action.payload };
+      return { ...state, recognitionFrameDisplay: action.payload };
     case "AUDIO_RECOGNITION_TEXT":
       return { ...state, audioRecognitionText: action.payload };
     case "AUDIO_RECOGNITION_FRAME_DISPLAY":
