@@ -1,15 +1,30 @@
 import Icon, { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { GradientBulbOutlined } from "@/common/icons/GradientBulbOutlined";
-import React, { useState } from "react";
-import { Button, Divider, Form, Input, Radio, Select, Space } from "antd";
+import React, { useEffect, useState, useRef } from "react";
+import {
+  Button,
+  Divider,
+  Form,
+  Input,
+  Radio,
+  Select,
+  Skeleton,
+  Space,
+} from "antd";
 import { OPERATE } from "@/views/Home/model";
 import { AIWritingProps } from "../interface";
+import { useRequest } from "@/hooks/useRequest";
+import { aiIWritingApi } from "../api";
+import { useAuth } from "@/provider/authProvider";
 
 export const Academic: React.FC<AIWritingProps> = ({ className }) => {
   const [form] = Form.useForm();
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
-  };
+  const { token } = useAuth();
+  const [output, setOutput] = useState<string>("");
+  const [isTyping, setIsTyping] = useState<boolean>(false);
+  const [displayedText, setDisplayedText] = useState<string>("");
+  const [displayFrame, setDisplayFrame] = useState<boolean>(false);
+  const outputRef = useRef<HTMLDivElement>(null); // 用于引用输出容器
 
   const [keywords, setKeywords] = useState([""]);
   const addKeyword = () => {
@@ -20,10 +35,76 @@ export const Academic: React.FC<AIWritingProps> = ({ className }) => {
     setKeywords(newKeywords);
   };
 
-  const generatePaperOutline = () => {
-    const value = form.validateFields();
-    console.log(value);
+  const { runAsync: paperOutline } = useRequest(async (processedData) => {
+    const res = await aiIWritingApi.paperOutline(processedData);
+    return res;
+  });
+  const processFormData = (value: {
+    [x: string]: any;
+    title: any;
+    subject: any;
+    target: any;
+    language: any;
+    standard: any;
+  }) => {
+    const { title, subject, target, language, standard, ...rest } = value;
+
+    // Extract keywords
+    const keywords = Object.keys(rest)
+      .filter((key) => key.startsWith("keyword"))
+      .map((key) => rest[key]);
+
+    return {
+      title,
+      keywords,
+      subject,
+      target,
+      language,
+      standard,
+      token,
+    };
   };
+  const generatePaperOutline = async () => {
+    const value = await form.validateFields();
+    const processedData = processFormData(value);
+    setDisplayFrame(true);
+    const response = await paperOutline(processedData);
+    const reader = response!.pipeThrough(new TextDecoderStream()).getReader();
+    let fullText = "";
+    while (true) {
+      const { done, value } = await reader.read();
+      if (value) {
+        fullText += value;
+        setOutput(fullText);
+      }
+      if (done) {
+        break;
+      }
+    }
+  };
+  useEffect(() => {
+    if (output) {
+      setIsTyping(true); // 开始打字时设置为 true
+      let index = 0;
+      const interval = setInterval(() => {
+        setDisplayedText((prev) => prev + output[index]);
+        index++;
+        if (index >= output.length) {
+          clearInterval(interval);
+          setIsTyping(false); // 打字结束时设置为 false
+        }
+      }, 25); // 每25ms显示一个字符
+      return () => clearInterval(interval);
+    } else {
+      return;
+    }
+  }, [output]);
+
+  useEffect(() => {
+    if (outputRef.current) {
+      outputRef.current.scrollTop = outputRef.current.scrollHeight;
+    }
+  }, [displayedText]); // 每次 displayedText 更新时滚动到最下方
 
   return (
     <div className={className}>
@@ -41,7 +122,11 @@ export const Academic: React.FC<AIWritingProps> = ({ className }) => {
         </div>
       </div>
       <Divider className="mb-3 mt-0 border-gray-300" />
-      <Form form={form} name={OPERATE.ACADEMIC}>
+      <Form
+        form={form}
+        name={OPERATE.ACADEMIC}
+        initialValues={{ standard: "本科毕设" }}
+      >
         <div className="flex justify-between h-12 items-center">
           <div className="text-topbar-text">论文题目</div>
           <Form.Item
@@ -119,19 +204,14 @@ export const Academic: React.FC<AIWritingProps> = ({ className }) => {
         </div>
         <div className="flex justify-between h-12 items-center mt-2">
           <div className="text-topbar-text">论文标准</div>
-          <Form.Item
-            name="standard"
-            rules={[{ required: true, message: "请选择论文标准！" }]}
-            className="mb-0 w-ai-writing-form-item"
-          >
+          <Form.Item name="standard" className="mb-0 w-ai-writing-form-item">
             <Select
-              defaultValue="undergraduate"
+              defaultValue="本科毕设"
               className="h-10"
-              onChange={handleChange}
               options={[
-                { value: "undergraduate", label: "本科毕设" },
-                { value: "graduate", label: "研究生毕业论文" },
-                { value: "journal", label: "期刊会议学术论文" },
+                { value: "本科毕设", label: "本科毕设" },
+                { value: "研究生毕业论文", label: "研究生毕业论文" },
+                { value: "期刊会议学术论文", label: "期刊会议学术论文" },
               ]}
             />
           </Form.Item>
@@ -146,6 +226,17 @@ export const Academic: React.FC<AIWritingProps> = ({ className }) => {
           </Button>
         </div>
       </Form>
+      {displayFrame && (
+        <div
+          className="py-2 border-blue-100 border rounded mt-4 px-2.5 text-[13px] overflow-y-auto max-h-60"
+          ref={outputRef} // 引用输出容器
+        >
+          <Skeleton loading={!displayedText} active title={false}>
+            {displayedText}
+            {isTyping && <span className="blinking-cursor">|</span>}
+          </Skeleton>
+        </div>
+      )}
     </div>
   );
 };
