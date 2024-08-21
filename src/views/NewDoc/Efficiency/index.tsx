@@ -6,6 +6,7 @@ import Reference from "./Reference";
 import MindMap from "./MindMap";
 import Visualization from "./Visualization";
 import { ReferenceNote } from "./ReferenceNote";
+import { Setting } from "./Setting";
 
 export const Efficiency: React.FC = () => {
   const items = [
@@ -33,6 +34,11 @@ export const Efficiency: React.FC = () => {
       label: "文献笔记",
       key: "referenceNote",
       children: <ReferenceNote />,
+    },
+    {
+      label: "模型设置",
+      key: "setting",
+      children: <Setting />,
     },
   ];
   const effectDataSource = [

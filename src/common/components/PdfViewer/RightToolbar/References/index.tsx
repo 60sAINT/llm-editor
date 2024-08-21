@@ -71,9 +71,10 @@ export const References: React.FC<ReferencesProps> = ({ paperInformation }) => {
                     <span className="text-xs text-neutral-500">
                       {" · "}
                       <span className="pl-2">
-                        {new Date(reference.published_at)
-                          .toISOString()
-                          .slice(0, 10)}
+                        {reference.published_at &&
+                          new Date(reference.published_at)
+                            .toISOString()
+                            .slice(0, 10)}
                       </span>
                     </span>
                   </div>
