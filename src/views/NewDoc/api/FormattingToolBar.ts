@@ -3,9 +3,15 @@ import { fetch } from "@/api/FetchInstance";
 const apikeyPrefix = "/api/v1";
 
 export class ToolBarApi {
+  private knowledgeBaseName: string | null;
+
+  constructor() {
+    this.knowledgeBaseName = localStorage.getItem("knowledge_base_name");
+  }
+
   public async textContinue(text: string, token: string) {
     const result = await fetch.get(
-      `${apikeyPrefix}/text/continue?text=${text}`,
+      `${apikeyPrefix}/text/continue?text=${text}&knowledge_base_name=${this.knowledgeBaseName}`,
       token
     );
     return result.body;
@@ -13,14 +19,15 @@ export class ToolBarApi {
 
   public async textTranslate(tar_lang: string, text: string, token: string) {
     const result = await fetch.get(
-      `${apikeyPrefix}/text/translate?tar_lang=${tar_lang}&text=${text}`,
+      `${apikeyPrefix}/text/translate?tar_lang=${tar_lang}&text=${text}&knowledge_base_name=${this.knowledgeBaseName}`,
       token
     );
     return result.body;
   }
+
   public async textRevise(text: string, token: string) {
     const result = await fetch.get(
-      `${apikeyPrefix}/text/revise?text=${text}`,
+      `${apikeyPrefix}/text/revise?text=${text}&knowledge_base_name=${this.knowledgeBaseName}`,
       token
     );
     return result.body;
@@ -28,7 +35,7 @@ export class ToolBarApi {
 
   public async textPolish(text: string, token: string) {
     const result = await fetch.get(
-      `${apikeyPrefix}/text/polish?text=${text}`,
+      `${apikeyPrefix}/text/polish?text=${text}&knowledge_base_name=${this.knowledgeBaseName}`,
       token
     );
     return result.body;
@@ -39,6 +46,7 @@ export class ToolBarApi {
       `${apikeyPrefix}/text/polish_doc`,
       {
         content,
+        knowledge_base_name: this.knowledgeBaseName,
       },
       token
     );
@@ -47,7 +55,7 @@ export class ToolBarApi {
 
   public async textSummary(text: string, token: string) {
     const result = await fetch.get(
-      `${apikeyPrefix}/text/summary?text=${text}`,
+      `${apikeyPrefix}/text/summary?text=${text}&knowledge_base_name=${this.knowledgeBaseName}`,
       token
     );
     return result.body;
@@ -58,6 +66,7 @@ export class ToolBarApi {
       `${apikeyPrefix}/image/ocr`,
       {
         url,
+        knowledge_base_name: this.knowledgeBaseName,
       },
       token
     );
@@ -69,6 +78,7 @@ export class ToolBarApi {
       `${apikeyPrefix}/image/detection`,
       {
         url,
+        knowledge_base_name: this.knowledgeBaseName,
       },
       token
     );
@@ -80,6 +90,7 @@ export class ToolBarApi {
       `${apikeyPrefix}/video/detection`,
       {
         url,
+        knowledge_base_name: this.knowledgeBaseName,
       },
       token
     );
@@ -91,6 +102,7 @@ export class ToolBarApi {
       `${apikeyPrefix}/video/recognition`,
       {
         url,
+        knowledge_base_name: this.knowledgeBaseName,
       },
       token
     );
@@ -102,6 +114,7 @@ export class ToolBarApi {
       `${apikeyPrefix}/audio/recognition`,
       {
         url,
+        knowledge_base_name: this.knowledgeBaseName,
       },
       token
     );
